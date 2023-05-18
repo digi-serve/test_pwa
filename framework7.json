@@ -1,0 +1,18 @@
+{
+  "cwd": "/Users/jamesduncan/Desktop",
+  "type": [
+    "pwa"
+  ],
+  "name": "AppBuilder PWA",
+  "framework": "core",
+  "template": "single-view",
+  "bundler": "vite",
+  "cssPreProcessor": "less",
+  "theming": {
+    "customColor": true,
+    "color": "#1992af",
+    "darkMode": false,
+    "iconFonts": true
+  },
+  "customBuild": false
+}
