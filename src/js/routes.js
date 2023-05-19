@@ -29,7 +29,15 @@ var routes = [
           <div class="navbar">
             <div class="navbar-bg"></div>
             <div class="navbar-inner">
+              <div class="left">
+                <a href="#" data-panel=".panel-left" class="link icon-only panel-open">
+                  <i class="icon material-icons">menu</i>
+                </a>
+              </div>
               <div class="title">${title}</div>
+              <div class="title-large">
+                <div class="title-large-text">${title}</div>
+              </div>
             </div>
           </div>
           <div class="page-content">
