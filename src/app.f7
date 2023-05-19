@@ -16,7 +16,20 @@
             <div class="list links-list list-strong list-dividers-ios">
               <ul>
                 <li>
-                  <a class="panel-close" href="/">List of People</a>
+                  <a href="/" class="panel-close">
+                    <div class="item-media"><i class="material-icons">contacts</i></div>
+                    <div class="item-inner">
+                      <div class="item-title">List of People</div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" @click="${logout}">
+                    <div class="item-media"><i class="material-icons">logout</i></div>
+                    <div class="item-inner">
+                      <div class="item-title">Log out</div>
+                    </div>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -29,47 +42,80 @@
     <div class="view view-main view-init safe-areas" data-url="/"></div>
 
 
-    <!-- Login Screen -->
+        <!-- Login Screen -->
     <div class="login-screen" id="my-login-screen">
       <div class="view">
-        <div class="page">
-          <div class="page-content login-screen-content">
-            <div class="login-screen-title">Login</div>
+        <div class="page bg-color-primary dark">
+          <div class="page-content login-screen-content bg-color-primary">
+            <!-- <div class="login-screen-title">Login</div> -->
+            <div class="block text-align-center no-margin-bottom">
+              <!-- block content -->
+              <!-- <img src="assets/images/AdroitLogoNew.png" width="90%" class="sidebar_logo" /> -->
+            </div>
             <div class="list">
               <ul>
                 <li class="item-content item-input">
                   <div class="item-inner">
                     <div class="item-title item-label">Username</div>
                     <div class="item-input-wrap">
-                      <input type="text" name="username" placeholder="Your username" value="${username}" @input="${updateUsername}"/>
-
+                      <input autocorrect="off" autocomplete="username" spellcheck="false" type="text" id="username" name="username" placeholder="Your username"/>
+                      <span class="input-clear-button"></span>
                     </div>
                   </div>
                 </li>
-                <li class="item-content item-input">
+                <li id="passwordHolder" class="item-content item-input">
                   <div class="item-inner">
                     <div class="item-title item-label">Password</div>
                     <div class="item-input-wrap">
-                      <input type="password" name="password" placeholder="Your password" value="${password}" @input="${updatePassword}"/>
-
+                      <a @click="${showPasswordPreview}" style="color: var(--f7-input-clear-button-color); position: absolute; right: 0; padding: 10px; margin-right: -15px; margin-top: -5px;" href="#"><i class="material-icons">visibility_off</i></a>
+                      <input type="password" id="password" name="password" placeholder="Your password" @input="${updatePassword}" autocomplete="current-password" autocorrect="off" spellcheck="false"/>
                     </div>
                   </div>
                 </li>
+                <li id="passwordPreviewHolder" style="display: none;" class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label">Password</div>
+                    <div class="item-input-wrap">
+                      <a @click="${showPassword}" style="color: var(--f7-input-clear-button-color); position: absolute; right: 0; padding: 10px; margin-right: -15px; margin-top: -5px;" href="#"><i class="material-icons">visibility</i></a>
+                      <input type="text" id="passwordPreview" name="passwordPreview" placeholder="Your password" @input="${updatePassword}" autocomplete="current-password" autocorrect="off" spellcheck="false"/>
+                    </div>
+                  </div>
+                </li>
+                <li class="item-content item-input"></li>
               </ul>
             </div>
-            <div class="list">
-              <ul>
-                <li>
-                  <a href="#" class="item-link list-button login-button" @click="${alertLoginData}">Sign In</a>
-
-                </li>
-              </ul>
-              <div class="block-footer">Some text about login information.<br/>Click "Sign In" to close Login Screen</div>
+            <div class="block">
+              <button @click="${close}" class="button color-primary button-outline button-round bg-color-white button-large login-button button-preloader">
+                <div class="preloader">
+                  <span class="preloader-inner">
+                    <span class="if-ios">
+                      <span class="preloader-inner-line"></span>
+                      <span class="preloader-inner-line"></span>
+                      <span class="preloader-inner-line"></span>
+                      <span class="preloader-inner-line"></span>
+                      <span class="preloader-inner-line"></span>
+                      <span class="preloader-inner-line"></span>
+                      <span class="preloader-inner-line"></span>
+                      <span class="preloader-inner-line"></span>
+                    </span>
+                    <span class="if-md">
+                      <svg viewBox="0 0 36 36">
+                        <circle cx="18" cy="18" r="16"></circle>
+                      </svg>
+                    </span>
+                    <span class="if-aurora">
+                      <span class="preloader-inner-circle"></span>
+                    </span>
+                  </span>
+                </div>
+                <span>Sign In</span>
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+
 
   </div>
 </template>
@@ -92,6 +138,43 @@
         $f7.loginScreen.close();
       });
     }
+
+    const close = (e) => {
+      $f7.loginScreen.close("#my-login-screen");
+    }
+
+    const logout = () => {
+      $f7.loginScreen.open("#my-login-screen");
+      // $f7.preloader.show();
+      // password = "";
+      // $update();
+      // fetchJson(Api.urls.logout, { method: 'GET' })
+      //   .then(data => {
+      //     store.dispatch('addCsrfToken', "");
+      //     $f7.loginScreen.open("#my-login-screen");
+      //     $f7.preloader.hide();
+      //   })
+      //   .catch(err => {
+      //     console.error("logout failed but pretending it didn't");
+      //     store.dispatch('addCsrfToken', "");
+      //     $f7.loginScreen.open("#my-login-screen");
+      //     $f7.preloader.hide();
+      //   });
+    }
+
+    const showPasswordPreview = (e) => {
+      $("#passwordPreviewHolder").show();
+      $("#passwordHolder").hide();
+      $("#passwordPreview").focus();
+    }
+
+    const showPassword = (e) => {
+      $("#passwordHolder").show();
+      $("#passwordPreviewHolder").hide();
+      $("#password").focus();
+    }
+
+
 
     return $render;
   }

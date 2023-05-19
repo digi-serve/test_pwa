@@ -21,7 +21,7 @@ var app = new Framework7({
   theme: "auto", // Automatic theme detection
   darkMode: "auto",
   colors: {
-    primary: "#1992af",
+    primary: "#366989",
   },
 
   el: "#app", // App root element
