@@ -75,23 +75,23 @@
                   </div>
                 </li>
                 <li id="passwordHolder" class="item-content item-input">
-                  <div class="item-inner">
-                    <div class="item-title item-label">Password</div>
-                    <div class="item-input-wrap">
-                      <a @click="${showPasswordPreview}" style="color: var(--f7-input-clear-button-color); position: absolute; right: 0; padding: 10px; margin-right: -15px; margin-top: -5px;" href="#"><i class="material-icons">visibility_off</i></a>
-                      <input type="password" id="password" name="password" placeholder="Your password" @input="${updatePassword}" autocomplete="current-password" autocorrect="off" spellcheck="false"/>
+                    <div class="item-inner">
+                      <div class="item-title item-label">Password</div>
+                      <div class="item-input-wrap">
+                        <a @click="${showPasswordPreview}" style="color: var(--f7-input-clear-button-color); position: absolute; right: 0; padding: 10px; margin-right: -15px; margin-top: -5px;" href="#"><i class="material-icons">visibility_off</i></a>
+                        <input required type="password" id="password" name="password" placeholder="Your password" value="${password}" @input="${updatePassword}" autocomplete="current-password" autocorrect="off" spellcheck="false"/>
+                      </div>
                     </div>
-                  </div>
-                </li>
-                <li id="passwordPreviewHolder" style="display: none;" class="item-content item-input">
-                  <div class="item-inner">
-                    <div class="item-title item-label">Password</div>
-                    <div class="item-input-wrap">
-                      <a @click="${showPassword}" style="color: var(--f7-input-clear-button-color); position: absolute; right: 0; padding: 10px; margin-right: -15px; margin-top: -5px;" href="#"><i class="material-icons">visibility</i></a>
-                      <input type="text" id="passwordPreview" name="passwordPreview" placeholder="Your password" @input="${updatePassword}" autocomplete="current-password" autocorrect="off" spellcheck="false"/>
+                  </li>
+                  <li id="passwordPreviewHolder" style="display: none;" class="item-content item-input">
+                    <div class="item-inner">
+                      <div class="item-title item-label">Password</div>
+                      <div class="item-input-wrap">
+                        <a @click="${showPassword}" style="color: var(--f7-input-clear-button-color); position: absolute; right: 0; padding: 10px; margin-right: -15px; margin-top: -5px;" href="#"><i class="material-icons">visibility</i></a>
+                        <input required type="text" id="passwordPreview" name="passwordPreview" placeholder="Your password" value="${password}" @input="${updatePassword}" autocomplete="current-password" autocorrect="off" spellcheck="false"/>
+                      </div>
                     </div>
-                  </div>
-                </li>
+                  </li>
                 <li class="item-content item-input"></li>
               </ul>
             </div>
@@ -138,10 +138,6 @@
     let versionNumber = $f7.params.version;
     $store.dispatch('getVersion');
 
-    const updateUsername = (e) => {
-      username = e.target.value;
-      $update();
-    }
     const updatePassword = (e) => {
       password = e.target.value;
       $update();
