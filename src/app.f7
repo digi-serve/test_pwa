@@ -13,10 +13,16 @@
             </div>
           </div>
           <div class="page-content">
-            <div class="list links-list list-strong list-dividers-ios">
+            <div class="block text-align-center no-margin-bottom">
+              <!-- block content -->
+              <img src="assets/images/digiServe_logo.png" width="70%" class="sidebar_logo" />
+              <p>
+              </p>
+            </div>
+            <div class="list list-outline-ios list-strong-ios list-dividers-ios">
               <ul>
                 <li>
-                  <a href="/" class="panel-close">
+                  <a href="/" class="item-link item-content panel-close">
                     <div class="item-media"><i class="material-icons">contacts</i></div>
                     <div class="item-inner">
                       <div class="item-title">List of People</div>
@@ -24,7 +30,7 @@
                   </a>
                 </li>
                 <li>
-                  <a href="#" @click="${logout}">
+                  <a href="#" class="item-link item-content" @click="${logout}">
                     <div class="item-media"><i class="material-icons">logout</i></div>
                     <div class="item-inner">
                       <div class="item-title">Log out</div>
@@ -32,6 +38,12 @@
                   </a>
                 </li>
               </ul>
+            </div>
+            <div class="block text-align-center" style="position: absolute; width: 100%; margin-bottom: 15px; bottom: 0px;">
+              <p>
+                <img src="assets/images/digiServe_logo.png" width="30%"/><br/>
+                <span class="version">v${versionNumber}</span>
+              </p>
             </div>
           </div>
         </div>
@@ -49,8 +61,7 @@
           <div class="page-content login-screen-content bg-color-primary">
             <!-- <div class="login-screen-title">Login</div> -->
             <div class="block text-align-center no-margin-bottom">
-              <!-- block content -->
-              <!-- <img src="assets/images/AdroitLogoNew.png" width="90%" class="sidebar_logo" /> -->
+              <img src="assets/images/digiServe_logo.png" width="60%" class="sidebar_logo" />
             </div>
             <div class="list">
               <ul>
@@ -120,10 +131,12 @@
   </div>
 </template>
 <script>
-  export default (props, { $f7, $update }) => {
+  export default (props, { $, $f7, $update, $store }) => {
     // Login screen demo data
     let username = '';
     let password = '';
+    let versionNumber = $f7.params.version;
+    $store.dispatch('getVersion');
 
     const updateUsername = (e) => {
       username = e.target.value;

@@ -5,7 +5,11 @@ var routes = [
     path: "/",
     component: (props, { $h, $f7, $on, $store }) => {
       const title = "List of People";
-      const coolPeople = $store.getters["faa9905e-dea8-4c7f-8eb4-98f1e6e66506"];
+      const people = $store.getters["faa9905e-dea8-4c7f-8eb4-98f1e6e66506"];
+      let allowInfinite = true;
+      let hasMoreItems = true;
+      let page = 0;
+      let lastItem = 20;
 
       $on("pageInit", (e, page) => {
         // do something on page init
@@ -24,6 +28,10 @@ var routes = [
         });
       };
 
+      const loadMore = (id) => {
+        $store.dispatch("getAppBuilderData", id);
+      };
+
       return () => $h`
         <div class="page">
           <div class="navbar">
@@ -40,35 +48,34 @@ var routes = [
               </div>
             </div>
           </div>
-          <div class="page-content">
+          <div data-infinite-distance="50" class="page-content infinite-scroll-content" @infinite=${() =>
+            loadMore("faa9905e-dea8-4c7f-8eb4-98f1e6e66506")}>
             ${
-              coolPeople.value.length == 0
+              people.value.length == 0
                 ? $h`
-            <div style="display: block; font-size: 180px; background-color: #666; color: transparent; text-shadow: 0px 1px 1px rgba(255,255,255,0.5); -webkit-background-clip: text; -moz-background-clip: text; background-clip: text; margin: 20vh auto 20px;" class="icon material-icons">add_photo_alternate</div>
-            <div class="block no-margin-top text-align-center">
-              <p style="color: gray;">
-                <small>Tap the <i class="icon f7-icons if-not-md">plus</i><i class="icon material-icons md-only">add</i> below to add an activity photo.</small>
-              </p>
-            </div>
+                <div></div>
               `
                 : $h`
                 <div class="list links-list list-outline-ios list-strong-ios list-dividers-ios">
                   <ul>
-                    ${coolPeople.value.map(
-                      (coolPerson) => $h`
-                      <li key=${coolPerson.id} data-activity-image-id="${
-                        coolPerson.id
-                      }">
-                        <a href="#" @click=${() =>
-                          openView("/edit", coolPerson)}>
-                          ${coolPerson["Name"]}
-                        </a>
-                      </li>
-                    `
+                    ${people.value.map(
+                      (item, index) => $h`
+                        <li key=${item.id}>
+                          <a href="#" @click=${() => openView("/edit", item)}>
+                            ${item["Name"]}
+                          </a>
+                        </li>
+                      `
                     )}
                   </ul>
                 </div>
+              ${
+                hasMoreItems &&
+                $h`
+                <div class="preloader infinite-scroll-preloader"></div>
               `
+              }
+            `
             }
           </div>
         </div>

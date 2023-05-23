@@ -16,6 +16,8 @@ import store from "./store.js";
 // Import main app component
 import App from "../app.f7";
 
+let version = "0.0.1";
+
 var app = new Framework7({
   name: "AppBuilder PWA", // App name
   theme: "auto", // Automatic theme detection
@@ -30,6 +32,7 @@ var app = new Framework7({
   store: store,
   // App routes
   routes: routes,
+  version: version,
 
   // Register service worker (only on production build)
   serviceWorker:
