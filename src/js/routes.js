@@ -1,17 +1,35 @@
 import NotFoundPage from "../pages/404.f7";
+import List from "./views/list.js";
 
 var routes = [
   {
     path: "/",
     component: (props, { $h, $f7, $on, $store }) => {
       const title = "List of People";
-      const people = $store.getters["faa9905e-dea8-4c7f-8eb4-98f1e6e66506"];
-      let allowInfinite = true;
-      let hasMoreItems = true;
-      let page = 0;
-      let lastItem = 20;
+      let allDCs = {};
+
+      // let pageID = "ABPage.id";
+      // let Page = AB.pageByID(pageID);
+      // Page.datacollections().foreach((dc)=>{
+      //   allDCs[dc.id] = $store.getters[dc.id];
+      // })
+
+      // for each DC on this Page, do:
+      let dcIDs = ["faa9905e-dea8-4c7f-8eb4-98f1e6e66506"];
+      dcIDs.forEach((dcID) => {
+        allDCs[dcID] = $store.getters[dcID];
+      });
+
+      // const people = $store.getters["faa9905e-dea8-4c7f-8eb4-98f1e6e66506"];
 
       $on("pageInit", (e, page) => {
+        // Page.datacollections().foreach((dc)=>{
+        // $store.dispatch(
+        //   "getAppBuilderData",
+        //   dc.id
+        // );
+        // })
+
         // do something on page init
         $store.dispatch(
           "getAppBuilderData",
@@ -32,6 +50,30 @@ var routes = [
         $store.dispatch("getAppBuilderData", id);
       };
 
+      let views = [
+        { key: "list", dcID: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506" },
+      ];
+      function viewHTML() {
+        let allResults = [];
+
+        // let views = Page.views();
+        // views.forEach((v) => {
+        // allResults.push(v.html(...));
+        // })
+        views.forEach((view) => {
+          switch (view.key) {
+            case "list":
+              let list = new List(view.dcID, allDCs);
+              allResults.push(list.html($h, openView, loadMore));
+              break;
+            default:
+            // code block
+          }
+        });
+
+        return allResults.map((r) => r());
+      }
+
       return () => $h`
         <div class="page">
           <div class="navbar">
@@ -48,36 +90,7 @@ var routes = [
               </div>
             </div>
           </div>
-          <div data-infinite-distance="50" class="page-content infinite-scroll-content" @infinite=${() =>
-            loadMore("faa9905e-dea8-4c7f-8eb4-98f1e6e66506")}>
-            ${
-              people.value.length == 0
-                ? $h`
-                <div></div>
-              `
-                : $h`
-                <div class="list links-list list-outline-ios list-strong-ios list-dividers-ios">
-                  <ul>
-                    ${people.value.map(
-                      (item, index) => $h`
-                        <li key=${item.id}>
-                          <a href="#" @click=${() => openView("/edit", item)}>
-                            ${item["Name"]}
-                          </a>
-                        </li>
-                      `
-                    )}
-                  </ul>
-                </div>
-              ${
-                hasMoreItems &&
-                $h`
-                <div class="preloader infinite-scroll-preloader"></div>
-              `
-              }
-            `
-            }
-          </div>
+          ${viewHTML()}
         </div>
       `;
     },
@@ -131,7 +144,7 @@ var routes = [
             </div>
           </div>
           <div class="page-content">
-            <form class="list list-strong-ios list-dividers-ios list-outline-ios" id="my-form">
+            <form class="list list-inset list-strong-ios list-dividers-ios list-outline-ios" id="my-form">
               <ul>
                 <li>
                   <div class="item-content item-input">

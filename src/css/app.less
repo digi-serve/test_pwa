@@ -29,3 +29,15 @@ select:-webkit-autofill:focus {
 		courier new, monospace;
 	font-size: 10px;
 }
+.list-translucent {
+	background-color: rgba(
+		var(--f7-navbar-bg-color-rgb, var(--f7-bars-bg-color-rgb)),
+		var(--f7-bars-translucent-opacity)
+	) !important;
+	-webkit-backdrop-filter: saturate(180%)
+		blur(var(--f7-bars-translucent-blur)) !important;
+	backdrop-filter: saturate(180%) blur(var(--f7-bars-translucent-blur)) !important;
+}
+.list-translucent ul {
+	background-color: transparent !important;
+}

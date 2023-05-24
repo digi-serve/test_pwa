@@ -5,7 +5,7 @@
     <!-- Left panel with cover effect-->
     <div class="panel panel-left panel-cover dark panel-init">
       <div class="view">
-        <div class="page">
+        <div class="page bg-color-primary">
           <div class="navbar">
             <div class="navbar-bg"></div>
             <div class="navbar-inner">
@@ -19,7 +19,7 @@
               <p>
               </p>
             </div>
-            <div class="list list-outline-ios list-strong-ios list-dividers-ios">
+            <div class="list list-outline list-strong list-dividers list-translucent">
               <ul>
                 <li>
                   <a href="/" class="item-link item-content panel-close">
