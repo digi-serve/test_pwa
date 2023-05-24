@@ -1,5 +1,5 @@
 import NotFoundPage from "../pages/404.f7";
-import List from "./views/list.js";
+import List from "./views/list.f7.jsx";
 
 var routes = [
   {
@@ -63,8 +63,13 @@ var routes = [
         views.forEach((view) => {
           switch (view.key) {
             case "list":
-              let list = new List(view.dcID, allDCs);
-              allResults.push(list.html($h, openView, loadMore));
+              let list = List({
+                dcID: view.dcID,
+                allDCs: allDCs,
+                openView: openView,
+                loadMore: loadMore,
+              });
+              allResults.push(list);
               break;
             default:
             // code block
