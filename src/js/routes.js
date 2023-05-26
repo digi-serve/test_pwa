@@ -4,7 +4,7 @@ import List from "./views/list.f7.jsx";
 var routes = [
   {
     path: "/",
-    component: (props, { $h, $f7, $on, $store }) => {
+    component: (props, { $h, $f7, $on, $store, $update }) => {
       const title = "List of People";
       let allDCs = {};
 
@@ -37,18 +37,18 @@ var routes = [
         );
       });
 
-      const openView = (page, data) => {
-        $f7.view.main.router.navigate(page, {
-          props: {
-            data: data,
-          },
-          ignoreCache: true,
-        });
-      };
+      // const openView = (page, data) => {
+      //   $f7.view.main.router.navigate(page, {
+      //     props: {
+      //       data: data,
+      //     },
+      //     ignoreCache: true,
+      //   });
+      // };
 
-      const loadMore = (id) => {
-        $store.dispatch("getAppBuilderData", id);
-      };
+      // const loadMore = (id) => {
+      //   $store.dispatch("getAppBuilderData", id);
+      // };
 
       let views = [
         { key: "list", dcID: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506" },
@@ -63,20 +63,15 @@ var routes = [
         views.forEach((view) => {
           switch (view.key) {
             case "list":
-              let list = List({
-                dcID: view.dcID,
-                allDCs: allDCs,
-                openView: openView,
-                loadMore: loadMore,
-              });
-              allResults.push(list);
+              let list = new List(view.dcID, allDCs, $f7, $store);
+              allResults.push(list.html());
               break;
             default:
             // code block
           }
         });
 
-        return allResults.map((r) => r());
+        return allResults.map((r) => r()); // render each jsx template
       }
 
       return () => $h`
@@ -102,9 +97,10 @@ var routes = [
   },
   {
     path: "/edit",
-    component: (props, { $h, $f7, $on, $store }) => {
+    component: (props, { $h, $f7, $on, $store, $update }) => {
       const title = "Edit Person";
       const person = props.data;
+      let isLoading = false;
 
       $on("pageInit", (e, page) => {
         //convert boolean for toggle UI
@@ -125,13 +121,25 @@ var routes = [
       });
 
       const save = (form) => {
+        isLoading = true;
+        $update();
         var formData = $f7.form.convertToData(form);
         //convert toggle back to boolean
         formData.Toggle = formData.Toggle.length ? 1 : 0;
         //convert date to JS Date().toString()
         formData.Birthday = new Date(formData.Birthday).toISOString();
         console.log(formData);
-        alert(JSON.stringify(formData));
+        // alert(JSON.stringify(formData));
+
+        $store.dispatch("updateRecord", {
+          dcID: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506",
+          recordID: person.id,
+          record: formData,
+        });
+        setTimeout(function () {
+          isLoading = false;
+          $update();
+        }, 1000);
       };
 
       return () => $h`
@@ -254,9 +262,13 @@ var routes = [
             <div class="block">
               <a @click=${() =>
                 save(
-                  "#my-form",
-                  "idofobject"
-                )} class="button button-large button-fill convert-form-to-data" href="#">Get Data</a>
+                  "#my-form"
+                )} class="button button-large button-fill button-preloader ${
+        isLoading ? "button-loading" : ""
+      }" href="#">
+                  <span class="preloader"></span>
+                  <span>Save</span>
+              </a>
             </div>
           </div>
         </div>
