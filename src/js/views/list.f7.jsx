@@ -35,7 +35,7 @@ export default class F7ViewList {
                <div class="list links-list list-outline list-strong list-dividers">
                   <ul>
                      {this.allDCs[this.dcID].value.records.map((item) => (
-                        <li key={item.id}>
+                        <li key={item.uuid}>
                            <a
                               href="#"
                               onClick={() => this.openView("/edit", item)}
