@@ -14,7 +14,7 @@ var routes = [
          // let pageID = "ABPage.id";
          // let Page = AB.pageByID(pageID);
 
-         AB.datacollections().foreach((dc) => {
+         AB.datacollections().forEach((dc) => {
             allDCs[dc.id] = $store.getters[dc.id];
          });
 
@@ -23,7 +23,6 @@ var routes = [
          // dcIDs.forEach((dcID) => {
          //   allDCs[dcID] = $store.getters[dcID];
          // });
-
 
          // const people = $store.getters["faa9905e-dea8-4c7f-8eb4-98f1e6e66506"];
 
@@ -38,7 +37,7 @@ var routes = [
             // do something on page init
             $store.dispatch(
                "getAppBuilderData",
-               "faa9905e-dea8-4c7f-8eb4-98f1e6e66506"
+               "0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322"
             );
          });
 
@@ -56,7 +55,7 @@ var routes = [
          // };
 
          let views = [
-            { key: "list", dcID: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506" },
+            { key: "list", dcID: "0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322" },
          ];
          function viewHTML() {
             let allResults = [];
@@ -114,7 +113,7 @@ var routes = [
          });
 
          let views = [
-            { key: "form", dcID: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506" },
+            { key: "form", dcID: "0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322" },
          ];
 
          // for each view on this Page, do:
