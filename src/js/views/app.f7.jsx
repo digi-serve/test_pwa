@@ -1,9 +1,15 @@
-export default (props, { $h, $f7, $on, $store, $update }) => {
+export default (props, { $, $h, $f7, $on, $store, $update }) => {
    // Login screen demo data
    let username = "";
    let password = "";
    let versionNumber = $f7.params.version;
    let showingUpdate = false;
+   let isLoading = false;
+   let apiUrl =
+      process.env.NODE_ENV === "production"
+         ? "https://design.digiserve.org/assets/html/pwa"
+         : "http://localhost:8010/proxy/assets/html/pwa";
+
    $store.dispatch("getVersion");
 
    $on("pageInit", () => {
@@ -17,7 +23,7 @@ export default (props, { $h, $f7, $on, $store, $update }) => {
    });
 
    const updatePassword = (e) => {
-      password = e.target.value;
+      password = $("#" + e).value();
       $update();
    };
    const alertLoginData = () => {
@@ -52,6 +58,58 @@ export default (props, { $h, $f7, $on, $store, $update }) => {
       //   });
    };
 
+   const authenticate = () => {
+      debugger;
+      isLoading = true;
+      $update();
+      let csrfToken = apiUrl + "/csrfToken";
+      fetch(csrfToken, { method: "GET" })
+         .then((csrfResponse) => {
+            debugger;
+            $store.dispatch("addCsrfToken", csrfResponse.json._csrf);
+            let tempUser = $("#username").value();
+            fetch(Api.urls.login, {
+               method: "POST",
+               body: JSON.stringify({
+                  username: tempUser,
+                  password,
+               }),
+            })
+               .then(async (data) => {
+                  $store.dispatch("getUser");
+                  $store.dispatch("setUsername", $("#username").value());
+                  $("#password")[0].value = "";
+                  $f7.loginScreen.close();
+                  isLoading = false;
+                  $update();
+               })
+               .catch((err) => {
+                  $f7.toast
+                     .create({
+                        icon: '<i class="material-icons">error</i>',
+                        text: `Login Failed`,
+                        position: "center",
+                        closeTimeout: 2000,
+                     })
+                     .open();
+                  isLoading = false;
+                  $update();
+               });
+         })
+         .catch((err) => {
+            $f7.toast
+               .create({
+                  icon: '<i class="material-icons">error</i>',
+                  text: `Login Failed`,
+                  position: "center",
+                  closeTimeout: 2000,
+               })
+               .open();
+            isLoading = false;
+            $update();
+         });
+   };
+
    const showPasswordPreview = (e) => {
       $("#passwordPreviewHolder").show();
       $("#passwordHolder").hide();
@@ -66,10 +124,6 @@ export default (props, { $h, $f7, $on, $store, $update }) => {
 
    async function checkForUpdate() {
       if (!showingUpdate) {
-         let apiUrl =
-            process.env.NODE_ENV === "production"
-               ? "https://design.digiserve.org/assets/html/pwa"
-               : "http://localhost:8010/proxy";
          let getVersionPath = apiUrl + "/version.txt";
 
          const response = await fetch(getVersionPath, {
@@ -174,7 +228,7 @@ export default (props, { $h, $f7, $on, $store, $update }) => {
                               <a
                                  href="#"
                                  class="item-link item-content"
-                                 onClick="{logout}"
+                                 onClick={() => logout()}
                               >
                                  <div class="item-media">
                                     <i class="material-icons">logout</i>
@@ -216,125 +270,137 @@ export default (props, { $h, $f7, $on, $store, $update }) => {
                            class="sidebar_logo"
                         />
                      </div>
-                     <div class="list">
-                        <ul>
-                           <li class="item-content item-input">
-                              <div class="item-inner">
-                                 <div class="item-title item-label">
-                                    Username
+                     <form
+                        action="javascript: return false;"
+                        onSubmit={() => authenticate()}
+                     >
+                        <div class="list">
+                           <ul>
+                              <li class="item-content item-input">
+                                 <div class="item-inner">
+                                    <div class="item-title item-label">
+                                       Username
+                                    </div>
+                                    <div class="item-input-wrap">
+                                       <input
+                                          autocorrect="off"
+                                          autocomplete="username"
+                                          spellcheck="false"
+                                          type="text"
+                                          id="username"
+                                          name="username"
+                                          placeholder="Your username"
+                                       />
+                                       <span class="input-clear-button"></span>
+                                    </div>
                                  </div>
-                                 <div class="item-input-wrap">
-                                    <input
-                                       autocorrect="off"
-                                       autocomplete="username"
-                                       spellcheck="false"
-                                       type="text"
-                                       id="username"
-                                       name="username"
-                                       placeholder="Your username"
-                                    />
-                                    <span class="input-clear-button"></span>
+                              </li>
+                              <li
+                                 id="passwordHolder"
+                                 class="item-content item-input"
+                              >
+                                 <div class="item-inner">
+                                    <div class="item-title item-label">
+                                       Password
+                                    </div>
+                                    <div class="item-input-wrap">
+                                       <a
+                                          onClick={() => showPasswordPreview()}
+                                          style="color: var(--f7-input-clear-button-color); position: absolute; right: 0; padding: 10px; margin-right: -15px; margin-top: -5px;"
+                                          href="#"
+                                       >
+                                          <i class="material-icons">
+                                             visibility_off
+                                          </i>
+                                       </a>
+                                       <input
+                                          required
+                                          type="password"
+                                          id="password"
+                                          name="password"
+                                          placeholder="Your password"
+                                          value={password}
+                                          onInput={() =>
+                                             updatePassword("password")
+                                          }
+                                          autocomplete="current-password"
+                                          autocorrect="off"
+                                          spellcheck="false"
+                                       />
+                                    </div>
                                  </div>
-                              </div>
-                           </li>
-                           <li
-                              id="passwordHolder"
-                              class="item-content item-input"
-                           >
-                              <div class="item-inner">
-                                 <div class="item-title item-label">
-                                    Password
+                              </li>
+                              <li
+                                 id="passwordPreviewHolder"
+                                 style="display: none;"
+                                 class="item-content item-input"
+                              >
+                                 <div class="item-inner">
+                                    <div class="item-title item-label">
+                                       Password
+                                    </div>
+                                    <div class="item-input-wrap">
+                                       <a
+                                          onClick={() => showPassword()}
+                                          style="color: var(--f7-input-clear-button-color); position: absolute; right: 0; padding: 10px; margin-right: -15px; margin-top: -5px;"
+                                          href="#"
+                                       >
+                                          <i class="material-icons">
+                                             visibility
+                                          </i>
+                                       </a>
+                                       <input
+                                          required
+                                          type="text"
+                                          id="passwordPreview"
+                                          name="passwordPreview"
+                                          placeholder="Your password"
+                                          value={password}
+                                          onInput={() =>
+                                             updatePassword("passwordPreview")
+                                          }
+                                          autocomplete="current-password"
+                                          autocorrect="off"
+                                          spellcheck="false"
+                                       />
+                                    </div>
                                  </div>
-                                 <div class="item-input-wrap">
-                                    <a
-                                       onClick="{showPasswordPreview}"
-                                       style="color: var(--f7-input-clear-button-color); position: absolute; right: 0; padding: 10px; margin-right: -15px; margin-top: -5px;"
-                                       href="#"
-                                    >
-                                       <i class="material-icons">
-                                          visibility_off
-                                       </i>
-                                    </a>
-                                    <input
-                                       required
-                                       type="password"
-                                       id="password"
-                                       name="password"
-                                       placeholder="Your password"
-                                       value="{password}"
-                                       onCnput="{updatePassword}"
-                                       autocomplete="current-password"
-                                       autocorrect="off"
-                                       spellcheck="false"
-                                    />
-                                 </div>
-                              </div>
-                           </li>
-                           <li
-                              id="passwordPreviewHolder"
-                              style="display: none;"
-                              class="item-content item-input"
-                           >
-                              <div class="item-inner">
-                                 <div class="item-title item-label">
-                                    Password
-                                 </div>
-                                 <div class="item-input-wrap">
-                                    <a
-                                       onClick="{showPassword}"
-                                       style="color: var(--f7-input-clear-button-color); position: absolute; right: 0; padding: 10px; margin-right: -15px; margin-top: -5px;"
-                                       href="#"
-                                    >
-                                       <i class="material-icons">visibility</i>
-                                    </a>
-                                    <input
-                                       required
-                                       type="text"
-                                       id="passwordPreview"
-                                       name="passwordPreview"
-                                       placeholder="Your password"
-                                       value="{password}"
-                                       onCnput="{updatePassword}"
-                                       autocomplete="current-password"
-                                       autocorrect="off"
-                                       spellcheck="false"
-                                    />
-                                 </div>
-                              </div>
-                           </li>
-                           <li class="item-content item-input"></li>
-                        </ul>
-                     </div>
-                     <div class="block">
-                        <button
-                           onClick="{close}"
-                           class="button color-primary button-outline button-round bg-color-white button-large login-button button-preloader"
-                        >
-                           <div class="preloader">
-                              <span class="preloader-inner">
-                                 <span class="if-ios">
-                                    <span class="preloader-inner-line"></span>
-                                    <span class="preloader-inner-line"></span>
-                                    <span class="preloader-inner-line"></span>
-                                    <span class="preloader-inner-line"></span>
-                                    <span class="preloader-inner-line"></span>
-                                    <span class="preloader-inner-line"></span>
-                                    <span class="preloader-inner-line"></span>
-                                    <span class="preloader-inner-line"></span>
+                              </li>
+                              <li class="item-content item-input"></li>
+                           </ul>
+                        </div>
+                        <div class="block">
+                           <button class="button color-primary button-outline button-round bg-color-white button-large login-button button-preloader">
+                              <div class="preloader">
+                                 <span class="preloader-inner">
+                                    <span class="if-ios">
+                                       <span class="preloader-inner-line"></span>
+                                       <span class="preloader-inner-line"></span>
+                                       <span class="preloader-inner-line"></span>
+                                       <span class="preloader-inner-line"></span>
+                                       <span class="preloader-inner-line"></span>
+                                       <span class="preloader-inner-line"></span>
+                                       <span class="preloader-inner-line"></span>
+                                       <span class="preloader-inner-line"></span>
+                                    </span>
+                                    <span class="if-md">
+                                       <svg viewBox="0 0 36 36">
+                                          <circle
+                                             cx="18"
+                                             cy="18"
+                                             r="16"
+                                          ></circle>
+                                       </svg>
+                                    </span>
+                                    <span class="if-aurora">
+                                       <span class="preloader-inner-circle"></span>
+                                    </span>
                                  </span>
-                                 <span class="if-md">
-                                    <svg viewBox="0 0 36 36">
-                                       <circle cx="18" cy="18" r="16"></circle>
-                                    </svg>
-                                 </span>
-                                 <span class="if-aurora">
-                                    <span class="preloader-inner-circle"></span>
-                                 </span>
-                              </span>
-                           </div>
-                           <span>Sign In</span>
-                        </button>
-                     </div>
+                              </div>
+                              <span>Sign In</span>
+                           </button>
+                        </div>
+                     </form>
                   </div>
                </div>
             </div>
