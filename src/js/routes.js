@@ -122,10 +122,18 @@ var routes = [
          // })
          views.forEach((view) => {
             switch (view.key) {
-               case "form":
-                  let form = new Form(view.dcID, allDCs, $f7, $store, person);
+               case "form": {
+                  let form = new Form(
+                     view.dcID,
+                     allDCs,
+                     $,
+                     $f7,
+                     $store,
+                     person
+                  );
                   allViews.push(form);
                   break;
+               }
                default:
                // code block
             }

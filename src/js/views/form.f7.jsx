@@ -2,10 +2,11 @@ import formTextbox from "./formTextbox.f7.jsx";
 import formSelect from "./formSelect.f7.jsx";
 
 export default class F7ViewList {
-   constructor(dcID, allDCs, $f7, $store, record) {
+   constructor(dcID, allDCs, $, $f7, $store, record) {
       this.dcID = dcID;
       this.allDCs = allDCs;
       this.$f7 = $f7;
+      this.$ = $;
       this.$store = $store;
       this.isLoading = false;
       this.record = record;
@@ -48,29 +49,8 @@ export default class F7ViewList {
       ];
    }
 
-   openView(page, data) {
-      this.$f7.view.main.router.navigate(page, {
-         props: {
-            data: data,
-         },
-         ignoreCache: true,
-      });
-   }
-
-   loadMore() {
-      if (this.allDCs[this.dcID].value.hasMore) {
-         this.$store.dispatch("getAppBuilderData", this.dcID);
-      }
-   }
-
-   hasMore() {
-      if (this.allDCs[this.dcID].value.hasMore) {
-         return <div class="preloader infinite-scroll-preloader"></div>;
-      }
-   }
-
-   save() {
-      this.isLoading = true;
+   save(btn) {
+      this.$("#" + btn).addClass("button-loading");
       var formData = this.$f7.form.convertToData("#my-form");
       //convert toggle back to boolean
       formData.Toggle = formData.Toggle.length ? 1 : 0;
@@ -84,17 +64,9 @@ export default class F7ViewList {
          recordID: this.record.uuid,
          record: formData,
       });
-      setTimeout(function () {
-         this.isLoading = false;
+      setTimeout(() => {
+         this.$("#" + btn).removeClass("button-loading");
       }, 1000);
-   }
-
-   isLoadingCheck() {
-      if (this.isLoading) {
-         return "button-loading";
-      } else {
-         return "";
-      }
    }
 
    init() {
@@ -245,7 +217,8 @@ export default class F7ViewList {
             </ul>
             <div class="block">
                <a
-                  onClick={() => this.save()}
+                  onClick={() => this.save("saveButton")}
+                  id="saveButton"
                   class="button button-large button-fill button-preloader"
                   href="#"
                >
