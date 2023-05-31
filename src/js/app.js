@@ -16,6 +16,9 @@ import store from "./store.js";
 // Import main app component
 import App from "../app.f7";
 
+// AB Factory
+import AB from "./AppBuilder/ABFactory";
+
 let version = "0.0.1";
 
 var app = new Framework7({

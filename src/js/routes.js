@@ -10,17 +10,17 @@ var routes = [
       const title = "List of People";
       let allDCs = {};
 
-      // let pageID = "ABPage.id";
-      // let Page = AB.pageByID(pageID);
-      // Page.datacollections().foreach((dc)=>{
-      //   allDCs[dc.id] = $store.getters[dc.id];
-      // })
+         // let pageID = "ABPage.id";
+         // let Page = AB.pageByID(pageID);
+         AB.datacollections().foreach((dc) => {
+            allDCs[dc.id] = $store.getters[dc.id];
+         });
 
-      // for each DC on this Page, do:
-      let dcIDs = ["faa9905e-dea8-4c7f-8eb4-98f1e6e66506"];
-      dcIDs.forEach((dcID) => {
-        allDCs[dcID] = $store.getters[dcID];
-      });
+         // for each DC on this Page, do:
+         // let dcIDs = ["0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322"];
+         // dcIDs.forEach((dcID) => {
+         //   allDCs[dcID] = $store.getters[dcID];
+         // });
 
       // const people = $store.getters["faa9905e-dea8-4c7f-8eb4-98f1e6e66506"];
 
