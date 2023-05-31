@@ -1,6 +1,8 @@
 import NotFoundPage from "../pages/404.f7";
 import List from "./views/list.f7.jsx";
 
+import AB from "./AppBuilder/ABFactory.js";
+
 var routes = [
   {
     path: "/",
