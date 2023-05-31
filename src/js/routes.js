@@ -6,7 +6,7 @@ import AB from "./AppBuilder/ABFactory.js";
 var routes = [
   {
     path: "/",
-    component: (props, { $h, $f7, $on, $store }) => {
+    component: (props, { $h, $f7, $on, $store, $update }) => {
       const title = "List of People";
       let allDCs = {};
 
@@ -39,18 +39,18 @@ var routes = [
         );
       });
 
-      const openView = (page, data) => {
-        $f7.view.main.router.navigate(page, {
-          props: {
-            data: data,
-          },
-          ignoreCache: true,
-        });
-      };
+      // const openView = (page, data) => {
+      //   $f7.view.main.router.navigate(page, {
+      //     props: {
+      //       data: data,
+      //     },
+      //     ignoreCache: true,
+      //   });
+      // };
 
-      const loadMore = (id) => {
-        $store.dispatch("getAppBuilderData", id);
-      };
+      // const loadMore = (id) => {
+      //   $store.dispatch("getAppBuilderData", id);
+      // };
 
       let views = [
         { key: "list", dcID: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506" },
@@ -65,20 +65,15 @@ var routes = [
         views.forEach((view) => {
           switch (view.key) {
             case "list":
-              let list = List({
-                dcID: view.dcID,
-                allDCs: allDCs,
-                openView: openView,
-                loadMore: loadMore,
-              });
-              allResults.push(list);
+              let list = new List(view.dcID, allDCs, $f7, $store);
+              allResults.push(list.html());
               break;
             default:
             // code block
           }
         });
 
-        return allResults.map((r) => r());
+        return allResults.map((r) => r()); // render each jsx template
       }
 
       return () => $h`
@@ -104,11 +99,23 @@ var routes = [
   },
   {
     path: "/edit",
-    component: (props, { $h, $f7, $on, $store }) => {
+    component: (props, { $, $h, $f7, $on, $store, $update }) => {
       const title = "Edit Person";
       const person = props.data;
+      const allDCs = {};
+      let isLoading = false;
+
+      // for each DC on this Page, do:
+      let dcIDs = ["19e566e3-a6b0-4ed5-83ea-a42b1ddbf5c5"];
+      dcIDs.forEach((dcID) => {
+        allDCs[dcID] = $store.getters[dcID];
+      });
 
       $on("pageInit", (e, page) => {
+        $store.dispatch(
+          "getAppBuilderData",
+          "19e566e3-a6b0-4ed5-83ea-a42b1ddbf5c5"
+        );
         //convert boolean for toggle UI
         person.Toggle = person.Toggle ? "on" : "off";
         //convert date for date UI
@@ -124,16 +131,41 @@ var routes = [
         }
         //fill in form
         $f7.form.fillFromData("#my-form", person);
+
+        // listen for when we remove the preloader on the smart select then set the value to the select
+        // this is just a hack to get the value of the smart select set we may be able to take this out
+        if ($(".smartSelectCountry .item-after .preloader").length) {
+          $(".smartSelectCountry .item-after .preloader")[0].addEventListener(
+            "DOMNodeRemoved",
+            () => {
+              $(
+                "select[name='Country'] option[value='" + person.Country + "']"
+              ).prop("selected", "selected");
+            }
+          );
+        }
       });
 
       const save = (form) => {
+        isLoading = true;
+        $update();
         var formData = $f7.form.convertToData(form);
         //convert toggle back to boolean
         formData.Toggle = formData.Toggle.length ? 1 : 0;
         //convert date to JS Date().toString()
         formData.Birthday = new Date(formData.Birthday).toISOString();
         console.log(formData);
-        alert(JSON.stringify(formData));
+        // alert(JSON.stringify(formData));
+
+        $store.dispatch("updateRecord", {
+          dcID: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506",
+          recordID: person.uuid,
+          record: formData,
+        });
+        setTimeout(function () {
+          isLoading = false;
+          $update();
+        }, 1000);
       };
 
       return () => $h`
@@ -217,6 +249,47 @@ var routes = [
                   </div>
                 </li>
                 <li>
+                  <a class="item-link smartSelectCountry smart-select ${
+                    allDCs["19e566e3-a6b0-4ed5-83ea-a42b1ddbf5c5"].value.records
+                      .length
+                      ? $h` `
+                      : $h`disabled`
+                  }">
+                    <select name="Country">
+                      ${allDCs[
+                        "19e566e3-a6b0-4ed5-83ea-a42b1ddbf5c5"
+                      ].value.records.map(
+                        (item) => $h`
+                        <option value="${item.uuid}">${item.Name}</option>
+                      `
+                      )}
+                    </select>
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title">Country</div>
+                        <div class="item-after">
+                          ${
+                            allDCs["19e566e3-a6b0-4ed5-83ea-a42b1ddbf5c5"].value
+                              .records.length
+                              ? $h`
+                                ${
+                                  allDCs[
+                                    "19e566e3-a6b0-4ed5-83ea-a42b1ddbf5c5"
+                                  ].value.records.filter(
+                                    (item) => item.uuid == person.Country
+                                  )[0].Name
+                                }
+                            `
+                              : $h`
+                                <div class="preloader"></div>
+                              `
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                <li>
                   <div class="item-content">
                     <div class="item-inner">
                       <div class="item-title">Toggle</div>
@@ -256,9 +329,13 @@ var routes = [
             <div class="block">
               <a @click=${() =>
                 save(
-                  "#my-form",
-                  "idofobject"
-                )} class="button button-large button-fill convert-form-to-data" href="#">Get Data</a>
+                  "#my-form"
+                )} class="button button-large button-fill button-preloader ${
+        isLoading ? "button-loading" : ""
+      }" href="#">
+                  <span class="preloader"></span>
+                  <span>Save</span>
+              </a>
             </div>
           </div>
         </div>
