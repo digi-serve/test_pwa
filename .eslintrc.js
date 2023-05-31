@@ -19,7 +19,10 @@ module.exports = {
    },
 
    parserOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2022,
+      ecmaFeatures: {
+         jsx: true,
+      },
       sourceType: "module",
    },
 
