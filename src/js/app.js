@@ -14,34 +14,34 @@ import routes from "./routes.js";
 import store from "./store.js";
 
 // Import main app component
-import App from "../app.f7";
+import App from "./views/app.f7.jsx";
 
 // AB Factory
 import AB from "./AppBuilder/ABFactory";
 
-let version = "0.0.1";
+let version = "0.0.9";
 
 var app = new Framework7({
-  name: "AppBuilder PWA", // App name
-  theme: "auto", // Automatic theme detection
-  darkMode: "auto",
-  colors: {
-    primary: "#366989",
-  },
+   name: "AppBuilder PWA", // App name
+   theme: "auto", // Automatic theme detection
+   darkMode: "auto",
+   colors: {
+      primary: "#366989",
+   },
 
-  el: "#app", // App root element
-  component: App, // App main component
-  // App store
-  store: store,
-  // App routes
-  routes: routes,
-  version: version,
+   el: "#app", // App root element
+   component: App, // App main component
+   // App store
+   store: store,
+   // App routes
+   routes: routes,
+   version: version,
 
-  // Register service worker (only on production build)
-  serviceWorker:
-    process.env.NODE_ENV === "production"
-      ? {
-          path: "/service-worker.js",
-        }
-      : {},
+   // Register service worker (only on production build)
+   serviceWorker:
+      process.env.NODE_ENV === "production"
+         ? {
+              path: "/assets/html/pwa/service-worker.js",
+           }
+         : {},
 });

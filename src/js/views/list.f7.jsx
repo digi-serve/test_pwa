@@ -1,4 +1,4 @@
-export default class F7ViewList {
+export default class F7ViewForm {
    constructor(dcID, allDCs, $f7, $store) {
       this.dcID = dcID;
       this.allDCs = allDCs;
@@ -16,7 +16,9 @@ export default class F7ViewList {
    }
 
    loadMore() {
-      this.$store.dispatch("getAppBuilderData", this.dcID);
+      if (this.allDCs[this.dcID].value.hasMore) {
+         this.$store.dispatch("getAppBuilderData", this.dcID);
+      }
    }
 
    hasMore() {
