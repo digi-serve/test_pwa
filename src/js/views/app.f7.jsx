@@ -1,3 +1,4 @@
+import AB from "../AppBuilder/ABFactory";
 export default (props, { $, $h, $f7, $on, $store, $update }) => {
    // Login screen demo data
    let username = "";
@@ -7,8 +8,8 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
    let isLoading = false;
    let apiUrl =
       process.env.NODE_ENV === "production"
-         ? "https://design.digiserve.org/assets/html/pwa"
-         : "http://localhost:8010/proxy/assets/html/pwa";
+         ? "https://design.digiserve.org"
+         : "http://localhost:8010/proxy";
 
    $store.dispatch("getVersion");
 
@@ -62,41 +63,15 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
       debugger;
       isLoading = true;
       $update();
-      let csrfToken = apiUrl + "/csrfToken";
-      fetch(csrfToken, { method: "GET" })
-         .then((csrfResponse) => {
-            debugger;
-            $store.dispatch("addCsrfToken", csrfResponse.json._csrf);
-            let tempUser = $("#username").value();
-            fetch(Api.urls.login, {
-               method: "POST",
-               body: JSON.stringify({
-                  username: tempUser,
-                  password,
-               }),
-            })
-               .then(async (data) => {
-                  $store.dispatch("getUser");
-                  $store.dispatch("setUsername", $("#username").value());
-                  $("#password")[0].value = "";
-                  $f7.loginScreen.close();
-                  isLoading = false;
-                  $update();
-               })
-               .catch((err) => {
-                  $f7.toast
-                     .create({
-                        icon: '<i class="material-icons">error</i>',
-                        text: `Login Failed`,
-                        position: "center",
-                        closeTimeout: 2000,
-                     })
-                     .open();
-                  isLoading = false;
-                  $update();
-               });
-         })
-         .catch((err) => {
+      // let csrfToken = apiUrl + "/csrfToken";
+      // fetch(csrfToken, { method: "GET" })
+      //    .then((csrfResponse) => {
+
+      // $store.dispatch("addCsrfToken", csrfResponse.json._csrf);
+      let tempUser = $("#username").value();
+      let jobID = AB.jobID();
+      AB.Network.once(jobID, (context, err, data) => {
+         if (err) {
             $f7.toast
                .create({
                   icon: '<i class="material-icons">error</i>',
@@ -107,7 +82,69 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                .open();
             isLoading = false;
             $update();
-         });
+            return;
+         }
+         $store.dispatch("getUser");
+         $store.dispatch("setUsername", $("#username").value());
+         $("#password")[0].value = "";
+         $f7.loginScreen.close();
+         isLoading = false;
+         $update();
+      });
+      AB.Network.post(
+         {
+            url: apiUrl + "/auth/login",
+            params: {
+               email: tempUser,
+               password,
+            },
+         },
+         {
+            key: jobID,
+            context: {},
+         }
+      );
+
+      // fetch(Api.urls.login, {
+      //    method: "POST",
+      //    body: JSON.stringify({
+      //       username: tempUser,
+      //       password,
+      //    }),
+      // })
+      //    .then(async (data) => {
+      //       $store.dispatch("getUser");
+      //       $store.dispatch("setUsername", $("#username").value());
+      //       $("#password")[0].value = "";
+      //       $f7.loginScreen.close();
+      //       isLoading = false;
+      //       $update();
+      //    })
+      //    .catch((err) => {
+      //       $f7.toast
+      //          .create({
+      //             icon: '<i class="material-icons">error</i>',
+      //             text: `Login Failed`,
+      //             position: "center",
+      //             closeTimeout: 2000,
+      //          })
+      //          .open();
+      //       isLoading = false;
+      //       $update();
+      //    });
+      // })
+      // .catch((err) => {
+      //    $f7.toast
+      //       .create({
+      //          icon: '<i class="material-icons">error</i>',
+      //          text: `Login Failed`,
+      //          position: "center",
+      //          closeTimeout: 2000,
+      //       })
+      //       .open();
+      //    isLoading = false;
+      //    $update();
+      // });
    };
 
    const showPasswordPreview = (e) => {
@@ -124,7 +161,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
 
    async function checkForUpdate() {
       if (!showingUpdate) {
-         let getVersionPath = apiUrl + "/version.txt";
+         let getVersionPath = apiUrl + "/assets/html/pwa/version.txt";
 
          const response = await fetch(getVersionPath, {
             method: "GET",
@@ -271,7 +308,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                         />
                      </div>
                      <form
-                        action="javascript: return false;"
+                        action="javascript: null;"
                         onSubmit={() => authenticate()}
                      >
                         <div class="list">
