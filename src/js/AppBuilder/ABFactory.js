@@ -981,7 +981,7 @@ class ABFactory extends ABFactoryCore {
       return _.isString(params);
    }
 }
-
 const AB = new ABFactory(Definitions.definitions);
+await AB.init();
 
 export default AB;

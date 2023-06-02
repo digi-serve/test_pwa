@@ -30,7 +30,7 @@ const settingsDefault = {
 const configDefaults = {
    site: {
       appbuilder: {
-         networkType: "socket",
+         networkType: "rest", // "socket",
          // options: ["rest", "relay", "socket"]
          // Note: "socket" is required for realtime updates across devices.
 
@@ -38,7 +38,10 @@ const configDefaults = {
          // the number of times we will retry sending a network request
          // when we receive a timeout error.
 
-         urlCoreServer: window.location.origin,
+         urlCoreServer:
+            process.env.NODE_ENV === "production"
+               ? window.location.origin
+               : "http://localhost:8010/proxy",
          // on the web client, just record the current URL by default.
          // the site config can override this if they want.
       },

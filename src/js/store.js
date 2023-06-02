@@ -1,8 +1,10 @@
 import { createStore } from "framework7";
 
+import AB from "./AppBuilder/ABFactory";
+
 const store = createStore({
    state: {
-      "faa9905e-dea8-4c7f-8eb4-98f1e6e66506": {
+      "0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322": {
          loading: false,
          hasMore: true,
          records: [],
@@ -12,14 +14,18 @@ const store = createStore({
          hasMore: true,
          records: [],
       },
+      user: { username: "" },
       version: "",
    },
    getters: {
-      "faa9905e-dea8-4c7f-8eb4-98f1e6e66506"({ state }) {
-         return state["faa9905e-dea8-4c7f-8eb4-98f1e6e66506"];
+      "0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322"({ state }) {
+         return state["0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322"];
       },
       "19e566e3-a6b0-4ed5-83ea-a42b1ddbf5c5"({ state }) {
          return state["19e566e3-a6b0-4ed5-83ea-a42b1ddbf5c5"];
+      },
+      user({ state }) {
+         return state["user"];
       },
       version({ state }) {
          return state.version;
@@ -28,9 +34,10 @@ const store = createStore({
    actions: {
       getAppBuilderData({ state }, id) {
          if (state[id].loading) return false;
-         // let DC = AB.datacollectionByID(id)
-         // DC.setState(state);
-         // DC.loadMore()
+         let DC = AB.datacollectionByID(id);
+         DC.setState(state);
+         DC.loadData();
+         return;
          //
          // IN our DC, after we receive data, internally set the state:
          // .then((data) => {
@@ -38,7 +45,7 @@ const store = createStore({
          // })
          state[id].loading = true;
          let data = [];
-         if (id == "faa9905e-dea8-4c7f-8eb4-98f1e6e66506") {
+         if (id == "0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322") {
             data = [
                {
                   uuid:
@@ -537,6 +544,9 @@ const store = createStore({
                };
             }, 1000);
          }
+      },
+      setUser({ state }, user) {
+         state["user"] = user;
       },
       updateRecord({ state }, props) {
          let records = [...state[props.dcID].records];

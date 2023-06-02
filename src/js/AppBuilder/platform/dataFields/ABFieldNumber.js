@@ -9,12 +9,12 @@ export default class ABFieldNumber extends ABFieldNumberCore {
    constructor(values, object) {
       if (!INIT_EDITOR) {
          // NOTE: if you need a unique [edit_type] by your returned config.editor above:
-         webix.editors.number = webix.extend(
-            {
-               // TODO : Validate number only
-            },
-            webix.editors.text
-         );
+         // webix.editors.number = webix.extend(
+         //    {
+         //       // TODO : Validate number only
+         //    },
+         //    webix.editors.text
+         // );
          INIT_EDITOR = true;
       }
       super(values, object);

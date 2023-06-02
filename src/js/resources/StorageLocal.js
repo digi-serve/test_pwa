@@ -26,43 +26,51 @@ class StorageLocal extends EventEmitter {
       // {ABFactory} AB
 
       this.AB = AB;
-      var tenantID = this.AB.Tenant.id();
-      if (!tenantID) {
-         tenantID = "noAuth";
+      this.tenantID = this.AB.Tenant.id();
+      if (!this.tenantID) {
+         this.tenantID = "noAuth";
          // "noAuth" is considered the tenant on our Login sequence
          // which should have a minimum of data stored (language maybe?)
       }
 
-      this.tenantStorage = this.AB.Webix.storage.prefix(
-         tenantID,
-         this.AB.Webix.storage.local
+      this.tenantStorage = JSON.parse(
+         window.localStorage.getItem(this.tenantID) || "{}"
       );
 
       // this isn't actually an Async operation, so just resolve()
       return Promise.resolve();
    }
 
+   _save() {
+      return Promise.resolve(
+         localStorage.setItem(this.tenantID, JSON.stringify(this.tenantStorage))
+      );
+   }
+
    set(key, value /* , options = {} */) {
       return Promise.resolve().then(() => {
-         return this.tenantStorage.put(key, value);
+         this.tenantStorage[key] = value;
+         return this._save();
       });
    }
 
    get(key /*, options = {} */) {
       return Promise.resolve().then(() => {
-         return this.tenantStorage.get(key);
+         return this.tenantStorage[key];
       });
    }
 
    clear(key) {
       return Promise.resolve().then(() => {
-         return this.tenantStorage.remove(key);
+         delete this.tenantStorage[key];
+         return this._save();
       });
    }
 
    clearAll() {
       return Promise.resolve().then(() => {
-         return this.tenantStorage.clear();
+         this.tenantStorage = {};
+         return this._save();
       });
    }
 }

@@ -1,10 +1,23 @@
 import ABObjectQuery from "./ABObjectQuery";
 import ABDataCollectionCore from "../core/ABDataCollectionCore";
 
+import ABEmitter from "./ABEmitter";
+
+class DC extends ABEmitter {
+   constructor(attributes, AB) {
+      super();
+      // this.setMaxListeners(0);
+      this.AB = AB;
+   }
+}
+
 export default class ABDataCollection extends ABDataCollectionCore {
    constructor(attributes, AB) {
       super(attributes, AB);
       this.setMaxListeners(0);
+
+      this.$state = null;
+      // {Framework7.store} The shared F7 data store
    }
 
    /**
@@ -67,6 +80,10 @@ export default class ABDataCollection extends ABDataCollectionCore {
    ///
    /// Data
    ///
+
+   setState(state) {
+      this.$state = state;
+   }
 
    init() {
       // prevent initialize many times
@@ -394,6 +411,8 @@ export default class ABDataCollection extends ABDataCollectionCore {
     * @param {Array} data - initial data
     */
    _dataCollectionNew(data) {
+      debugger;
+      return null;
       // get a webix data collection
       let dc = new webix.DataCollection({
          data: data || [],
@@ -421,6 +440,11 @@ export default class ABDataCollection extends ABDataCollectionCore {
    }
 
    _extendCollection(dataStore) {
+      console.error(
+         "TODO: ABDataCollection._extendCollection(): remove this call!"
+      );
+      return;
+
       // Apply this data collection to support multi-selection
       // https://docs.webix.com/api__refs__selectionmodel.html
       webix.extend(dataStore, webix.SelectionModel);

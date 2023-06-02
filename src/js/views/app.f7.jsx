@@ -1,7 +1,9 @@
 import AB from "../AppBuilder/ABFactory";
 export default (props, { $, $h, $f7, $on, $store, $update }) => {
    // Login screen demo data
-   let path = document?.location?.pathname ? document.location.pathname : "/";
+   let path = document?.location?.pathname
+      ? document.location.pathname
+      : "/bootstrap";
    let username = "";
    let password = "";
    let versionNumber = $f7.params.version;
@@ -69,9 +71,22 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
 
       // $store.dispatch("addCsrfToken", csrfResponse.json._csrf);
       let tempUser = $("#username").value();
-      let jobID = AB.jobID();
-      AB.Network.once(jobID, (context, err, data) => {
-         if (err) {
+      AB.Network.post({
+         url: apiUrl + "/auth/login",
+         params: {
+            email: tempUser,
+            password,
+         },
+      })
+         .then((data) => {
+            $store.dispatch("setUser", data.user);
+            // $store.dispatch("setUsername", $("#username").value());
+            $("#password")[0].value = "";
+            $f7.loginScreen.close();
+            isLoading = false;
+            $update();
+         })
+         .catch((err) => {
             $f7.toast
                .create({
                   icon: '<i class="material-icons">error</i>',
@@ -83,68 +98,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
             isLoading = false;
             $update();
             return;
-         }
-         $store.dispatch("getUser");
-         $store.dispatch("setUsername", $("#username").value());
-         $("#password")[0].value = "";
-         $f7.loginScreen.close();
-         isLoading = false;
-         $update();
-      });
-      AB.Network.post(
-         {
-            url: apiUrl + "/auth/login",
-            params: {
-               email: tempUser,
-               password,
-            },
-         },
-         {
-            key: jobID,
-            context: {},
-         }
-      );
-
-      // fetch(Api.urls.login, {
-      //    method: "POST",
-      //    body: JSON.stringify({
-      //       username: tempUser,
-      //       password,
-      //    }),
-      // })
-      //    .then(async (data) => {
-      //       $store.dispatch("getUser");
-      //       $store.dispatch("setUsername", $("#username").value());
-      //       $("#password")[0].value = "";
-      //       $f7.loginScreen.close();
-      //       isLoading = false;
-      //       $update();
-      //    })
-      //    .catch((err) => {
-      //       $f7.toast
-      //          .create({
-      //             icon: '<i class="material-icons">error</i>',
-      //             text: `Login Failed`,
-      //             position: "center",
-      //             closeTimeout: 2000,
-      //          })
-      //          .open();
-      //       isLoading = false;
-      //       $update();
-      //    });
-      // })
-      // .catch((err) => {
-      //    $f7.toast
-      //       .create({
-      //          icon: '<i class="material-icons">error</i>',
-      //          text: `Login Failed`,
-      //          position: "center",
-      //          closeTimeout: 2000,
-      //       })
-      //       .open();
-      //    isLoading = false;
-      //    $update();
-      // });
+         });
    };
 
    const showPasswordPreview = (e) => {

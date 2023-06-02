@@ -18,7 +18,6 @@ import EventEmitter from "../AppBuilder/platform/ABEmitter";
 // Temp placeholders until Resources are implemented:
 
 // End Temp
-debugger;
 var Atomic = atomic;
 // import Atomic from "../../../node_modules/atomicjs/dist/atomic.polyfills.js";
 // Atomic : a small $.ajax() replacement

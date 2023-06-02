@@ -43,6 +43,6 @@
       "prettier": "^2.2.1",
       "rollup-plugin-framework7": "^1.2.1",
       "vite": "^4.3.7",
-      "workbox-cli": "^6.5.4",
+      "workbox-cli": "^6.5.4"
    }
 }

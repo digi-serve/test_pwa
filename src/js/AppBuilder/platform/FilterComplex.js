@@ -144,68 +144,56 @@ export default class FilterComplex extends FilterComplexCore {
       let labels = (this.labels = {
          common: (AB._App ?? {}).labels,
          component: {
-            and: L("And"),
-            or: L("Or"),
-
-            thisObject: L("This Object"),
-            inQuery: L("In Query"),
-            notInQuery: L("Not In Query"),
-            inQueryField: L("By Query Field"),
-            notInQueryField: L("Not By Query Field"),
-
-            inQueryFieldQueryPlaceholder: L("Choose a Query"),
-            inQueryFieldFieldPlaceholder: L("Choose a Field"),
-
-            sameAsUser: L("Same As User"),
-            notSameAsUser: L("Not Same As User"),
-
-            sameAsField: L("Same As Field"),
-            notSameAsField: L("Not Field"),
-
-            inDataCollection: L("In Data Collection"),
-            notInDataCollection: L("Not In Data Collection"),
-
-            containsCondition: L("contains"),
-            notContainsCondition: L("doesn't contain"),
-            isCondition: L("is"),
-            isNotCondition: L("is not"),
-            isEmpty: L("is empty"),
-            isNotEmpty: L("is not empty"),
-
-            beforeCondition: L("is before"),
-            afterCondition: L("is after"),
-            onOrBeforeCondition: L("is on or before"),
-            onOrAfterCondition: L("is on or after"),
-            beforeCurrentCondition: L("is before current date"),
-            afterCurrentCondition: L("is after current date"),
-            onOrBeforeCurrentCondition: L("is on or before current date"),
-            onOrAfterCurrentCondition: L("is on or after current date"),
-            onLastDaysCondition: L("last ... days"),
-            onNextDaysCondition: L("next ... days"),
-
-            equalCondition: L(":"),
-            notEqualCondition: L("≠"),
-            lessThanCondition: L("<"),
-            moreThanCondition: L(">"),
-            lessThanOrEqualCondition: L("≤"),
-            moreThanOrEqualCondition: L("≥"),
-
-            equalListCondition: L("equals"),
-            notEqualListCondition: L("does not equal"),
-
-            checkedCondition: L("is checked"),
-            notCheckedCondition: L("is not checked"),
-
-            isCurrentUserCondition: L("is current user"),
-            isNotCurrentUserCondition: L("is not current user"),
-            containsCurrentUserCondition: L("contains current user"),
-            notContainsCurrentUserCondition: L("does not contain current user"),
-
-            contextDefaultOption: L("choose option"),
-            equalsProcessValue: L("equals process value"),
-            notEqualsProcessValueCondition: L("not equals process value"),
-            inProcessValueCondition: L("in process value"),
-            notInProcessValueCondition: L("not in process value"),
+            // and: L("And"),
+            // or: L("Or"),
+            // thisObject: L("This Object"),
+            // inQuery: L("In Query"),
+            // notInQuery: L("Not In Query"),
+            // inQueryField: L("By Query Field"),
+            // notInQueryField: L("Not By Query Field"),
+            // inQueryFieldQueryPlaceholder: L("Choose a Query"),
+            // inQueryFieldFieldPlaceholder: L("Choose a Field"),
+            // sameAsUser: L("Same As User"),
+            // notSameAsUser: L("Not Same As User"),
+            // sameAsField: L("Same As Field"),
+            // notSameAsField: L("Not Field"),
+            // inDataCollection: L("In Data Collection"),
+            // notInDataCollection: L("Not In Data Collection"),
+            // containsCondition: L("contains"),
+            // notContainsCondition: L("doesn't contain"),
+            // isCondition: L("is"),
+            // isNotCondition: L("is not"),
+            // isEmpty: L("is empty"),
+            // isNotEmpty: L("is not empty"),
+            // beforeCondition: L("is before"),
+            // afterCondition: L("is after"),
+            // onOrBeforeCondition: L("is on or before"),
+            // onOrAfterCondition: L("is on or after"),
+            // beforeCurrentCondition: L("is before current date"),
+            // afterCurrentCondition: L("is after current date"),
+            // onOrBeforeCurrentCondition: L("is on or before current date"),
+            // onOrAfterCurrentCondition: L("is on or after current date"),
+            // onLastDaysCondition: L("last ... days"),
+            // onNextDaysCondition: L("next ... days"),
+            // equalCondition: L(":"),
+            // notEqualCondition: L("≠"),
+            // lessThanCondition: L("<"),
+            // moreThanCondition: L(">"),
+            // lessThanOrEqualCondition: L("≤"),
+            // moreThanOrEqualCondition: L("≥"),
+            // equalListCondition: L("equals"),
+            // notEqualListCondition: L("does not equal"),
+            // checkedCondition: L("is checked"),
+            // notCheckedCondition: L("is not checked"),
+            // isCurrentUserCondition: L("is current user"),
+            // isNotCurrentUserCondition: L("is not current user"),
+            // containsCurrentUserCondition: L("contains current user"),
+            // notContainsCurrentUserCondition: L("does not contain current user"),
+            // contextDefaultOption: L("choose option"),
+            // equalsProcessValue: L("equals process value"),
+            // notEqualsProcessValueCondition: L("not equals process value"),
+            // inProcessValueCondition: L("in process value"),
+            // notInProcessValueCondition: L("not in process value"),
          },
       });
 
@@ -222,37 +210,37 @@ export default class FilterComplex extends FilterComplexCore {
       this._settings.recordRuleFieldOptions = [];
 
       // webix UI definition:
-      this.ui = {
-         rows: [
-            {
-               view: "layout",
-               type: "clean",
-               borderless: this._options.borderless ?? true,
-               rows: [
-                  {
-                     id: ids.querybuilder,
-                     view: "query",
-                     data: () => [],
-                     // data: async (field) => await this.pullOptions(field),
-                     fields: [],
-                     disabled: true,
-                     height: this._options.height,
-                  },
-               ],
-            },
-            {
-               id: ids.save,
-               view: "button",
-               css: "webix_primary",
-               value: L("Save"),
-               hidden: this._options.isSaveHidden ?? false,
-               click: () => {
-                  if (this.myPopup) this.myPopup.hide();
-                  this.emit("save", this.getValue());
-               },
-            },
-         ],
-      };
+      // this.ui = {
+      //    rows: [
+      //       {
+      //          view: "layout",
+      //          type: "clean",
+      //          borderless: this._options.borderless ?? true,
+      //          rows: [
+      //             {
+      //                id: ids.querybuilder,
+      //                view: "query",
+      //                data: () => [],
+      //                // data: async (field) => await this.pullOptions(field),
+      //                fields: [],
+      //                disabled: true,
+      //                height: this._options.height,
+      //             },
+      //          ],
+      //       },
+      //       {
+      //          id: ids.save,
+      //          view: "button",
+      //          css: "webix_primary",
+      //          value: L("Save"),
+      //          hidden: this._options.isSaveHidden ?? false,
+      //          click: () => {
+      //             if (this.myPopup) this.myPopup.hide();
+      //             this.emit("save", this.getValue());
+      //          },
+      //       },
+      //    ],
+      // };
    }
 
    // setting up UI
@@ -375,64 +363,65 @@ export default class FilterComplex extends FilterComplexCore {
       super.setValue(settings);
       this.condition = settings;
 
-      const el = $$(this.ids.querybuilder);
-      if (el) {
-         if (!settings) {
-            // Clear settings value of webix.query
-            el.define("value", {
-               glue: "and",
-               rules: [],
-            });
-            return;
-         }
+      // const el = $$(this.ids.querybuilder);
+      // if (el) {
+      //    if (!settings) {
+      //       // Clear settings value of webix.query
+      //       el.define("value", {
+      //          glue: "and",
+      //          rules: [],
+      //       });
+      //       return;
+      //    }
 
-         let qbSettings = this.AB.cloneDeep(settings);
+      //    let qbSettings = this.AB.cloneDeep(settings);
 
-         // Settings should match a condition built upon our QB format:
-         // {
-         //    glue:"and",
-         //    rules:[
-         //       {
-         //          key:"uuid",
-         //          rule:"",
-         //          value:""
-         //       }
-         //    ]
-         // }
-         // externally our key should be the field.id and the rules should be
-         // the "contains", "not_contains", "equal" ... keywords.
-         // However, internally, we convert these rules into .ids that are
-         // unique for each field (see uiInit()).  So when we bring in settings
-         // we need to translate them into our internal format:
+      //    // Settings should match a condition built upon our QB format:
+      //    // {
+      //    //    glue:"and",
+      //    //    rules:[
+      //    //       {
+      //    //          key:"uuid",
+      //    //          rule:"",
+      //    //          value:""
+      //    //       }
+      //    //    ]
+      //    // }
+      //    // externally our key should be the field.id and the rules should be
+      //    // the "contains", "not_contains", "equal" ... keywords.
+      //    // However, internally, we convert these rules into .ids that are
+      //    // unique for each field (see uiInit()).  So when we bring in settings
+      //    // we need to translate them into our internal format:
 
-         _toInternal(qbSettings, this._Fields);
+      //    _toInternal(qbSettings, this._Fields);
 
-         this.__blockOnChange = true;
-         el.define("value", qbSettings);
-         this.__blockOnChange = false;
-      }
+      //    this.__blockOnChange = true;
+      //    el.define("value", qbSettings);
+      //    this.__blockOnChange = false;
+      // }
    }
 
    getValue() {
-      if ($$(this.ids.querybuilder)) {
-         let settings = this.AB.cloneDeep(
-            $$(this.ids.querybuilder).getState().value ?? {}
-         );
+      // if ($$(this.ids.querybuilder)) {
+      //    let settings = this.AB.cloneDeep(
+      //       $$(this.ids.querybuilder).getState().value ?? {}
+      //    );
 
-         // what we pull out of the QB will have .rules in our internal format:
-         // {field.id}_{rule}  (see uiInit() )
-         // But we need to store them in our generic QB format for use outside
-         // our FilterComplex widget.
-         _toExternal(settings, this._Fields);
-         this.condition = settings;
-      }
+      //    // what we pull out of the QB will have .rules in our internal format:
+      //    // {field.id}_{rule}  (see uiInit() )
+      //    // But we need to store them in our generic QB format for use outside
+      //    // our FilterComplex widget.
+      //    _toExternal(settings, this._Fields);
+      //    this.condition = settings;
+      // }
 
       return super.getValue();
    }
 
    fieldsLoad(fields = [], object = null) {
       super.fieldsLoad(fields, object);
-      this.uiInit();
+      console.log("TODO: How to handle FilterComplex's dependence on webix?");
+      // this.uiInit();
    }
 
    toShortHand() {

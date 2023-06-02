@@ -31,7 +31,7 @@ export default class ABComponent extends ABEmitter {
             App = AB._App;
          } else {
             App = {
-               uuid: AB.Webix.uid(),
+               uuid: AB.jobID(),
 
                /*
                 * AB
@@ -51,7 +51,7 @@ export default class ABComponent extends ABEmitter {
                 * config
                 * webix configuration settings for our current browser
                 */
-               config: AB.UISettings.config(),
+               config: {}, // AB.UISettings.config(),
 
                /*
                 * custom
@@ -63,71 +63,55 @@ export default class ABComponent extends ABEmitter {
                 * Icons
                 * this will provide you with the list of avaialbe font awesome 4.7.0 icons to use in interface building
                 */
-               icons: AB.UISettings.icons,
+               icons: {}, // AB.UISettings.icons,
 
-               Label: L,
+               Label: AB.Label(),
 
                /*
                 * labels
                 * a collection of labels that are common for the Application.
                 */
                labels: {
-                  add: L("Add"),
-                  create: L("Create"),
-                  delete: L("Delete"),
-                  edit: L("Edit"),
-                  export: L("Export"),
-                  formName: L("Name"),
-                  import: L("Import"),
-                  rename: L("Rename"),
-                  ok: L("Ok"),
-
-                  cancel: L("Cancel"),
-                  save: L("Save"),
-
-                  yes: L("Yes"),
-                  no: L("No"),
-
-                  none: L("None"),
-                  close: L("Close"),
-
-                  default: L("Default"),
-                  defaultPlaceholder: L("Enter default value"),
-
-                  disable: L("Disable"),
-
-                  required: L("Required"),
-                  unique: L("Unique"),
-
-                  invalidMessage: {
-                     required: L("This field is required"),
-                  },
-
-                  createErrorMessage: L("System could not create <b>{0}</b>."),
-                  createSuccessMessage: L("<b>{0}</b> is created."),
-
-                  updateErrorMessage: L("System could not update <b>{0}</b>."),
-                  updateSucessMessage: L("<b>{0}</b> is updated."),
-
-                  deleteErrorMessage: L("System could not delete <b>{0}</b>."),
-                  deleteSuccessMessage: L("<b>{0}</b> is deleted."),
-
-                  renameErrorMessage: L("System could not rename <b>{0}</b>."),
-                  renameSuccessMessage: L("<b>{0}</b> is renamed."),
-
-                  // Data Field  common Property labels:
-                  dataFieldHeaderLabel: L("Section Title"),
-                  dataFieldHeaderLabelPlaceholder: L("Section Name"),
-
-                  dataFieldLabel: L("Label"),
-                  dataFieldLabelPlaceholder: L("Label"),
-
-                  dataFieldColumnName: L("Field Name"),
-                  dataFieldColumnNamePlaceholder: L("Database field name"),
-
-                  dataFieldShowIcon: L("show icon?"),
-
-                  componentDropZone: L("add widgets here"),
+                  // add: L("Add"),
+                  // create: L("Create"),
+                  // delete: L("Delete"),
+                  // edit: L("Edit"),
+                  // export: L("Export"),
+                  // formName: L("Name"),
+                  // import: L("Import"),
+                  // rename: L("Rename"),
+                  // ok: L("Ok"),
+                  // cancel: L("Cancel"),
+                  // save: L("Save"),
+                  // yes: L("Yes"),
+                  // no: L("No"),
+                  // none: L("None"),
+                  // close: L("Close"),
+                  // default: L("Default"),
+                  // defaultPlaceholder: L("Enter default value"),
+                  // disable: L("Disable"),
+                  // required: L("Required"),
+                  // unique: L("Unique"),
+                  // invalidMessage: {
+                  //    required: L("This field is required"),
+                  // },
+                  // createErrorMessage: L("System could not create <b>{0}</b>."),
+                  // createSuccessMessage: L("<b>{0}</b> is created."),
+                  // updateErrorMessage: L("System could not update <b>{0}</b>."),
+                  // updateSucessMessage: L("<b>{0}</b> is updated."),
+                  // deleteErrorMessage: L("System could not delete <b>{0}</b>."),
+                  // deleteSuccessMessage: L("<b>{0}</b> is deleted."),
+                  // renameErrorMessage: L("System could not rename <b>{0}</b>."),
+                  // renameSuccessMessage: L("<b>{0}</b> is renamed."),
+                  // // Data Field  common Property labels:
+                  // dataFieldHeaderLabel: L("Section Title"),
+                  // dataFieldHeaderLabelPlaceholder: L("Section Name"),
+                  // dataFieldLabel: L("Label"),
+                  // dataFieldLabelPlaceholder: L("Label"),
+                  // dataFieldColumnName: L("Field Name"),
+                  // dataFieldColumnNamePlaceholder: L("Database field name"),
+                  // dataFieldShowIcon: L("show icon?"),
+                  // componentDropZone: L("add widgets here"),
                },
 
                /*
@@ -144,14 +128,14 @@ export default class ABComponent extends ABEmitter {
          }
       }
 
-      if (!App.custom) {
-         if (!AB.custom) {
-            var componentManager = new CustomComponentManager();
-            componentManager.initComponents(App);
-         } else {
-            App.custom = AB.custom;
-         }
-      }
+      // if (!App.custom) {
+      //    if (!AB.custom) {
+      //       var componentManager = new CustomComponentManager();
+      //       componentManager.initComponents(App);
+      //    } else {
+      //       App.custom = AB.custom;
+      //    }
+      // }
 
       this.App = App;
 

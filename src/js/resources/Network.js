@@ -206,6 +206,16 @@ class Network extends EventEmitter {
     * @return {bool}
     */
    isNetworkConnected() {
+      console.log(
+         "TODO: Network.isNetworkConnected(): replace online check to expected order."
+      );
+      // if this isn't a Cordova Plugin, then return navigator data:
+      if (typeof Connection == "undefined") {
+         // NOTE: this technically only detects if we are connected to a
+         // network.  It doesn't guarantee we can communicate across the 'net
+         return navigator.onLine;
+      }
+
       // if this is a Web Client and using sails.socket.io
       if (io && io.socket && io.socket.isConnected) {
          return io.socket.isConnected();
