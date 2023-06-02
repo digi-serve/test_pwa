@@ -1,6 +1,7 @@
 import AB from "../AppBuilder/ABFactory";
 export default (props, { $, $h, $f7, $on, $store, $update }) => {
    // Login screen demo data
+   let path = document?.location?.pathname ? document.location.pathname : "/";
    let username = "";
    let password = "";
    let versionNumber = $f7.params.version;
@@ -60,7 +61,6 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
    };
 
    const authenticate = () => {
-      debugger;
       isLoading = true;
       $update();
       // let csrfToken = apiUrl + "/csrfToken";
@@ -293,7 +293,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
          </div>
 
          {/* Your main view, should have "view-main" class */}
-         <div class="view view-main view-init safe-areas" data-url="/"></div>
+         <div class="view view-main view-init safe-areas" data-url={path}></div>
 
          {/* Login Screen */}
          <div class="login-screen" id="my-login-screen">

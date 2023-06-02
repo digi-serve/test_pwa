@@ -71,36 +71,38 @@ export default class F7ViewList {
 
    init() {
       //convert boolean for toggle UI
-      this.record.Toggle = this.record.Toggle ? "on" : "off";
-      //convert date for date UI
-      if (this.record.Birthday) {
-         var MyDate = new Date(this.record.Birthday);
-         var MyDateString =
-            MyDate.getFullYear() +
-            "-" +
-            ("0" + (MyDate.getMonth() + 1)).slice(-2) +
-            "-" +
-            ("0" + MyDate.getDate()).slice(-2);
-         this.record.Birthday = MyDateString;
-      }
-      //fill in form
-      this.$f7.form.fillFromData("#my-form", this.record);
+      if (this.record) {
+         this.record.Toggle = this.record.Toggle ? "on" : "off";
+         //convert date for date UI
+         if (this.record.Birthday) {
+            var MyDate = new Date(this.record.Birthday);
+            var MyDateString =
+               MyDate.getFullYear() +
+               "-" +
+               ("0" + (MyDate.getMonth() + 1)).slice(-2) +
+               "-" +
+               ("0" + MyDate.getDate()).slice(-2);
+            this.record.Birthday = MyDateString;
+         }
+         //fill in form
+         this.$f7.form.fillFromData("#my-form", this.record);
 
-      // listen for when we remove the preloader on the smart select then set the value to the select
-      // this is just a hack to get the value of the smart select set we may be able to take this out
-      if (this.$f7.$(".smartSelectCountry .item-after .preloader").length) {
-         $(".smartSelectCountry .item-after .preloader")[0].addEventListener(
-            "DOMNodeRemoved",
-            () => {
-               this.$f7
-                  .$(
-                     "select[name='Country'] option[value='" +
-                        this.record.Country +
-                        "']"
-                  )
-                  .prop("selected", "selected");
-            }
-         );
+         // listen for when we remove the preloader on the smart select then set the value to the select
+         // this is just a hack to get the value of the smart select set we may be able to take this out
+         if (this.$f7.$(".smartSelectCountry .item-after .preloader").length) {
+            $(".smartSelectCountry .item-after .preloader")[0].addEventListener(
+               "DOMNodeRemoved",
+               () => {
+                  this.$f7
+                     .$(
+                        "select[name='Country'] option[value='" +
+                           this.record.Country +
+                           "']"
+                     )
+                     .prop("selected", "selected");
+               }
+            );
+         }
       }
    }
 
@@ -115,7 +117,7 @@ export default class F7ViewList {
          switch (view.key) {
             case "email":
             case "text":
-               let textbox = new formTextbox(
+               var textbox = new formTextbox(
                   view,
                   this.allDCs,
                   this.$f7,
@@ -126,7 +128,7 @@ export default class F7ViewList {
                break;
             case "selectmultiple":
             case "selectsingle":
-               let select = new formSelect(
+               var select = new formSelect(
                   view,
                   this.allDCs,
                   this.$f7,
