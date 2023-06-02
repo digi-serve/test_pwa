@@ -1,9 +1,7 @@
 import AB from "../AppBuilder/ABFactory";
 export default (props, { $, $h, $f7, $on, $store, $update }) => {
    // Login screen demo data
-   let path = document?.location?.pathname
-      ? document.location.pathname
-      : "/bootstrap";
+   let path = document?.location?.pathname ? document.location.pathname : "/";
    let username = "";
    let password = "";
    let versionNumber = $f7.params.version;
@@ -204,7 +202,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                         <ul>
                            <li>
                               <a
-                                 href="/"
+                                 href="/list"
                                  class="item-link item-content panel-close"
                               >
                                  <div class="item-media">

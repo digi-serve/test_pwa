@@ -6,7 +6,7 @@ import AB from "./AppBuilder/ABFactory.js";
 
 var routes = [
    {
-      path: "/bootstrap",
+      path: "/",
       component: (props, { $h, $f7, $on, $store, $update }) => {
          $on("pageInit", (e, page) => {
             var panel = $f7.panel.get(".panel-left");
@@ -22,7 +22,7 @@ var routes = [
       },
    },
    {
-      path: "/",
+      path: "/list",
       component: (props, { $h, $f7, $on, $store, $update }) => {
          const title = "List of People";
          let allDCs = {};
