@@ -9,15 +9,17 @@ var routes = [
       path: "/",
       component: (props, { $h, $f7, $on, $store, $update }) => {
          $on("pageInit", (e, page) => {
-            var panel = $f7.panel.get(".panel-left");
-            panel.open();
+            // var panel = $f7.panel.get(".panel-left");
+            // panel.open();
             $f7.loginScreen.open("#my-login-screen");
          });
 
          return () => $h`
-        <div class="page">
-          <div class="preloader"></div>
-        </div>
+            <div class="page">
+               <div class="block no-margin text-align-center vertical-container">
+                  <div class="preloader vertical-center"></div>
+               </div>
+            </div>
       `;
       },
    },
@@ -83,7 +85,7 @@ var routes = [
             views.forEach((view) => {
                switch (view.key) {
                   case "list":
-                     let list = new List(view.dcID, allDCs, $f7, $store);
+                     var list = new List(view.dcID, allDCs, $f7, $store);
                      allResults.push(list.html());
                      break;
                   default:

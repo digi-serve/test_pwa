@@ -411,7 +411,7 @@ export default class ABDataCollection extends ABDataCollectionCore {
     * @param {Array} data - initial data
     */
    _dataCollectionNew(data) {
-      debugger;
+      // debugger;
       return null;
       // get a webix data collection
       let dc = new webix.DataCollection({

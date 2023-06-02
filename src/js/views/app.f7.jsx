@@ -6,7 +6,6 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
    let password = "";
    let versionNumber = $f7.params.version;
    let showingUpdate = false;
-   let isLoading = false;
    let apiUrl =
       process.env.NODE_ENV === "production"
          ? "https://design.digiserve.org"
@@ -15,7 +14,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
    $store.dispatch("getVersion");
 
    $on("pageInit", () => {
-      checkForUpdate();
+      // checkForUpdate();
    });
 
    document.addEventListener("visibilitychange", (e) => {
@@ -61,13 +60,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
    };
 
    const authenticate = () => {
-      isLoading = true;
-      $update();
-      // let csrfToken = apiUrl + "/csrfToken";
-      // fetch(csrfToken, { method: "GET" })
-      //    .then((csrfResponse) => {
-
-      // $store.dispatch("addCsrfToken", csrfResponse.json._csrf);
+      $(".button-preloader").addClass("button-loading");
       let tempUser = $("#username").value();
       AB.Network.post({
          url: apiUrl + "/auth/login",
@@ -81,8 +74,10 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
             // $store.dispatch("setUsername", $("#username").value());
             $("#password")[0].value = "";
             $f7.loginScreen.close();
-            isLoading = false;
-            $update();
+            $(".button-preloader").removeClass("button-loading");
+            $f7.view.main.router.navigate("/list", {
+               transition: "f7-fade",
+            });
          })
          .catch((err) => {
             $f7.toast
@@ -93,8 +88,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                   closeTimeout: 2000,
                })
                .open();
-            isLoading = false;
-            $update();
+            $(".button-preloader").removeClass("button-loading");
             return;
          });
    };
@@ -268,7 +262,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                               <li class="item-content item-input">
                                  <div class="item-inner">
                                     <div class="item-title item-label">
-                                       Username
+                                       E-mail
                                     </div>
                                     <div class="item-input-wrap">
                                        <input
@@ -278,7 +272,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                                           type="text"
                                           id="username"
                                           name="username"
-                                          placeholder="Your username"
+                                          placeholder="Your e-mail address"
                                        />
                                        <span class="input-clear-button"></span>
                                     </div>
@@ -303,7 +297,6 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                                           </i>
                                        </a>
                                        <input
-                                          required
                                           type="password"
                                           id="password"
                                           name="password"
@@ -339,7 +332,6 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                                           </i>
                                        </a>
                                        <input
-                                          required
                                           type="text"
                                           id="passwordPreview"
                                           name="passwordPreview"
