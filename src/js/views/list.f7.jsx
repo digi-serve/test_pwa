@@ -42,6 +42,7 @@ export default class F7ViewList {
       }
    }
 
+   // NOTE: this now means OPEN THIS VIEW.
    openView(data) {
       this.$f7.view.main.router.navigate("/list", {
          props: {
@@ -65,7 +66,10 @@ export default class F7ViewList {
    }
 
    html() {
-      console.log(this.$store.getters[this.dcID].value);
+      console.log(
+         "... list data: .html(): ",
+         this.$store.getters[this.dcID].value
+      );
       if (this.$store.getters[this.dcID].value.length > 0) {
          return () => (
             <div
