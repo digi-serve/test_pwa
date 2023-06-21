@@ -1,4 +1,5 @@
 import AB from "../AppBuilder/ABFactory";
+const L = AB.Label();
 export default (props, { $, $h, $f7, $on, $store, $update }) => {
    // Login screen demo data
    let path = document?.location?.pathname ? document.location.pathname : "/";
@@ -59,38 +60,43 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
       //   });
    };
 
-   const authenticate = () => {
+   const authenticate = async () => {
       $(".button-preloader").addClass("button-loading");
       let tempUser = $("#username").value();
-      AB.Network.post({
-         url: apiUrl + "/auth/login",
-         params: {
-            email: tempUser,
-            password,
-         },
-      })
-         .then((data) => {
-            $store.dispatch("setUser", data.user);
-            // $store.dispatch("setUsername", $("#username").value());
-            $("#password")[0].value = "";
-            $f7.loginScreen.close();
-            $(".button-preloader").removeClass("button-loading");
-            $f7.view.main.router.navigate("/list", {
-               transition: "f7-fade",
-            });
-         })
-         .catch((err) => {
-            $f7.toast
-               .create({
-                  icon: '<i class="material-icons">error</i>',
-                  text: `Login Failed`,
-                  position: "center",
-                  closeTimeout: 2000,
-               })
-               .open();
-            $(".button-preloader").removeClass("button-loading");
-            return;
+      try {
+         var data = await AB.Network.post({
+            url: apiUrl + "/auth/login",
+            params: {
+               email: tempUser,
+               password: $("#password").value(),
+            },
          });
+
+         $store.dispatch("setUser", data.user);
+         // $store.dispatch("setUsername", $("#username").value());
+
+         // Now attempt to ensure our cookie is set:
+         // var result = await AB.Network.get({
+         //    url: `${apiUrl}/__getCookie`,
+         // });
+
+         $("#password")[0].value = "";
+         $f7.loginScreen.close();
+         $(".button-preloader").removeClass("button-loading");
+         $f7.view.main.router.navigate("/list", {
+            transition: "f7-fade",
+         });
+      } catch (err) {
+         $f7.toast
+            .create({
+               icon: '<i class="material-icons">error</i>',
+               text: `Login Failed`,
+               position: "center",
+               closeTimeout: 2000,
+            })
+            .open();
+         $(".button-preloader").removeClass("button-loading");
+      }
    };
 
    const showPasswordPreview = (e) => {
@@ -121,8 +127,10 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
             if ("serviceWorker" in navigator) {
                $f7.dialog
                   .create({
-                     title: `Update Available`,
-                     content: `There is an app update avaiable, tap "Update" to get the latest version.`,
+                     title: L(`Update Available`),
+                     content: L(
+                        `There is an app update avaiable, tap "Update" to get the latest version.`
+                     ),
                      buttons: [
                         {
                            text: "Cancel",
@@ -131,7 +139,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                            },
                         },
                         {
-                           text: `Update to version {version}`,
+                           text: L(`Update to version {version}`),
                            bold: true,
                            cssClass: "bg-color-primary text-color-white",
                            onClick: function (dialog, e) {
@@ -179,7 +187,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                   <div class="navbar">
                      <div class="navbar-bg"></div>
                      <div class="navbar-inner">
-                        <div class="title">AppBuilder PWA</div>
+                        <div class="title">{L("AppBuilder PWA")}</div>
                      </div>
                   </div>
                   <div class="page-content">
@@ -203,7 +211,9 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                                     <i class="material-icons">contacts</i>
                                  </div>
                                  <div class="item-inner">
-                                    <div class="item-title">List of People</div>
+                                    <div class="item-title">
+                                       {L("List of People")}
+                                    </div>
                                  </div>
                               </a>
                            </li>

@@ -105,6 +105,8 @@ class ABFactory extends ABFactoryCore {
 
       // Common Reference to Configuration Values
       this.Config = Config;
+      let appDiv = document.querySelector("#app");
+      this.Config.settingsFromDiv(appDiv);
 
       //
       // Resources
@@ -898,7 +900,7 @@ class ABFactory extends ABFactoryCore {
 
    Label() {
       return (...params) => {
-         return this.Multilingual.label(...params);
+         return this.Multilingual.labelPlugin("mobile", ...params);
       };
    }
 

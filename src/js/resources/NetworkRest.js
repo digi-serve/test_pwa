@@ -213,6 +213,7 @@ class NetworkRest extends EventEmitter {
       }
 
       return new Promise((resolve, reject) => {
+         params.withCredentials = true;
          params.url = params.url || "/";
          if (params.url[0] == "/") {
             params.url = this.baseURL + params.url;

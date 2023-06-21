@@ -1,7 +1,7 @@
 import formTextbox from "./formTextbox.f7.jsx";
 import formSelect from "./formSelect.f7.jsx";
 
-export default class F7ViewList {
+export default class F7ViewForm {
    constructor(dcID, allDCs, $, $f7, $store, record) {
       this.dcID = dcID;
       this.allDCs = allDCs;

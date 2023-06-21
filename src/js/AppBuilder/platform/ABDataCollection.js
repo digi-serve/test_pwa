@@ -2,6 +2,7 @@ import ABObjectQuery from "./ABObjectQuery";
 import ABDataCollectionCore from "../core/ABDataCollectionCore";
 
 import ABEmitter from "./ABEmitter";
+import ABMobileDC from "./ABMobileDC";
 
 class DC extends ABEmitter {
    constructor(attributes, AB) {
@@ -85,6 +86,15 @@ export default class ABDataCollection extends ABDataCollectionCore {
       this.$state = state;
    }
 
+   hasMore() {
+      // if we are not yet initialized:
+      if (!this.initialized) {
+         return true;
+      }
+
+      return (this.__totalCount || 0) > this.$state[this.id].length;
+   }
+
    init() {
       // prevent initialize many times
       if (this.initialized) return;
@@ -124,7 +134,7 @@ export default class ABDataCollection extends ABDataCollectionCore {
 
    bindParentDc() {
       // if we pass the master datacollection and the field it is linked to
-      // we want to bind it witht hat field as second param so dataFeed is
+      // we want to bind it with that field as second param so dataFeed is
       // used on the slave datacollection
       let dataCollectionLink = this.datacollectionLink;
       let fieldLink = this.fieldLink;
@@ -263,6 +273,7 @@ export default class ABDataCollection extends ABDataCollectionCore {
     * @param {Object} component - a webix element instance
     */
    bind(component) {
+      console.error("ABDataCollection.bind()!: Who is calling this?");
       var dc = this.__dataCollection;
 
       // prevent bind many times
@@ -412,10 +423,11 @@ export default class ABDataCollection extends ABDataCollectionCore {
     */
    _dataCollectionNew(data) {
       // debugger;
-      return null;
+
       // get a webix data collection
-      let dc = new webix.DataCollection({
+      let dc = new ABMobileDC({
          data: data || [],
+         DC: this,
       });
 
       this._extendCollection(dc);

@@ -4,10 +4,15 @@ import Form from "./views/form.f7.jsx";
 
 import AB from "./AppBuilder/ABFactory.js";
 
+const Application = AB.applicationByID("4b7a489a-5fe5-4044-8565-aaa3654300f2");
+
 var routes = [
    {
       path: "/",
       component: (props, { $h, $f7, $on, $store, $update }) => {
+         AB.$f7 = $f7;
+         AB.$store = $store;
+
          $on("pageInit", (e, page) => {
             // var panel = $f7.panel.get(".panel-left");
             // panel.open();
@@ -32,9 +37,9 @@ var routes = [
          // let pageID = "ABPage.id";
          // let Page = AB.pageByID(pageID);
 
-         AB.datacollections().forEach((dc) => {
-            allDCs[dc.id] = $store.getters[dc.id];
-         });
+         // AB.datacollections().forEach((dc) => {
+         //    allDCs[dc.id] = $store.getters[dc.id];
+         // });
 
          // for each DC on this Page, do:
          // let dcIDs = ["0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322"];
@@ -73,7 +78,11 @@ var routes = [
          // };
 
          let views = [
-            { key: "list", dcID: "0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322" },
+            {
+               key: "list",
+               dcID: "0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322",
+               detailPage: "ABPage.id",
+            },
          ];
          function viewHTML() {
             let allResults = [];
@@ -85,7 +94,7 @@ var routes = [
             views.forEach((view) => {
                switch (view.key) {
                   case "list":
-                     var list = new List(view.dcID, allDCs, $f7, $store);
+                     var list = new List(view, Application, AB);
                      allResults.push(list.html());
                      break;
                   default:
@@ -203,5 +212,10 @@ var routes = [
       component: NotFoundPage,
    },
 ];
+
+const listPages = Application.pages();
+listPages.forEach((Page) => {
+   routes.push(Page.routeComponent());
+});
 
 export default routes;

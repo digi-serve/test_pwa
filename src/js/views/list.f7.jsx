@@ -1,13 +1,49 @@
-export default class F7ViewForm {
-   constructor(dcID, allDCs, $f7, $store) {
-      this.dcID = dcID;
-      this.allDCs = allDCs;
-      this.$f7 = $f7;
-      this.$store = $store;
+//
+
+export default class F7ViewList {
+   constructor(settings, application, AB) {
+      this.dcID = settings.dcID;
+      this.settings = settings;
+
+      this.application = application;
+
+      // this.allDCs = allDCs;
+      this.AB = AB;
+      this.$f7 = AB.$f7;
+      this.$store = AB.$store;
+
+      setInterval(() => {
+         console.log("... list data:", this.$store.getters[this.dcID].value);
+      }, 1000);
    }
 
-   openView(page, data) {
-      this.$f7.view.main.router.navigate(page, {
+   get datacollection() {
+      return this.AB.datacollectionByID(this.dcID);
+   }
+
+   itemSelected(item) {
+      // if there is a detailPage set, then transition there:
+      if (this.settings.detailPage) {
+         // let DetailPage = this.application.pageByID(this.settings.detailPage)
+         // DetailPage.openView(item);
+
+         this.$f7.view.main.router.navigate("/edit", {
+            props: {
+               data: data,
+            },
+            ignoreCache: true,
+         });
+      }
+
+      // Make sure our DC registers which item was just selected.
+      var DC = this.datacollection;
+      if (DC) {
+         DC.setCursor(item[DC.datasource.PK()] || item.id || item.uuid);
+      }
+   }
+
+   openView(data) {
+      this.$f7.view.main.router.navigate("/list", {
          props: {
             data: data,
          },
@@ -16,19 +52,21 @@ export default class F7ViewForm {
    }
 
    loadMore() {
-      if (this.allDCs[this.dcID].value.hasMore) {
+      // if (this.$store.getters[this.dcID].value.hasMore) {
+      if (this.datacollection.hasMore()) {
          this.$store.dispatch("getAppBuilderData", this.dcID);
       }
    }
 
    hasMore() {
-      if (this.allDCs[this.dcID].value.hasMore) {
+      if (this.datacollection.hasMore()) {
          return <div class="preloader infinite-scroll-preloader"></div>;
       }
    }
 
    html() {
-      if (this.allDCs[this.dcID].value.records.length > 0) {
+      console.log(this.$store.getters[this.dcID].value);
+      if (this.$store.getters[this.dcID].value.length > 0) {
          return () => (
             <div
                class="page-content infinite-scroll-content"
@@ -36,12 +74,9 @@ export default class F7ViewForm {
             >
                <div class="list links-list list-outline list-strong list-dividers">
                   <ul>
-                     {this.allDCs[this.dcID].value.records.map((item) => (
+                     {this.$store.getters[this.dcID].value.map((item) => (
                         <li key={item.uuid}>
-                           <a
-                              href="#"
-                              onClick={() => this.openView("/edit", item)}
-                           >
+                           <a href="#" onClick={() => this.itemSelected(item)}>
                               {item.Name}
                            </a>
                         </li>
