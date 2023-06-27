@@ -1,4 +1,6 @@
 import AB from "../AppBuilder/ABFactory";
+const Application = AB.applicationByID("4b7a489a-5fe5-4044-8565-aaa3654300f2");
+
 const L = AB.Label();
 export default (props, { $, $h, $f7, $on, $store, $update }) => {
    // Login screen demo data
@@ -83,6 +85,10 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
          $("#password")[0].value = "";
          $f7.loginScreen.close();
          $(".button-preloader").removeClass("button-loading");
+
+         // NOTE: replace this with:
+         // const Page = Application.pageByID(LastViewedPageID);
+         // Page.openView();
          $f7.view.main.router.navigate("/list", {
             transition: "f7-fade",
          });

@@ -4,6 +4,7 @@ export default class F7ViewList {
    constructor(settings, application, AB) {
       this.dcID = settings.dcID;
       this.settings = settings;
+      this.settings.route = "/list";
 
       this.application = application;
 
@@ -29,7 +30,7 @@ export default class F7ViewList {
 
          this.$f7.view.main.router.navigate("/edit", {
             props: {
-               data: data,
+               data: item,
             },
             ignoreCache: true,
          });
@@ -44,7 +45,7 @@ export default class F7ViewList {
 
    // NOTE: this now means OPEN THIS VIEW.
    openView(data) {
-      this.$f7.view.main.router.navigate("/list", {
+      this.$f7.view.main.router.navigate(this.settings.route, {
          props: {
             data: data,
          },
