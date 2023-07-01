@@ -1,25 +1,30 @@
 //
 
 export default class F7ViewList {
-   constructor(settings, application, AB) {
+   constructor(settings, parent, AB) {
       this.dcID = settings.dcID;
       this.settings = settings;
       this.settings.route = "/list";
 
-      this.application = application;
+      this.parent = parent;
+      this.Application = parent.Application;
 
       // this.allDCs = allDCs;
       this.AB = AB;
       this.$f7 = AB.$f7;
       this.$store = AB.$store;
 
-      setInterval(() => {
-         console.log("... list data:", this.$store.getters[this.dcID].value);
-      }, 1000);
+      // setInterval(() => {
+      //    console.log("... list data:", this.$store.getters[this.dcID].value);
+      // }, 1000);
    }
 
    get datacollection() {
       return this.AB.datacollectionByID(this.dcID);
+   }
+
+   init() {
+      return Promise.resolve();
    }
 
    itemSelected(item) {
@@ -67,10 +72,6 @@ export default class F7ViewList {
    }
 
    html() {
-      console.log(
-         "... list data: .html(): ",
-         this.$store.getters[this.dcID].value
-      );
       if (this.$store.getters[this.dcID].value.length > 0) {
          return () => (
             <div

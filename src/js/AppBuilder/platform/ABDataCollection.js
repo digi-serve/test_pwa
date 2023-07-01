@@ -21,48 +21,6 @@ export default class ABDataCollection extends ABDataCollectionCore {
       // {Framework7.store} The shared F7 data store
    }
 
-   /**
-    * @method save()
-    *
-    * persist this instance of ABDataCollection with it's parent
-    *
-    *
-    * @return {Promise}
-    *       .resolve( {this} )
-    */
-   async save() {
-      if (!this.id) {
-         this.label = this.label || this.name;
-      }
-      await super.save();
-      this.AB.emit("ab.datacollection.update", {
-         datacollectionId: this.id,
-      });
-      return this;
-   }
-
-   isValid() {
-      var validator = this.AB.Validation.validator();
-      var L = this.AB.Label();
-
-      // label/name must be unique:
-      var isNameUnique =
-         this.AB.datacollections((o) => {
-            return (
-               o.id != this.id &&
-               o.name.toLowerCase() == this.name.toLowerCase()
-            );
-         }).length == 0;
-      if (!isNameUnique) {
-         validator.addError(
-            "name",
-            L('Name must be unique ("{0}" already in use)', [this.name])
-         );
-      }
-
-      return validator;
-   }
-
    ///
    /// Cursor
    ///
@@ -88,7 +46,7 @@ export default class ABDataCollection extends ABDataCollectionCore {
 
    hasMore() {
       // if we are not yet initialized:
-      if (!this.initialized) {
+      if (!this.dataInitialized) {
          return true;
       }
 
@@ -98,7 +56,7 @@ export default class ABDataCollection extends ABDataCollectionCore {
    init() {
       // prevent initialize many times
       if (this.initialized) return;
-      // this.initialized = true;  // <<---- DO NOT SET THIS HERE
+      // this.initialized = true;  // <<---- DO NOT SET THIS HERE, it goes in CORE
 
       super.init();
 

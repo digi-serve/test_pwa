@@ -27,6 +27,10 @@ export default class ABMobileDC extends ABEmitter {
       this.DC = Options.DC;
 
       this.cursorID = null;
+
+      // Mock the ABDataCollectionCore.init(): initialization of the
+      // "changeCursor" event:
+      this.___AD = { onAfterCursorChange: () => true };
    }
 
    //
@@ -77,13 +81,17 @@ dc.define("dataFeed", (value, params) => {
    }
 
    add(value, indx) {
+      if (!Array.isArray(value)) {
+         value = [value];
+      }
       let allValues = this.stateValues();
-      allValues.splice(indx, 0, value);
+      allValues.splice(indx, 0, ...value);
       this.setValues(allValues);
    }
 
    clearAll() {
-      this.DC.$state[this.DC.id] = [];
+      this.setValues([]);
+      this.cursorID = null;
    }
 
    count() {
@@ -127,6 +135,11 @@ dc.define("dataFeed", (value, params) => {
       return this.stateValues().filter(fn);
    }
 
+   /**
+    * @method getCursor()
+    * returns the ID of the item the cursor is set to.
+    * @return {string}
+    */
    getCursor() {
       return this.cursorID;
    }
@@ -187,22 +200,48 @@ dc.define("dataFeed", (value, params) => {
    remove(id) {
       var PK = this.PK;
       var allValues = this.stateValues();
-      this.setValues(allValues.filter((v) => (v[PK] || v.id || v.uuid) != id));
+      this.setValues(allValues.filter((v) => this.id(v) != id));
 
       if (this.__unfilteredData) {
-         this.__unfilteredData = this.__unfilteredData.filter.filter(
+         this.__unfilteredData = this.__unfilteredData.filter(
             (v) => this.id(v) != id
          );
       }
+
+      if (this.cursorID == id) this.cursorID = null;
    }
 
    setCursor(ID) {
       this.cursorID = ID;
       this.emit("onAfterCursorChange");
+
+      // ABDataCollectionCore.init() : attempts to set up this dynamic,
+      // but we are initializing this here instead:
+      let currCursorItem = this.getItem(ID);
+      this.DC.emit("changeCursor", currCursorItem);
    }
 
    setValues(data) {
       this.DC.$state[this.DC.id] = data;
+   }
+
+   updateItem(ID, data) {
+      let item = this.getItem(ID);
+      for (var p in data) {
+         if (data.hasOwnProperty(p)) {
+            item[p] = data[p];
+         }
+      }
+
+      var allValues = this.stateValues().map((v) => {
+         if ((v.id || v.uuid) == (data.id || data.uuid)) {
+            return item;
+         } else {
+            return v;
+         }
+      });
+
+      this.setValues(allValues);
    }
 
    // DataCollectionCore.setCursor()

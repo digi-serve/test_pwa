@@ -30,14 +30,6 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
       password = $("#" + e).value();
       $update();
    };
-   const alertLoginData = () => {
-      $f7.dialog.alert(
-         "Username: " + username + "<br/>Password: " + password,
-         () => {
-            $f7.loginScreen.close();
-         }
-      );
-   };
 
    const close = (e) => {
       $f7.loginScreen.close("#my-login-screen");
@@ -85,6 +77,8 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
          $("#password")[0].value = "";
          $f7.loginScreen.close();
          $(".button-preloader").removeClass("button-loading");
+
+         AB.isInitialized = true;
 
          // NOTE: replace this with:
          // const Page = Application.pageByID(LastViewedPageID);
@@ -139,7 +133,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                      ),
                      buttons: [
                         {
-                           text: "Cancel",
+                           text: L("Cancel"),
                            onClick: function (dialog, e) {
                               showingUpdate = false;
                            },
@@ -214,7 +208,9 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                                  class="item-link item-content panel-close"
                               >
                                  <div class="item-media">
-                                    <i class="material-icons">contacts</i>
+                                    <i class="material-icons">
+                                       {L("contacts")}
+                                    </i>
                                  </div>
                                  <div class="item-inner">
                                     <div class="item-title">
@@ -230,10 +226,10 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                                  onClick={() => logout()}
                               >
                                  <div class="item-media">
-                                    <i class="material-icons">logout</i>
+                                    <i class="material-icons">{L("logout")}</i>
                                  </div>
                                  <div class="item-inner">
-                                    <div class="item-title">Log out</div>
+                                    <div class="item-title">{L("Log out")}</div>
                                  </div>
                               </a>
                            </li>
@@ -278,7 +274,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                               <li class="item-content item-input">
                                  <div class="item-inner">
                                     <div class="item-title item-label">
-                                       E-mail
+                                       {L("E-mail")}
                                     </div>
                                     <div class="item-input-wrap">
                                        <input
@@ -288,7 +284,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                                           type="text"
                                           id="username"
                                           name="username"
-                                          placeholder="Your e-mail address"
+                                          placeholder={L("Your e-mail address")}
                                        />
                                        <span class="input-clear-button"></span>
                                     </div>
@@ -300,7 +296,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                               >
                                  <div class="item-inner">
                                     <div class="item-title item-label">
-                                       Password
+                                       {L("Password")}
                                     </div>
                                     <div class="item-input-wrap">
                                        <a
@@ -316,7 +312,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                                           type="password"
                                           id="password"
                                           name="password"
-                                          placeholder="Your password"
+                                          placeholder={L("Your password")}
                                           value={password}
                                           onInput={() =>
                                              updatePassword("password")
@@ -335,7 +331,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                               >
                                  <div class="item-inner">
                                     <div class="item-title item-label">
-                                       Password
+                                       {L("Password")}
                                     </div>
                                     <div class="item-input-wrap">
                                        <a
@@ -351,7 +347,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                                           type="text"
                                           id="passwordPreview"
                                           name="passwordPreview"
-                                          placeholder="Your password"
+                                          placeholder={L("Your password")}
                                           value={password}
                                           onInput={() =>
                                              updatePassword("passwordPreview")
@@ -394,7 +390,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                                     </span>
                                  </span>
                               </div>
-                              <span>Sign In</span>
+                              <span>{L("Sign In")}</span>
                            </button>
                         </div>
                      </form>

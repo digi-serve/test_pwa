@@ -3,20 +3,36 @@ import List from "./views/list.f7.jsx";
 import Form from "./views/form.f7.jsx";
 
 import AB from "./AppBuilder/ABFactory.js";
+const L = AB.Label();
 
 const Application = AB.applicationByID("4b7a489a-5fe5-4044-8565-aaa3654300f2");
+
+AB.isInitialized = false;
+async function init() {
+   if (!AB.isInitialized) {
+      try {
+         var user = await AB.Network.get({ url: "/mobile/whoami" });
+         AB.isInitialized = true;
+      } catch (e) {
+         AB.$f7.loginScreen.open("#my-login-screen");
+      }
+   } else {
+      console.warn("Why is page(/).onPageInit() still getting called?");
+   }
+}
 
 var routes = [
    {
       path: "/",
-      component: (props, { $h, $f7, $on, $store, $update }) => {
+      component: (props, { $, $h, $f7, $on, $store, $update }) => {
+         AB.$ = $;
          AB.$f7 = $f7;
          AB.$store = $store;
 
-         $on("pageInit", (e, page) => {
+         $on("pageInit", async (e, page) => {
             // var panel = $f7.panel.get(".panel-left");
             // panel.open();
-            $f7.loginScreen.open("#my-login-screen");
+            await init();
          });
 
          return () => $h`
@@ -31,51 +47,36 @@ var routes = [
    {
       path: "/list",
       component: (props, { $h, $f7, $on, $store, $update }) => {
-         const title = "List of People";
-         let allDCs = {};
+         const title = L("List of People");
+         let allGetters = {};
 
+         // // NOTE: Programming Quirk:
+         // // We seem to need to access our getters for this Page from
+         // // within this PageComponent definition.  (maybe) this is how
+         // // it registers the components that need to be redrawn when the
+         // // related state is updated.
          // let pageID = "ABPage.id";
          // let Page = AB.pageByID(pageID);
-
-         // AB.datacollections().forEach((dc) => {
-         //    allDCs[dc.id] = $store.getters[dc.id];
-         // });
-
-         // for each DC on this Page, do:
-         // let dcIDs = ["0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322"];
-         // dcIDs.forEach((dcID) => {
-         //   allDCs[dcID] = $store.getters[dcID];
-         // });
-
-         // const people = $store.getters["faa9905e-dea8-4c7f-8eb4-98f1e6e66506"];
+         // let allViews = Page.views();
+         // allViews.forEach((v) => {
+         //    let dc = v.datacollection;
+         //    if (dc) {
+         //       allGetters[dc.id] = $store.getters[dc.id];
+         //    }
+         // })
+         let dcGetter = $store.getters["0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322"];
+         var allViews = [];
 
          $on("pageInit", (e, page) => {
-            // Page.datacollections().foreach((dc)=>{
-            // $store.dispatch(
-            //   "getAppBuilderData",
-            //   dc.id
-            // );
-            // })
-
-            // do something on page init
-            $store.dispatch(
-               "getAppBuilderData",
-               "0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322"
-            );
+            allViews.forEach((v) => {
+               let dc = v.datacollection;
+               dc?.init();
+               if (dc && !dc.dataInitialized) {
+                  $store.dispatch("getAppBuilderData", dc.id);
+               }
+               v.init();
+            });
          });
-
-         // const openView = (page, data) => {
-         //   $f7.view.main.router.navigate(page, {
-         //     props: {
-         //       data: data,
-         //     },
-         //     ignoreCache: true,
-         //   });
-         // };
-
-         // const loadMore = (id) => {
-         //   $store.dispatch("getAppBuilderData", id);
-         // };
 
          let views = [
             {
@@ -87,15 +88,16 @@ var routes = [
          function viewHTML() {
             let allResults = [];
 
-            // let views = Page.views();
-            // views.forEach((v) => {
-            // allResults.push(v.html(...));
+            // allViews.forEach((v) => {
+            //    allResults.push(v.html(...));
             // })
+
             views.forEach((view) => {
                switch (view.key) {
                   case "list":
-                     var list = new List(view, Application, AB);
+                     var list = new List(view, { Application }, AB);
                      allResults.push(list.html());
+                     allViews.push(list);
                      break;
                   default:
                   // code block
@@ -129,18 +131,32 @@ var routes = [
    {
       path: "/edit",
       component: (props, { $, $h, $f7, $on, $store, $update }) => {
-         const title = "Edit Person";
-         const person = props.data;
-         const allDCs = {};
+         const title = L("Edit Person");
+         const record = props.data;
 
-         // for each DC on this Page, do:
-         let dcIDs = ["19e566e3-a6b0-4ed5-83ea-a42b1ddbf5c5"];
-         dcIDs.forEach((dcID) => {
-            allDCs[dcID] = $store.getters[dcID];
-         });
+         // // NOTE: Programming Quirk:
+         // // We seem to need to access our getters for this Page from
+         // // within this PageComponent definition.  (maybe) this is how
+         // // it registers the components that need to be redrawn when the
+         // // related state is updated.
+         // let pageID = "ABPage.id";
+         // let Page = AB.pageByID(pageID);
+         // let allViews = Page.views();
+         // allViews.forEach((v) => {
+         //    let dc = v.datacollection;
+         //    if (dc) {
+         //       allGetters[dc.id] = $store.getters[dc.id];
+         //    }
+         // })
+
+         let dcGetter = $store.getters["0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322"];
 
          let views = [
-            { key: "form", dcID: "0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322" },
+            {
+               key: "form",
+               dcID: "0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322",
+               formID: "my-form",
+            },
          ];
 
          // for each view on this Page, do:
@@ -153,14 +169,15 @@ var routes = [
          views.forEach((view) => {
             switch (view.key) {
                case "form": {
-                  let form = new Form(
+                  let form = new Form(view, { Application }, AB);
+                  /* new Form(
                      view.dcID,
                      allDCs,
                      $,
                      $f7,
                      $store,
                      person
-                  );
+                  ); */
                   allViews.push(form);
                   break;
                }
@@ -170,12 +187,14 @@ var routes = [
          });
 
          $on("pageInit", (e, page) => {
-            $store.dispatch(
-               "getAppBuilderData",
-               "19e566e3-a6b0-4ed5-83ea-a42b1ddbf5c5"
-            );
-            // init all the views
-            return allViews.map((r) => r.init());
+            allViews.forEach((v) => {
+               let dc = v.datacollection;
+               dc?.init();
+               if (dc && !dc.dataInitialized) {
+                  $store.dispatch("getAppBuilderData", dc.id);
+               }
+               v.init();
+            });
          });
 
          function viewHTML() {
@@ -194,7 +213,7 @@ var routes = [
               <div class="left">
                 <a href="#" class="link back">
                   <i class="icon icon-back"></i>
-                  <span class="if-not-md">Back</span>
+                  <span class="if-not-md">${L("Back")}</span>
                 </a>
               </div>
               <div class="title">${title}</div>

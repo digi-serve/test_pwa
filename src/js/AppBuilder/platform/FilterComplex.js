@@ -284,15 +284,15 @@ export default class FilterComplex extends FilterComplexCore {
     *                                        }
     */
    isValid(rowData, condition = this.condition) {
-      let helper = () => true;
+      // let helper = () => true;
 
-      let $query = $$(this.ids.querybuilder);
-      if ($query) {
-         helper = $query.getFilterFunction();
-         return helper(rowData);
-      } else {
-         return super.isValid(rowData, condition);
-      }
+      // let $query = $$(this.ids.querybuilder);
+      // if ($query) {
+      //    helper = $query.getFilterFunction();
+      //    return helper(rowData);
+      // } else {
+      return super.isValid(rowData, condition);
+      // }
    }
 
    /**
