@@ -109,9 +109,7 @@ dc.define("dataFeed", (value, params) => {
     * Apply a filter to the current data set.
     */
    filter(fn) {
-      if (!this.__unfilteredData) {
-         this.__unfilteredData = this.stateValues();
-      }
+      this.__unfilteredData = this.stateValues();
 
       if (typeof fn == "undefined") {
          this.setValues(this.__unfilteredData);

@@ -13,13 +13,23 @@ async function init() {
       try {
          var user = await AB.Network.get({ url: "/mobile/whoami" });
          AB.isInitialized = true;
+         AB.$f7.view.main.router.navigate("/list", {
+            transition: "f7-fade",
+         });
       } catch (e) {
+         // NOTE: this will catch errors OTHER than the "Reauth" notification
+         // errors.  Those will be caught by listening to the AB.Network object
          AB.$f7.loginScreen.open("#my-login-screen");
       }
    } else {
       console.warn("Why is page(/).onPageInit() still getting called?");
    }
 }
+
+AB.Network.on("reauth", () => {
+   AB.isInitialized = false;
+   AB.$f7.loginScreen.open("#my-login-screen");
+});
 
 var routes = [
    {
@@ -46,7 +56,7 @@ var routes = [
    },
    {
       path: "/list",
-      component: (props, { $h, $f7, $on, $store, $update }) => {
+      component: (props, { $, $h, $f7, $on, $store, $update }) => {
          const title = L("List of People");
          let allGetters = {};
 
@@ -75,6 +85,15 @@ var routes = [
                   $store.dispatch("getAppBuilderData", dc.id);
                }
                v.init();
+            });
+
+            // just temporary:
+            $("#btnAdd").on("click", () => {
+               delItem();
+            });
+
+            $("#btnDel").on("click", () => {
+               delItem();
             });
          });
 
@@ -107,6 +126,46 @@ var routes = [
             return allResults.map((r) => r()); // render each jsx template
          }
 
+         async function addItem() {
+            let DC = allViews[0].datacollection;
+            let firstItem = DC.getFirstRecord();
+            console.log(firstItem);
+            let removeThese = ["uuid", "created_at", "updated_at", "id"];
+            let newItem = {};
+            Object.keys(firstItem).forEach((k) => {
+               if (removeThese.indexOf(k) == -1) {
+                  newItem[k] = firstItem[k];
+               }
+            });
+
+            newItem.Name = `${newItem.Name}-${AB.jobID()}`;
+            console.log(newItem);
+
+            try {
+               await DC.datasource.model().create(newItem);
+            } catch (e) {
+               console.error(e);
+            }
+         }
+
+         async function delItem() {
+            let DC = allViews[0].datacollection;
+            let item = DC.getCursor();
+            if (!item) {
+               item = DC.getFirstRecord();
+            }
+
+            console.log("record to delete:", item);
+            try {
+               await DC.datasource
+                  .model()
+                  .delete(item[DC.datasource.PK()] || item.id || item.uuid);
+            } catch (e) {
+               console.error(e);
+            }
+         }
+
+         //
          return () => $h`
         <div class="page">
           <div class="navbar">
@@ -117,6 +176,8 @@ var routes = [
                   <i class="icon material-icons">menu</i>
                 </a>
               </div>
+              <a id="btnAdd" class="button" >Add</a>
+              <a id="btnDel" class="button" >Delete</a>
               <div class="title">${title}</div>
               <div class="title-large">
                 <div class="title-large-text">${title}</div>

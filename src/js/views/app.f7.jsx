@@ -7,7 +7,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
    let path = document?.location?.pathname ? document.location.pathname : "/";
    let username = "";
    let password = "";
-   let versionNumber = $f7.params.version;
+   let versionNumber = Application.version;
    let showingUpdate = false;
    let apiUrl =
       process.env.NODE_ENV === "production"
@@ -80,6 +80,8 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
 
          AB.isInitialized = true;
 
+         await checkForUpdate();
+
          // NOTE: replace this with:
          // const Page = Application.pageByID(LastViewedPageID);
          // Page.openView();
@@ -113,16 +115,14 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
 
    async function checkForUpdate() {
       if (!showingUpdate) {
-         let getVersionPath = apiUrl + "/assets/html/pwa/version.txt";
+         let getVersionPath = `${apiUrl}${Application.urlCurrentVersion}`;
 
-         const response = await fetch(getVersionPath, {
-            method: "GET",
-            cache: "no-cache",
-         });
-         const version = await response.text();
+         const response = await AB.Network.get({ url: getVersionPath });
+         const version = response?.version ?? "0.0.0";
+         const currVersion = Application.version;
          console.log("getVersionPath: ", version);
-         console.log("getCurrVersion: ", $f7.params.version);
-         if ($f7.params.version.trim() != version.trim()) {
+         console.log("getCurrVersion: ", currVersion);
+         if (currVersion.trim() != version.trim()) {
             showingUpdate = true;
             if ("serviceWorker" in navigator) {
                $f7.dialog
@@ -139,7 +139,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                            },
                         },
                         {
-                           text: L(`Update to version {version}`),
+                           text: L(`Update to version {0}`, [version]),
                            bold: true,
                            cssClass: "bg-color-primary text-color-white",
                            onClick: function (dialog, e) {
