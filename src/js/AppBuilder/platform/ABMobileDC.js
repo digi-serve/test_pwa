@@ -176,8 +176,27 @@ dc.define("dataFeed", (value, params) => {
       return allValues.find((v) => this.id(v) == id);
    }
 
+   /**
+    * @method load()
+    * can be called with a
+    * - data
+    */
    load(fn) {
-      this.parse(fn());
+      if ("function" == typeof fn) {
+         var result = fn();
+         // did the fn() return a Promise?
+         // if so, then wait for the result and pass to .parse()
+         if (result?.then) {
+            result.then((data) => {
+               if (data) this.parse(data);
+            });
+         } else {
+            // pass the result on to .parse()
+            if (result) this.parse(result);
+         }
+      } else {
+         this.parse(fn);
+      }
    }
 
    /**
