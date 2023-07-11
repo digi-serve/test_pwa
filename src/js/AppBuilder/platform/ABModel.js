@@ -66,7 +66,7 @@ export default class ABModel extends ABModelCore {
       };
 
       this.handler_delete = (...params) => {
-         this.handler_common("ab.datacollection.update", ...params);
+         this.handler_common("ab.datacollection.delete", ...params);
       };
 
       this.handler_findAll = (...params) => {
@@ -101,6 +101,8 @@ export default class ABModel extends ABModelCore {
             // on "update" & "create" we want to normalizeData()
             if (key.indexOf("delete") == -1) {
                this.normalizeData(data);
+            } else {
+               data = data.data || context.id;
             }
          } else {
             // on a findAll we normalize data.data
@@ -251,7 +253,7 @@ export default class ABModel extends ABModelCore {
             },
             {
                key: jobID,
-               context: { resolve, reject },
+               context: { resolve, reject, id },
             }
          ).catch((err) => {
             errorPopup(err);
