@@ -1,6 +1,12 @@
 import $ from "dom7";
 import Framework7 from "framework7/bundle";
 
+// Import Global Resources
+// import "./atomic.polyfills.min.js";
+var atomic = require("./atomic.polyfills.min.js");
+var sails = require("./sails.io.js");
+Window.atomic = atomic;
+
 // Import F7 Styles
 import "framework7/css/bundle";
 
