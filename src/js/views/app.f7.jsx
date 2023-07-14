@@ -5,14 +5,15 @@ const L = AB.Label();
 export default (props, { $, $h, $f7, $on, $store, $update }) => {
    // Login screen demo data
    let path = document?.location?.pathname ? document.location.pathname : "/";
+   let defaultPath = "/";
    let username = "";
    let password = "";
    let versionNumber = Application.version;
    let showingUpdate = false;
-   let apiUrl =
-      process.env.NODE_ENV === "production"
-         ? "https://design.digiserve.org"
-         : "http://localhost:8010/proxy";
+   let apiUrl = path.split("/mobile")[0];
+   // process.env.NODE_ENV === "production"
+   //    ? "https://design.digiserve.org"
+   //    : "http://localhost:8010/proxy";
 
    $store.dispatch("getVersion");
 
@@ -251,7 +252,10 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
          </div>
 
          {/* Your main view, should have "view-main" class */}
-         <div class="view view-main view-init safe-areas" data-url={path}></div>
+         <div
+            class="view view-main view-init safe-areas"
+            data-url={defaultPath}
+         ></div>
 
          {/* Login Screen */}
          <div class="login-screen" id="my-login-screen">

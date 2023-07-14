@@ -18,7 +18,7 @@ import EventEmitter from "../AppBuilder/platform/ABEmitter";
 // Temp placeholders until Resources are implemented:
 
 // End Temp
-var Atomic = atomic;
+// var Atomic = Window.atomic;
 // import Atomic from "../../../node_modules/atomicjs/dist/atomic.polyfills.js";
 // Atomic : a small $.ajax() replacement
 
@@ -177,7 +177,7 @@ class NetworkRest extends EventEmitter {
    }
 
    salSend(params) {
-      return Atomic(params.url, params).then((packet) => {
+      return Window.atomic(params.url, params).then((packet) => {
          // {json} packet
          // the response from Atomic is in format:
          // {data: {…}, xhr: XMLHttpRequest}
