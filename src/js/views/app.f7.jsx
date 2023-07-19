@@ -4,13 +4,13 @@ const Application = AB.applicationByID("4b7a489a-5fe5-4044-8565-aaa3654300f2");
 const L = AB.Label();
 export default (props, { $, $h, $f7, $on, $store, $update }) => {
    // Login screen demo data
-   let path = document?.location?.pathname ? document.location.pathname : "/";
+   // let path = document?.location?.pathname ? document.location.pathname : "/";
    let defaultPath = "/";
    let username = "";
    let password = "";
    let versionNumber = Application.version;
    let showingUpdate = false;
-   let apiUrl = path.split("/mobile")[0];
+   let apiUrl = document?.location?.origin ?? "http://localhost:8080";
    // process.env.NODE_ENV === "production"
    //    ? "https://design.digiserve.org"
    //    : "http://localhost:8010/proxy";

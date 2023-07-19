@@ -10,7 +10,7 @@ module.exports = {
    },
    output: {
       // path: path.join(APP, "..", "web", "assets", "app"),
-      path: path.join(APP, "src", "js", "assets"),
+      path: path.join(APP, "..", "web", "assets", "mobile"),
       filename: "mobile_[name].js",
    },
    module: {

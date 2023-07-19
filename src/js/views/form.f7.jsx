@@ -180,10 +180,18 @@ export default class F7ViewForm {
       this.$("#" + btn).addClass("button-loading");
       var formData = this.$f7.form.convertToData(`#${this.formID}`);
 
+      // TODO: figure out validation warnings on our forms:
+      this.$f7.input.validate(`#${this.formID}`);
+
       //convert toggle back to boolean
       formData.Toggle = formData.Toggle.length ? 1 : 0;
       //convert date to JS Date().toString()
-      formData.Birthday = new Date(formData.Birthday).toISOString();
+      if (formData.Birthday != "") {
+         formData.Birthday = new Date(formData.Birthday).toISOString();
+      } else {
+         delete formData.Birthday;
+      }
+
       // console.log(formData);
       // alert(JSON.stringify(formData));
 
@@ -339,6 +347,8 @@ export default class F7ViewForm {
                               name="Birthday"
                               type="date"
                               placeholder="Birthday"
+                              required
+                              validate
                            />
                         </div>
                      </div>
