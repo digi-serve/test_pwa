@@ -215,6 +215,8 @@ dc.define("dataFeed", (value, params) => {
       let pos = data.pos || 0;
       let tc = data.total_count || 0;
 
+      if (Array.isArray(dataIn) && dataIn.length == 0) return;
+
       if (pos == 0) {
          this.setValues(dataIn);
       } else {
