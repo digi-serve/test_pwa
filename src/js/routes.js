@@ -5,7 +5,7 @@ import Form from "./views/form.f7.jsx";
 import AB from "./AppBuilder/ABFactory.js";
 const L = AB.Label();
 
-const Application = AB.applicationByID("4b7a489a-5fe5-4044-8565-aaa3654300f2");
+const Application = AB.applications()[0]; // AB.applicationByID("4b7a489a-5fe5-4044-8565-aaa3654300f2");
 
 AB.isInitialized = false;
 async function init() {

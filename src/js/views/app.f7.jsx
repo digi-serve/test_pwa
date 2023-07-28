@@ -1,5 +1,5 @@
 import AB from "../AppBuilder/ABFactory";
-const Application = AB.applicationByID("4b7a489a-5fe5-4044-8565-aaa3654300f2");
+const Application = AB.applications()[0]; // AB.applicationByID("4b7a489a-5fe5-4044-8565-aaa3654300f2");
 
 const L = AB.Label();
 export default (props, { $, $h, $f7, $on, $store, $update }) => {
