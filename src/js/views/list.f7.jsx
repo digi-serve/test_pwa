@@ -72,25 +72,136 @@ export default class F7ViewList {
    }
 
    html() {
+      window.onresize = () => {
+         document.querySelector(
+            ".panel.panel-right.panel-cover.light.panel-init"
+         ).style.width = `${window.screen.width * 0.5}px`;
+      };
+
       if (this.$store.getters[this.dcID].value.length > 0) {
          return () => (
-            <div
-               class="page-content infinite-scroll-content"
-               onInfinite={() => this.loadMore()}
-            >
-               <div class="list links-list list-outline list-strong list-dividers">
-                  <ul>
-                     {this.$store.getters[this.dcID].value.map((item) => (
-                        <li key={item.uuid}>
-                           <a href="#" onClick={() => this.itemSelected(item)}>
-                              {item.Name}
-                           </a>
-                        </li>
-                     ))}
-                  </ul>
+            <>
+               <div
+                  class="panel panel-right panel-cover light panel-init"
+                  style={`width: ${window.screen.width * 0.5}px;`}
+               >
+                  <div class="view">
+                     <div class="page">
+                        <div class="navbar">
+                           <div class="navbar-bg"></div>
+                           <div class="navbar-inner">
+                              <div class="title">{"Add data"}</div>
+                           </div>
+                        </div>
+                        <div class="page-content">
+                           <form
+                              class="list list-strong-ios list-dividers-ios list-outline-ios"
+                              id="add-data-form"
+                           >
+                              <ul>
+                                 {this.datacollection.datasource
+                                    .fields()
+                                    .map((field) => {
+                                       switch (field.key) {
+                                          case "string":
+                                             return (
+                                                <li>
+                                                   <div class="item-content item-input">
+                                                      <div class="item-inner">
+                                                         <div class="item-title item-label">
+                                                            {field.label}
+                                                         </div>
+                                                         <div class="item-input-wrap">
+                                                            <input
+                                                               type="text"
+                                                               name={
+                                                                  field.columnName
+                                                               }
+                                                               placeholder=""
+                                                            />
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </li>
+                                             );
+
+                                          default:
+                                             return (
+                                                <li>
+                                                   <div class="item-content item-input">
+                                                      <div class="item-inner">
+                                                         <div class="item-title item-label">
+                                                            {field.label}
+                                                         </div>
+                                                         <div class="item-input-wrap">
+                                                            <input
+                                                               type="text"
+                                                               name={
+                                                                  field.columnName
+                                                               }
+                                                               placeholder=""
+                                                            />
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </li>
+                                             );
+                                       }
+                                    })}
+                              </ul>
+                           </form>
+                           <div
+                              class="grid grid-cols-2 grid-gap"
+                              style="margin: 12px 0px;"
+                           >
+                              <div></div>
+                              <div style="text-align: right;">
+                                 <button
+                                    id="add-data-form-submit"
+                                    class="button button-fill"
+                                    style="max-width: 200px;"
+                                 >
+                                    Submit
+                                 </button>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
                </div>
-               {this.hasMore()}
-            </div>
+               <div
+                  class="page-content infinite-scroll-content"
+                  onInfinite={() => this.loadMore()}
+               >
+                  <div class="list links-list list-outline list-strong list-dividers">
+                     <ul>
+                        {this.$store.getters[this.dcID].value.map((item) => (
+                           <li id={item.uuid} class="swipeout deleted-callback">
+                              <div
+                                 class="swipeout-content item-content"
+                                 onClick={() => this.itemSelected(item)}
+                              >
+                                 <div class="item-inner">
+                                    <div class="item-title">{item.Name}</div>
+                                 </div>
+                              </div>
+                              <div class="swipeout-actions-right">
+                                 <a
+                                    href="#"
+                                    class="swipeout-delete"
+                                    data-confirm="Are you sure want to delete this item?"
+                                    data-confirm-title="Delete?"
+                                 >
+                                    Delete
+                                 </a>
+                              </div>
+                           </li>
+                        ))}
+                     </ul>
+                  </div>
+                  {this.hasMore()}
+               </div>
+            </>
          );
       } else {
          return () => (
