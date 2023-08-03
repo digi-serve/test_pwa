@@ -983,7 +983,8 @@ class ABFactory extends ABFactoryCore {
       return _.isString(params);
    }
 }
-const AB = new ABFactory(Definitions.definitions);
+const AB = new ABFactory(Window.__ab_definitions.definitions);
+AB.Config.config(Window.__ab_config);
 await AB.init();
 
 export default AB;

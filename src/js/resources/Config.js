@@ -38,10 +38,7 @@ const configDefaults = {
          // the number of times we will retry sending a network request
          // when we receive a timeout error.
 
-         urlCoreServer:
-            process.env.NODE_ENV === "production"
-               ? window.location.origin
-               : "http://localhost:8010/proxy",
+         urlCoreServer: window.location.origin,
          // on the web client, just record the current URL by default.
          // the site config can override this if they want.
       },

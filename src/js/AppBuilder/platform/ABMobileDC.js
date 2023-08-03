@@ -208,7 +208,22 @@ dc.define("dataFeed", (value, params) => {
     * or just the array of data to store: []
     */
    parse(data) {
-      this.setValues(data.data || data);
+      // check to see if data is in expanded format:
+      // { data, pos, total_count, }
+
+      let dataIn = data.data || data;
+      let pos = data.pos || 0;
+      let tc = data.total_count || 0;
+
+      if (Array.isArray(dataIn) && dataIn.length == 0) return;
+
+      if (pos == 0) {
+         this.setValues(dataIn);
+      } else {
+         let allValues = this.stateValues();
+         allValues.splice(pos, 0, ...dataIn);
+         this.setValues(allValues);
+      }
 
       // remove any stored filter
       delete this.__unfilteredData;
