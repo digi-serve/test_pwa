@@ -77,24 +77,54 @@ var routes = [
          let dcGetter = $store.getters["0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322"];
          var allViews = [];
 
-         $on("pageInit", (e, page) => {
+         $on("pageInit", async (e, page) => {
+            const pendingInit = [];
             allViews.forEach((v) => {
                let dc = v.datacollection;
                dc?.init();
-               if (dc && !dc.dataInitialized) {
-                  $store.dispatch("getAppBuilderData", dc.id);
+
+               const viewInit = async (v, callback) => {
+                  await v.init();
+
+                  callback();
+               };
+               const init = () =>
+                  new Promise((resolve) => {
+                     if (dc && !dc.isDataInitialized) {
+                        $store.dispatch("getAppBuilderData", dc.id);
+
+                        const waitDCInit = setInterval(async () => {
+                           if (dc.isDataInitialized) {
+                              clearInterval(waitDCInit);
+
+                              await viewInit(v, resolve);
+                           }
+                        }, 1000);
+
+                        return;
+                     }
+
+                     viewInit(v, resolve);
+                  });
+
+               pendingInit.push(init());
+            });
+
+            await Promise.all(pendingInit);
+
+            $("#add-data-form-submit").on("click", async () => {
+               const formData = $f7.form.convertToData("#add-data-form");
+
+               console.log(formData);
+               // await addItem(formData)
+            });
+
+            $(".deleted-callback").on(
+               "swipeout:deleted",
+               async function (value) {
+                  await delItem(this.getAttribute("id"));
                }
-               v.init();
-            });
-
-            // just temporary:
-            $("#btnAdd").on("click", () => {
-               delItem();
-            });
-
-            $("#btnDel").on("click", () => {
-               delItem();
-            });
+            );
          });
 
          let views = [
@@ -148,9 +178,9 @@ var routes = [
             }
          }
 
-         async function delItem() {
+         async function delItem(id) {
             let DC = allViews[0].datacollection;
-            let item = DC.getCursor();
+            let item = id ? DC.$dc.getItem(id) : DC.getCursor();
             if (!item) {
                item = DC.getFirstRecord();
             }
@@ -167,25 +197,37 @@ var routes = [
 
          //
          return () => $h`
-        <div class="page">
-          <div class="navbar">
-            <div class="navbar-bg"></div>
-            <div class="navbar-inner">
-              <div class="left">
-                <a href="#" data-panel=".panel-left" class="link icon-only panel-open">
-                  <i class="icon material-icons">menu</i>
-                </a>
-              </div>
-              <a id="btnAdd" class="button" >Add</a>
-              <a id="btnDel" class="button" >Delete</a>
-              <div class="title">${title}</div>
-              <div class="title-large">
-                <div class="title-large-text">${title}</div>
-              </div>
+         <div class="page">
+            <div class="navbar">
+               <div class="navbar-bg"></div>
+               <div class="navbar-inner">
+                  <div class="left">
+                     <a
+                        href="#"
+                        data-panel=".panel-left"
+                        class="link icon-only panel-open"
+                     >
+                        <i class="icon material-icons">menu</i>
+                     </a>
+                  </div>
+                  <div class="title">${title}</div>
+                  <div class="title-large">
+                     <div class="title-large-text">${title}</div>
+                  </div>
+                  <div class="right">
+                     <a
+                        href="#"
+                        data-panel=".panel-right"
+                        class="link icon-only panel-open"
+                     >
+                        <i class="icon f7-icons if-not-md">plus</i>
+                        <i class="icon material-icons md-only">add</i>
+                     </a>
+                  </div>
+               </div>
             </div>
-          </div>
-          ${viewHTML()}
-        </div>
+            ${viewHTML()}
+         </div>
       `;
       },
    },
@@ -251,7 +293,7 @@ var routes = [
             allViews.forEach((v) => {
                let dc = v.datacollection;
                dc?.init();
-               if (dc && !dc.dataInitialized) {
+               if (dc && !dc.isDataInitialized) {
                   $store.dispatch("getAppBuilderData", dc.id);
                }
                v.init();
