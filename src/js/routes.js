@@ -90,11 +90,11 @@ var routes = [
                };
                const init = () =>
                   new Promise((resolve) => {
-                     if (dc && !dc.dataInitialized) {
+                     if (dc && !dc.isDataInitialized) {
                         $store.dispatch("getAppBuilderData", dc.id);
 
                         const waitDCInit = setInterval(async () => {
-                           if (dc.dataInitialized) {
+                           if (dc.isDataInitialized) {
                               clearInterval(waitDCInit);
 
                               await viewInit(v, resolve);
@@ -293,7 +293,7 @@ var routes = [
             allViews.forEach((v) => {
                let dc = v.datacollection;
                dc?.init();
-               if (dc && !dc.dataInitialized) {
+               if (dc && !dc.isDataInitialized) {
                   $store.dispatch("getAppBuilderData", dc.id);
                }
                v.init();
