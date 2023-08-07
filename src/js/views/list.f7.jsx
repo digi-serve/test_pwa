@@ -80,7 +80,7 @@ export default class F7ViewList {
 
       if (this.$store.getters[this.dcID].value.length > 0) {
          return () => (
-            <>
+            <div>
                <div
                   class="panel panel-right panel-cover light panel-init"
                   style={`width: ${window.screen.width * 0.5}px;`}
@@ -201,7 +201,7 @@ export default class F7ViewList {
                   </div>
                   {this.hasMore()}
                </div>
-            </>
+            </div>
          );
       } else {
          return () => (
