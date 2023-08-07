@@ -254,6 +254,7 @@ dc.define("dataFeed", (value, params) => {
    }
 
    setValues(data) {
+      // this.DC.dataInitialized();
       this.DC.$state[this.DC.id] = data;
    }
 

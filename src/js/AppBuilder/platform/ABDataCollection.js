@@ -46,7 +46,7 @@ export default class ABDataCollection extends ABDataCollectionCore {
 
    hasMore() {
       // if we are not yet initialized:
-      if (!this.dataInitialized) {
+      if (!this.isDataInitialized) {
          return true;
       }
 
