@@ -329,15 +329,17 @@ var routes = [
       `;
       },
    },
-   {
-      path: "(.*)",
-      component: NotFoundPage,
-   },
 ];
 
 const listPages = Application.pages();
 listPages.forEach((Page) => {
    routes.push(Page.routeComponent());
+});
+
+// Now add the final NotFoundPage for all other references:
+routes.push({
+   path: "(.*)",
+   component: NotFoundPage,
 });
 
 export default routes;

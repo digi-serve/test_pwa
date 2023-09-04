@@ -3,7 +3,7 @@ const _ = require("lodash");
 // prettier-ignore
 import ABApplicationMobileCore from "../core/ABApplicationMobileCore.js";
 
-const ABViewPage = require("./views/ABViewPage");
+import ABViewPageMobile from "./mobile/ABMobilePage";
 const ABViewManager = require("./ABViewManager");
 
 export default class ABClassApplicationMobile extends ABApplicationMobileCore {

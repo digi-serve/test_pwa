@@ -188,7 +188,7 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                   <div class="navbar">
                      <div class="navbar-bg"></div>
                      <div class="navbar-inner">
-                        <div class="title">{L("AppBuilder PWA")}</div>
+                        <div class="title">{Application.label ?? L("PWA")}</div>
                      </div>
                   </div>
                   <div class="page-content">
@@ -220,6 +220,28 @@ export default (props, { $, $h, $f7, $on, $store, $update }) => {
                                  </div>
                               </a>
                            </li>
+                           {Application.pages().map((p) => {
+                              return (
+                                 <li>
+                                    <a
+                                       href={`/${p.route}`}
+                                       class="item-link item-content panel-close"
+                                    >
+                                       <div class="item-media">
+                                          <i class="material-icons">
+                                             {p.label}
+                                          </i>
+                                       </div>
+                                       <div class="item-inner">
+                                          <div class="item-title">
+                                             {p.label}
+                                          </div>
+                                       </div>
+                                    </a>
+                                 </li>
+                              );
+                           })}
+
                            <li>
                               <a
                                  href="#"
