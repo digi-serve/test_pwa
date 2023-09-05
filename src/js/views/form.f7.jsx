@@ -1,62 +1,95 @@
-import formTextbox from "./formTextbox.f7.jsx";
-import formSelect from "./formSelect.f7.jsx";
+import FormButton from "./formButton.f7.jsx";
+import FormCheckbox from "./formCheckbox.f7.jsx";
+import FormConnect from "./formConnect.f7.jsx";
+import FormCustom from "./formCustom.f7.jsx";
+import FormDatepicker from "./formDatepicker.f7.jsx";
+import FormJSON from "./formJSON.f7.jsx";
+import FormNumber from "./formNumber.f7.jsx";
+import FormReadonly from "./formReadonly.f7.jsx";
+import FormSelectMultiple from "./formSelectMultiple.f7.jsx";
+import FormSelectSingle from "./formSelectSingle.f7.jsx";
+import FormTextbox from "./formTextbox.f7.jsx";
+import FormTree from "./formTree.f7.jsx";
 
 export default class F7ViewForm {
-   // constructor(dcID, allDCs, $, $f7, $store, record) {
-   constructor(settings, parent, AB) {
-      this.dcID = settings.dcID;
-      this.formID = settings.formID;
-      this.parent = parent;
-      this.Application = parent.Application;
+   #AB;
+   #settings;
+   constructor(AB, settings) {
+      this.#AB = AB;
+      this.#settings = settings;
 
-      this.AB = AB;
-      this.$f7 = AB.$f7;
-      this.$ = AB.$;
-      this.$store = AB.$store;
-      this.isLoading = false;
       this.record = null;
+      this.isLoading = false;
 
-      this.views = [
-         {
-            key: "text",
-            id: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506",
-            label: "Name",
-            field: "Name",
-            placeholder: "Your name",
-         },
-         {
-            key: "email",
-            id: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506",
-            label: "E-mail",
-            field: "Email",
-            placeholder: "Your email address",
-         },
-         {
-            key: "text",
-            id: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506",
-            label: "URL",
-            field: "URL",
-            placeholder: "Your website URL",
-         },
-         {
-            key: "text",
-            id: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506",
-            label: "Phone",
-            field: "Phone",
-            placeholder: "Your phone number",
-         },
-         {
-            key: "selectsingle",
-            id: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506",
-            label: "Gender",
-            field: "Gender",
-            placeholder: "Select your gender",
-         },
-      ];
+      const definitions = this.datacollection.datasource
+         .fields()
+         .map((f) => ({
+            id: f.id,
+            key: f.formComponent().common().key,
+            field: f.columnName,
+            fieldType: f.key,
+            label: f.label,
+            // placeholder: f.placeholder,
+            settings: f.settings,
+         }))
+         .concat({
+            id: "saveButton",
+            key: "button",
+            field: null,
+            fieldType: null,
+            label: "Save",
+            // placeholder: null,
+         });
+
+      this.views = definitions.map((definition) => {
+         if (definition.settings) definition.settings.required = 1;
+
+         switch (definition.key) {
+            case "button":
+               return new FormButton(AB, this, definition);
+
+            case "checkbox":
+               return new FormCheckbox(AB, this, definition);
+
+            case "connect":
+               return new FormConnect(AB, this, definition);
+
+            case "fieldcustom":
+               return new FormCustom(AB, this, definition);
+
+            case "datepicker":
+               return new FormDatepicker(AB, this, definition);
+
+            case "json":
+               return new FormJSON(AB, this, definition);
+
+            case "numberbox":
+               return new FormNumber(AB, this, definition);
+
+            case "fieldreadonly":
+               return new FormReadonly(AB, this, definition);
+
+            case "selectmultiple":
+               return new FormSelectMultiple(AB, this, definition);
+
+            case "selectsingle":
+               return new FormSelectSingle(AB, this, definition);
+
+            case "formtree":
+               return new FormTree(AB, this, definition);
+
+            default:
+               return new FormTextbox(AB, this, definition);
+         }
+      });
+   }
+
+   get id() {
+      return this.#settings.id;
    }
 
    get datacollection() {
-      return this.AB.datacollectionByID(this.dcID);
+      return this.#AB.datacollectionByID(this.#settings.dcID);
    }
 
    /**
@@ -176,245 +209,138 @@ export default class F7ViewForm {
    }
    */
 
-   async save(btn) {
-      this.$("#" + btn).addClass("button-loading");
-      var formData = this.$f7.form.convertToData(`#${this.formID}`);
+   async init() {
+      const ab = this.#AB;
 
-      // TODO: figure out validation warnings on our forms:
-      this.$f7.input.validate(`#${this.formID}`);
+      const record = (this.record = this.datacollection.getCursor());
 
-      //convert toggle back to boolean
-      formData.Toggle = formData.Toggle.length ? 1 : 0;
-      //convert date to JS Date().toString()
-      if (formData.Birthday != "") {
-         formData.Birthday = new Date(formData.Birthday).toISOString();
-      } else {
-         delete formData.Birthday;
-      }
-
-      // console.log(formData);
-      // alert(JSON.stringify(formData));
-
-      // save to server:
-      for (var p in formData) {
-         this.record[p] = formData[p];
-      }
-      console.log("save(): updated record:", this.record);
-      const DC = this.datacollection;
-      try {
-         var updatedRecord = await DC.datasource
-            .model()
-            .update(this.record[DC.datasource.PK()], this.record);
-
-         // on success, go back to list page
-         this.$f7.views.current.router.back();
-      } catch (e) {
-         console.error(e);
-         // TODO: popup here:
-         const L = this.AB.Label();
-         var text = L("Save Failed");
-
-         // @TODO: instead of stuffing errors into popup message, find the input controls
-         // and set them to invalid markers, and add the message to them if possible.
-
-         if (e.errors) {
-            try {
-               if ("string" == typeof e.errors) e.errors = JSON.parse(e.errors);
-            } catch (e) {
-               // ignore
-            }
-
-            (e.errors || []).forEach((valError) => {
-               text = `${text}<br>${valError.name}: ${valError.message}`;
-            });
-         }
-
-         this.$f7.toast
-            .create({
-               icon: '<i class="material-icons">error</i>',
-               text,
-               position: "center",
-               closeTimeout: 2000,
-            })
-            .open();
-      }
-
-      this.$("#" + btn).removeClass("button-loading");
-
-      // this.$store.dispatch("updateRecord", {
-      //    dcID: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506",
-      //    recordID: this.record.uuid,
-      //    record: formData,
-      // });
-      // setTimeout(() => {
-      //    this.$("#" + btn).removeClass("button-loading");
-      // }, 1000);
-   }
-
-   init() {
-      this.record = this.datacollection.getCursor();
-      console.log("form: record:", this.record);
+      if (record == null) return;
 
       //convert boolean for toggle UI
-      if (this.record) {
-         this.record.Toggle = this.record.Toggle ? "on" : "off";
-         //convert date for date UI
-         if (this.record.Birthday) {
-            var MyDate = new Date(this.record.Birthday);
-            var MyDateString =
-               MyDate.getFullYear() +
-               "-" +
-               ("0" + (MyDate.getMonth() + 1)).slice(-2) +
-               "-" +
-               ("0" + MyDate.getDate()).slice(-2);
-            this.record.Birthday = MyDateString;
-         }
-         //fill in form
-         this.$f7.form.fillFromData(`#${this.formID}`, this.record);
+      const parsedRecord = {};
 
-         // listen for when we remove the preloader on the smart select then set the value to the select
-         // this is just a hack to get the value of the smart select set we may be able to take this out
-         if (this.$f7.$(".smartSelectCountry .item-after .preloader").length) {
-            this.$(
-               ".smartSelectCountry .item-after .preloader"
-            )[0].addEventListener("DOMNodeRemoved", () => {
-               this.$f7
-                  .$(
-                     "select[name='Country'] option[value='" +
-                        this.record.Country +
-                        "']"
-                  )
-                  .prop("selected", "selected");
-            });
+      this.views.forEach((view) => {
+         if (view.definition.fieldType == null || view instanceof FormButton)
+            return;
+
+         switch (view.definition.fieldType) {
+            case "boolean":
+               parsedRecord[view.definition.field] =
+                  record[view.definition.field] === 1 ? ["on"] : [];
+
+               break;
+
+            case "date":
+               {
+                  const date = record[view.definition.field];
+
+                  parsedRecord[view.definition.field] = `${
+                     date.getMonth() + 1
+                  }/${date.getDate()}/${date.getFullYear()}`;
+               }
+
+               break;
+
+            case "datetime":
+               {
+                  const datetime = new Date(record[view.definition.field]);
+                  const hours = datetime.getHours();
+                  const minutes = datetime.getMinutes();
+
+                  parsedRecord[view.definition.field] = `${
+                     datetime.getMonth() + 1
+                  }/${datetime.getDate()}/${datetime.getFullYear()}, ${
+                     hours <= 12 ? hours : hours % 12
+                  }:${
+                     minutes < 10
+                        ? `0${minutes.toString()}`
+                        : minutes.toString()
+                  } ${hours < 12 ? "AM" : "PM"}`;
+               }
+
+               break;
+
+            case "number":
+               parsedRecord[view.definition.field] =
+                  record[view.definition.field].toString();
+
+               break;
+
+            default:
+               parsedRecord[view.definition.field] =
+                  record[view.definition.field];
+
+               break;
          }
-      }
+      });
+
+      //fill in form
+      ab.$f7.form.fillFromData(`#${this.id}`, parsedRecord);
+
+      // // listen for when we remove the preloader on the smart select then set the value to the select
+      // // this is just a hack to get the value of the smart select set we may be able to take this out
+      // if (ab.$f7.$(".smartSelectCountry .item-after .preloader").length) {
+      //    ab.$(
+      //       ".smartSelectCountry .item-after .preloader"
+      //    )[0].addEventListener("DOMNodeRemoved", () => {
+      //       ab.$f7
+      //          .$(
+      //             "select[name='Country'] option[value='" +
+      //                this.#record.Country +
+      //                "']"
+      //          )
+      //          .prop("selected", "selected");
+      //    });
+      // }
    }
 
    viewHTML() {
-      let allResults = [];
+      const allResults = [];
 
-      // let views = Page.views();
-      // views.forEach((v) => {
-      // allResults.push(v.html(...));
-      // })
+      let fields = [];
+
       this.views.forEach((view) => {
-         switch (view.key) {
-            case "email":
-            case "text":
-               var textbox = new formTextbox(
-                  view,
-                  this.allDCs,
-                  this.$f7,
-                  this.$store,
-                  this.record
-               );
-               allResults.push(textbox.html());
+         if (view.definition.fieldType == null) {
+            if (view instanceof FormButton) {
+               const renderedFieldElements = [...fields];
+
+               if (fields.length > 0)
+                  allResults.push(() => <ul>{renderedFieldElements}</ul>);
+
+               allResults.push(view.html());
+
+               fields = [];
+            }
+
+            return;
+         }
+
+         switch (view.definition.fieldType) {
+            case "LongText":
+               fields.push(<li class="align-top">{view.html()()}</li>);
+
                break;
-            case "selectmultiple":
-            case "selectsingle":
-               var select = new formSelect(
-                  view,
-                  this.allDCs,
-                  this.$f7,
-                  this.$store,
-                  this.record
-               );
-               allResults.push(select.html());
-               break;
+
             default:
-            // code block
+               fields.push(<li>{view.html()()}</li>);
+
+               break;
          }
       });
+
+      if (fields.length > 0)
+         allResults.push(() => <ul>{fields.map((r) => r())}</ul>);
 
       return allResults.map((r) => r()); // render each jsx template
    }
 
    html() {
-      const L = this.AB.Label();
       return () => (
          <form
             class="list list-inset list-strong-ios list-dividers-ios list-outline-ios"
-            id={this.formID}
+            id={this.id}
          >
-            <ul>
-               {this.viewHTML()}
-               <li>
-                  <div class="item-content item-input">
-                     <div class="item-inner">
-                        <div class="item-title item-label">Birthday</div>
-                        <div class="item-input-wrap">
-                           <input
-                              name="Birthday"
-                              type="date"
-                              placeholder="Birthday"
-                              required
-                              validate
-                           />
-                        </div>
-                     </div>
-                  </div>
-               </li>
-               <li>
-                  <div class="item-content">
-                     <div class="item-inner">
-                        <div class="item-title">Toggle</div>
-                        <div class="item-after">
-                           <label class="toggle toggle-init">
-                              <input name="Toggle" type="checkbox" />
-                              <span class="toggle-icon"></span>
-                           </label>
-                        </div>
-                     </div>
-                  </div>
-               </li>
-               <li>
-                  <div class="item-content item-input">
-                     <div class="item-inner">
-                        <div class="item-title item-label">Slider</div>
-                        <div class="item-input-wrap">
-                           <div
-                              class="range-slider range-slider-init"
-                              data-label="true"
-                           >
-                              <input
-                                 name="Slider"
-                                 type="range"
-                                 value="50"
-                                 min="0"
-                                 max="100"
-                                 step="1"
-                              />
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </li>
-               <li class="align-top">
-                  <div class="item-content item-input">
-                     <div class="item-inner">
-                        <div class="item-title item-label">Resizable</div>
-                        <div class="item-input-wrap">
-                           <textarea
-                              name="Bio"
-                              placeholder="Bio"
-                              class="resizable"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </div>
-               </li>
-            </ul>
-            <div class="block">
-               <a
-                  onClick={() => this.save("saveButton")}
-                  id="saveButton"
-                  class="button button-large button-fill button-preloader"
-                  href="#"
-               >
-                  <span class="preloader"></span>
-                  <span>{L("Save")}</span>
-               </a>
-            </div>
+            {this.viewHTML()}
          </form>
       );
    }
