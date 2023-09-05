@@ -1,39 +1,25 @@
-//
-
 export default class F7ViewList {
-   constructor(settings, parent, AB) {
-      this.dcID = settings.dcID;
-      this.settings = settings;
-      this.settings.route = "/list";
+   #AB;
+   #settings;
+   constructor(AB, settings) {
+      this.#AB = AB;
+      this.#settings = settings;
+   }
 
-      this.parent = parent;
-      this.Application = parent.Application;
-
-      // this.allDCs = allDCs;
-      this.AB = AB;
-      this.$f7 = AB.$f7;
-      this.$store = AB.$store;
-
-      // setInterval(() => {
-      //    console.log("... list data:", this.$store.getters[this.dcID].value);
-      // }, 1000);
+   get id() {
+      return this.#settings.id;
    }
 
    get datacollection() {
-      return this.AB.datacollectionByID(this.dcID);
+      return this.#AB.datacollectionByID(this.#settings.dcID);
    }
 
-   init() {
-      return Promise.resolve();
-   }
+   async init() {}
 
    itemSelected(item) {
       // if there is a detailPage set, then transition there:
-      if (this.settings.detailPage) {
-         // let DetailPage = this.application.pageByID(this.settings.detailPage)
-         // DetailPage.openView(item);
-
-         this.$f7.view.main.router.navigate("/edit", {
+      if (this.#settings.detailPage) {
+         this.#AB.$f7.view.main.router.navigate("/form", {
             props: {
                data: item,
             },
@@ -42,15 +28,16 @@ export default class F7ViewList {
       }
 
       // Make sure our DC registers which item was just selected.
-      var DC = this.datacollection;
-      if (DC) {
-         DC.setCursor(item[DC.datasource.PK()] || item.id || item.uuid);
+      const dc = this.datacollection;
+
+      if (dc) {
+         dc.setCursor(item[dc.datasource.PK()] || item.id || item.uuid);
       }
    }
 
    // NOTE: this now means OPEN THIS VIEW.
    openView(data) {
-      this.$f7.view.main.router.navigate(this.settings.route, {
+      this.#AB.$f7.view.main.router.navigate("/list", {
          props: {
             data: data,
          },
@@ -59,9 +46,9 @@ export default class F7ViewList {
    }
 
    loadMore() {
-      // if (this.$store.getters[this.dcID].value.hasMore) {
+      // if (this.$store.getters[this.#settings.dcID].value.hasMore) {
       if (this.datacollection.hasMore()) {
-         this.$store.dispatch("getAppBuilderData", this.dcID);
+         this.#AB.$store.dispatch("getAppBuilderData", this.#settings.dcID);
       }
    }
 
@@ -71,139 +58,33 @@ export default class F7ViewList {
       }
    }
 
-   html() {
-      window.onresize = () => {
-         document.querySelector(
-            ".panel.panel-right.panel-cover.light.panel-init"
-         ).style.width = `${window.screen.width * 0.5}px`;
-      };
-
-      if (this.$store.getters[this.dcID].value.length > 0) {
-         return () => (
-            <div>
-               <div
-                  class="panel panel-right panel-cover light panel-init"
-                  style={`width: ${window.screen.width * 0.5}px;`}
-               >
-                  <div class="view">
-                     <div class="page">
-                        <div class="navbar">
-                           <div class="navbar-bg"></div>
-                           <div class="navbar-inner">
-                              <div class="title">{"Add data"}</div>
-                           </div>
-                        </div>
-                        <div class="page-content">
-                           <form
-                              class="list list-strong-ios list-dividers-ios list-outline-ios"
-                              id="add-data-form"
-                           >
-                              <ul>
-                                 {this.datacollection.datasource
-                                    .fields()
-                                    .map((field) => {
-                                       switch (field.key) {
-                                          case "string":
-                                             return (
-                                                <li>
-                                                   <div class="item-content item-input">
-                                                      <div class="item-inner">
-                                                         <div class="item-title item-label">
-                                                            {field.label}
-                                                         </div>
-                                                         <div class="item-input-wrap">
-                                                            <input
-                                                               type="text"
-                                                               name={
-                                                                  field.columnName
-                                                               }
-                                                               placeholder=""
-                                                            />
-                                                         </div>
-                                                      </div>
-                                                   </div>
-                                                </li>
-                                             );
-
-                                          default:
-                                             return (
-                                                <li>
-                                                   <div class="item-content item-input">
-                                                      <div class="item-inner">
-                                                         <div class="item-title item-label">
-                                                            {field.label}
-                                                         </div>
-                                                         <div class="item-input-wrap">
-                                                            <input
-                                                               type="text"
-                                                               name={
-                                                                  field.columnName
-                                                               }
-                                                               placeholder=""
-                                                            />
-                                                         </div>
-                                                      </div>
-                                                   </div>
-                                                </li>
-                                             );
-                                       }
-                                    })}
-                              </ul>
-                           </form>
-                           <div
-                              class="grid grid-cols-2 grid-gap"
-                              style="margin: 12px 0px;"
-                           >
-                              <div></div>
-                              <div style="text-align: right;">
-                                 <button
-                                    id="add-data-form-submit"
-                                    class="button button-fill"
-                                    style="max-width: 200px;"
-                                 >
-                                    Submit
-                                 </button>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div
-                  class="page-content infinite-scroll-content"
-                  onInfinite={() => this.loadMore()}
-               >
-                  <div class="list links-list list-outline list-strong list-dividers">
-                     <ul>
-                        {this.$store.getters[this.dcID].value.map((item) => (
-                           <li id={item.uuid} class="swipeout deleted-callback">
-                              <div
-                                 class="swipeout-content item-content"
-                                 onClick={() => this.itemSelected(item)}
-                              >
-                                 <div class="item-inner">
-                                    <div class="item-title">{item.Name}</div>
-                                 </div>
-                              </div>
-                              <div class="swipeout-actions-right">
-                                 <a
-                                    href="#"
-                                    class="swipeout-delete"
-                                    data-confirm="Are you sure want to delete this item?"
-                                    data-confirm-title="Delete?"
-                                 >
-                                    Delete
-                                 </a>
-                              </div>
-                           </li>
-                        ))}
-                     </ul>
-                  </div>
-                  {this.hasMore()}
+   viewHTML() {
+      return this.#AB.$store.getters[this.#settings.dcID].value.map((item) => (
+         <li id={item.uuid} class="swipeout deleted-callback">
+            <div
+               class="swipeout-content item-content"
+               onClick={() => this.itemSelected(item)}
+            >
+               <div class="item-inner">
+                  <div class="item-title">{item.Name}</div>
                </div>
             </div>
-         );
-      } else {
+            <div class="swipeout-actions-right">
+               <a
+                  href="#"
+                  class="swipeout-delete"
+                  data-confirm="Are you sure want to delete this item?"
+                  data-confirm-title="Delete?"
+               >
+                  Delete
+               </a>
+            </div>
+         </li>
+      ));
+   }
+
+   html() {
+      if (this.#AB.$store.getters[this.#settings.dcID].value.length === 0)
          return () => (
             <div class="page-content infinite-scroll-content">
                <div class="list links-list list-outline list-strong list-dividers skeleton-text skeleton-effect-fade">
@@ -217,6 +98,17 @@ export default class F7ViewList {
                </div>
             </div>
          );
-      }
+
+      return () => (
+         <div
+            class="page-content infinite-scroll-content"
+            onInfinite={() => this.loadMore()}
+         >
+            <div class="list links-list list-outline list-strong list-dividers">
+               <ul>{this.viewHTML()}</ul>
+            </div>
+            {this.hasMore()}
+         </div>
+      );
    }
 }
