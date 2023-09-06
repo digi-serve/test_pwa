@@ -39,7 +39,7 @@ export default (AB) => {
             let recordToUpdate = records[foundIndex];
 
             for (var propt in props.record) {
-               if (Object.prototype.hasOwnProperty.call(recordToUpdate.propt))
+               if (Object.prototype.hasOwnProperty.call(recordToUpdate, propt))
                   recordToUpdate[propt] = props.record[propt];
             }
             state[props.dcID] = {
