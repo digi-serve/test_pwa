@@ -63,11 +63,12 @@ export default class F7ViewFormButton extends formItem {
       const dc = form.datacollection;
 
       try {
-         if (form.record == null) await dc.model().create(parsedFormData);
+         if (form.record == null) await dc.model.create(parsedFormData);
          else
-            await dc
-               .model()
-               .update(form.record[dc.datasource.PK()], parsedFormData);
+            await dc.model.update(
+               form.record[dc.datasource.PK()],
+               parsedFormData
+            );
 
          // on success, go back to list page
          ab.$f7.views.current.router.back();
