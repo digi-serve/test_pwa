@@ -42,9 +42,8 @@ export default class F7ViewFormButton extends formItem {
 
                break;
 
-            case "date":
             case "datetime":
-               parsedFormData[field] = new Date(formData[field]);
+               parsedFormData[field] = new Date(formData[field]).toISOString();
 
                break;
 
