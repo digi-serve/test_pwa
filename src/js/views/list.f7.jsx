@@ -21,7 +21,7 @@ export default class F7ViewList {
       if (this.#settings.detailPage) {
          this.#AB.$f7.view.main.router.navigate("/form", {
             props: {
-               data: item,
+               isEditMode: true,
             },
             ignoreCache: true,
          });

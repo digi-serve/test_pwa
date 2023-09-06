@@ -139,7 +139,7 @@ export default (AB) => {
                         onclick={() => {
                            AB.$f7.view.main.router.navigate("/form", {
                               props: {
-                                 data: {},
+                                 isEditMode: false,
                               },
                               ignoreCache: true,
                            });
