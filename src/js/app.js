@@ -20,7 +20,7 @@ import routes from "./routes.js";
 import store from "./store.js";
 
 // Import main app component
-import App from "./views/app.f7.jsx";
+import App from "../pages/app.f7.jsx";
 
 // AB Factory
 import AB from "./AppBuilder/ABFactory";
@@ -36,11 +36,11 @@ var app = new Framework7({
    },
 
    el: "#app", // App root element
-   component: App, // App main component
+   component: App(AB), // App main component
    // App store
-   store: store,
+   store: store(AB),
    // App routes
-   routes: routes,
+   routes: routes(AB),
    version: version,
 
    // Register service worker (only on production build)
