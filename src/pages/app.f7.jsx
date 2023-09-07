@@ -197,7 +197,7 @@ export default (AB) => {
                         <div class="block text-align-center no-margin-bottom">
                            {/* block content */}
                            <img
-                              src="images/digiServe_logo.png"
+                              src="assets/mobile/images/digiServe_logo.png"
                               width="70%"
                               class="sidebar_logo"
                            />
@@ -270,7 +270,7 @@ export default (AB) => {
                         >
                            <p>
                               <img
-                                 src="images/digiServe_logo.png"
+                                 src="assets/mobile/images/digiServe_logo.png"
                                  width="30%"
                               />
                               <br />
@@ -295,7 +295,7 @@ export default (AB) => {
                      <div class="page-content login-screen-content bg-color-primary">
                         <div class="block text-align-center no-margin-bottom">
                            <img
-                              src="images/digiServe_logo.png"
+                              src="assets/mobile/images/digiServe_logo.png"
                               width="60%"
                               class="sidebar_logo"
                            />

@@ -9,9 +9,8 @@ module.exports = {
       app: path.join(APP, "src", "js", "app.js"),
    },
    output: {
-      // path: path.join(APP, "..", "web", "assets", "app"),
       path: path.join(APP, "..", "web", "assets", "mobile"),
-      filename: "mobile_[name].js",
+      filename: "mobile_[name].[contenthash].js",
    },
    module: {
       rules: [
@@ -41,15 +40,24 @@ module.exports = {
    plugins: [
       new HtmlWebpackPlugin({
          template: path.join(APP, "webpack", "index.ejs"),
-         filename: path.join(APP, "src", "index.html"), // "../../../web/assets/index.html",
+         filename: path.join(
+            APP,
+            "..",
+            "web",
+            "assets",
+            "mobile",
+            "index.html"
+         ),
          inject: "body",
-         publicPath: "/js/assets",
+         publicPath: "/assets/mobile",
       }),
-      new CleanWebpackPlugin(),
+      new CleanWebpackPlugin({
+         cleanOnceBeforeBuildPatterns: ["*.js", "*.js.map"],
+      }),
    ],
    resolve: {
       alias: {
-         assets: path.resolve(__dirname, "src"),
+         assets: path.resolve(__dirname, "..", "web", "assets", "mobile"),
       },
    },
    optimization: {
