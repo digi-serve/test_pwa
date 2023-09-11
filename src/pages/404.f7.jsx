@@ -1,5 +1,5 @@
-export default (AB) => {
-   return (props, { $, $h, $f7, $on, $store, $update }) => {
+export default () => {
+   return () => {
       return () => (
          <div class="page">
             <div class="navbar">
