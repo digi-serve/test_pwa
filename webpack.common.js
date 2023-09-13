@@ -65,6 +65,11 @@ module.exports = {
       runtimeChunk: "single",
       splitChunks: {
          cacheGroups: {
+            main: {
+               test: /[\\/]src[\\/]/,
+               name: "app",
+               chunks: "all",
+            },
             vendor: {
                test: /[\\/]node_modules[\\/]/,
                name: "vendors",
