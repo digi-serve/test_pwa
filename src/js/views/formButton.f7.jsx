@@ -69,8 +69,15 @@ export default class F7ViewFormButton extends formItem {
                parsedFormData
             );
 
-         // on success, go back to list page
-         ab.$f7.views.current.router.back();
+         if (definition.afterSubmitView == null) {
+            ab.$f7.views.current.router.back();
+
+            return;
+         }
+
+         ab.$f7.views.current.router.navigate(definition.afterSubmitView.path, {
+            props: definition.afterSubmitView.props,
+         });
       } catch (e) {
          console.error(e);
 
