@@ -210,7 +210,7 @@ export default class F7ViewForm {
    */
 
    async init() {
-      const ab = this.#AB;
+      const AB = this.#AB;
 
       const record = (this.record = this.datacollection.getCursor());
 
@@ -275,15 +275,15 @@ export default class F7ViewForm {
       });
 
       //fill in form
-      ab.$f7.form.fillFromData(`#${this.id}`, parsedRecord);
+      AB.$f7.form.fillFromData(`#${this.id}`, parsedRecord);
 
       // // listen for when we remove the preloader on the smart select then set the value to the select
       // // this is just a hack to get the value of the smart select set we may be able to take this out
-      // if (ab.$f7.$(".smartSelectCountry .item-after .preloader").length) {
-      //    ab.$(
+      // if (AB.$f7.$(".smartSelectCountry .item-after .preloader").length) {
+      //    AB.$(
       //       ".smartSelectCountry .item-after .preloader"
       //    )[0].addEventListener("DOMNodeRemoved", () => {
-      //       ab.$f7
+      //       AB.$f7
       //          .$(
       //             "select[name='Country'] option[value='" +
       //                this.#record.Country +

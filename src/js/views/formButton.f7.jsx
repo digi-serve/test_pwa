@@ -11,16 +11,16 @@ export default class F7ViewFormButton extends formItem {
    }
 
    async #save() {
-      const ab = this.#AB;
+      const AB = this.#AB;
       const form = this.#form;
       const definition = this.definition;
 
-      ab.$(`#${definition.id}`).addClass("button-loading");
+      AB.$(`#${definition.id}`).addClass("button-loading");
 
-      const formData = ab.$f7.form.convertToData(`#${form.id}`);
+      const formData = AB.$f7.form.convertToData(`#${form.id}`);
 
-      if (!ab.$f7.input.validateInputs(`#${form.id}`)) {
-         ab.$(`#${definition.id}`).removeClass("button-loading");
+      if (!AB.$f7.input.validateInputs(`#${form.id}`)) {
+         AB.$(`#${definition.id}`).removeClass("button-loading");
 
          return;
       }
@@ -70,19 +70,19 @@ export default class F7ViewFormButton extends formItem {
             );
 
          if (definition.afterSubmitView == null) {
-            ab.$f7.views.current.router.back();
+            AB.$f7.views.current.router.back();
 
             return;
          }
 
-         ab.$f7.views.current.router.navigate(definition.afterSubmitView.path, {
+         AB.$f7.views.current.router.navigate(definition.afterSubmitView.path, {
             props: definition.afterSubmitView.props,
          });
       } catch (e) {
          console.error(e);
 
          // TODO: popup here:
-         const L = ab.Label();
+         const L = AB.Label();
 
          let text = L("Save Failed");
 
@@ -101,7 +101,7 @@ export default class F7ViewFormButton extends formItem {
             });
          }
 
-         ab.$f7.toast
+         AB.$f7.toast
             .create({
                icon: '<i class="material-icons">error</i>',
                text,
@@ -111,7 +111,7 @@ export default class F7ViewFormButton extends formItem {
             .open();
       }
 
-      ab.$(`#${definition.id}`).removeClass("button-loading");
+      AB.$(`#${definition.id}`).removeClass("button-loading");
 
       // this.$store.dispatch("updateRecord", {
       //    dcID: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506",
