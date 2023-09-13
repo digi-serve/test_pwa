@@ -112,15 +112,6 @@ export default class F7ViewFormButton extends formItem {
       }
 
       AB.$(`#${definition.id}`).removeClass("button-loading");
-
-      // this.$store.dispatch("updateRecord", {
-      //    dcID: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506",
-      //    recordID: form.record.uuid,
-      //    record: parsedFormData,
-      // });
-      // setTimeout(() => {
-      //    this.$("#" + btn).removeClass("button-loading");
-      // }, 1000);
    }
 
    html() {
