@@ -37,7 +37,7 @@ export default class F7ViewList {
 
    // NOTE: this now means OPEN THIS VIEW.
    openView(data) {
-      this.#AB.$f7.view.main.router.navigate("/list", {
+      this.#AB.$f7.view.main.router.navigate(this.settings.route, {
          props: {
             data: data,
          },
