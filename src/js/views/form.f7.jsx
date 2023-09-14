@@ -4,7 +4,6 @@ import FormConnect from "./formConnect.f7.jsx";
 import FormDatepicker from "./formDatepicker.f7.jsx";
 import FormJSON from "./formJSON.f7.jsx";
 import FormNumber from "./formNumber.f7.jsx";
-import FormReadonly from "./formReadonly.f7.jsx";
 import FormSelectMultiple from "./formSelectMultiple.f7.jsx";
 import FormSelectSingle from "./formSelectSingle.f7.jsx";
 import FormTextbox from "./formTextbox.f7.jsx";
@@ -61,9 +60,6 @@ export default class F7ViewForm {
 
             case "numberbox":
                return new FormNumber(AB, this, definition);
-
-            case "fieldreadonly":
-               return new FormReadonly(AB, this, definition);
 
             case "selectmultiple":
                return new FormSelectMultiple(AB, this, definition);
