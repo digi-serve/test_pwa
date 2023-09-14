@@ -7,7 +7,6 @@ import FormNumber from "./formNumber.f7.jsx";
 import FormSelectMultiple from "./formSelectMultiple.f7.jsx";
 import FormSelectSingle from "./formSelectSingle.f7.jsx";
 import FormTextbox from "./formTextbox.f7.jsx";
-import FormTree from "./formTree.f7.jsx";
 
 export default class F7ViewForm {
    #AB;
@@ -66,9 +65,6 @@ export default class F7ViewForm {
 
             case "selectsingle":
                return new FormSelectSingle(AB, this, definition);
-
-            case "formtree":
-               return new FormTree(AB, this, definition);
 
             default:
                return new FormTextbox(AB, this, definition);
