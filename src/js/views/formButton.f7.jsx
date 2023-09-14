@@ -19,12 +19,6 @@ export default class F7ViewFormButton extends formItem {
 
       const formData = AB.$f7.form.convertToData(`#${form.id}`);
 
-      if (!AB.$f7.input.validateInputs(`#${form.id}`)) {
-         AB.$(`#${definition.id}`).removeClass("button-loading");
-
-         return;
-      }
-
       const parsedFormData = {};
 
       form.views.forEach((view) => {
@@ -47,6 +41,25 @@ export default class F7ViewFormButton extends formItem {
 
                break;
 
+            case "json":
+               {
+                  const $inputElements = AB.$(`#${form.id}`).find(
+                     `textarea[name="${field}"]`
+                  );
+                  const value = $inputElements.val();
+
+                  try {
+                     JSON.parse($inputElements.val());
+                  } catch (err) {
+                     $inputElements[0].setCustomValidity(L("Invalid JSON!"));
+                     $inputElements[0].checkValidity();
+                  }
+
+                  parsedFormData[field] = formData[field];
+               }
+
+               break;
+
             case "number":
                parsedFormData[field] = parseInt(formData[field]);
 
@@ -58,6 +71,12 @@ export default class F7ViewFormButton extends formItem {
                break;
          }
       });
+
+      if (!AB.$f7.input.validateInputs(`#${form.id}`)) {
+         AB.$(`#${definition.id}`).removeClass("button-loading");
+
+         return;
+      }
 
       const dc = form.datacollection;
 
