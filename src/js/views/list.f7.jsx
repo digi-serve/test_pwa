@@ -59,6 +59,8 @@ export default class F7ViewList {
    }
 
    viewHTML() {
+      const L = this.#AB.Label();
+
       return this.#AB.$store.getters[this.#settings.dcID].value.map((item) => (
          <li id={item.uuid} class="swipeout deleted-callback">
             <div
@@ -73,8 +75,8 @@ export default class F7ViewList {
                <a
                   href="#"
                   class="swipeout-delete"
-                  data-confirm="Are you sure want to delete this item?"
-                  data-confirm-title="Delete?"
+                  data-confirm={L("Are you sure want to delete this item?")}
+                  data-confirm-title={L("Delete?")}
                >
                   Delete
                </a>

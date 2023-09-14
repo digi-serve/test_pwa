@@ -1,4 +1,6 @@
 export default (AB) => {
+   const L = AB.Label();
+
    return (props, { $, $h, $f7, $on, $store, $update }) => {
       return () => (
          <div class="page">
@@ -8,17 +10,17 @@ export default (AB) => {
                   <div class="left">
                      <a href="#" class="link back">
                         <i class="icon icon-back"></i>
-                        <span class="if-not-md">Back</span>
+                        <span class="if-not-md">{L("Back")}</span>
                      </a>
                   </div>
-                  <div class="title">Not found</div>
+                  <div class="title">{L("Not found")}</div>
                </div>
             </div>
             <div class="page-content">
                <div class="block block-strong inset">
                   <center>
-                     <h1>Sorry</h1>
-                     <p>Requested content not found.</p>
+                     <h1>{L("Sorry")}</h1>
+                     <p>{L("Requested content not found.")}</p>
                   </center>
                </div>
             </div>
