@@ -60,6 +60,32 @@ export default class F7ViewFormButton extends formItem {
 
                break;
 
+            case "list":
+               if (view.definition.key === "selectmultiple") {
+                  parsedFormData[field] = AB.$(`#${form.id}`)
+                     .find(`select[name="${field}"]`)
+                     .val();
+
+                  break;
+               }
+
+               parsedFormData[field] = formData[field];
+
+               break;
+
+            case "connectObject":
+               if (view.definition.settings.linkType === "many") {
+                  parsedFormData[field] = AB.$(`#${form.id}`)
+                     .find(`select[name="${field}"]`)
+                     .val();
+
+                  break;
+               }
+
+               parsedFormData[field] = formData[field];
+
+               break;
+
             case "number":
                parsedFormData[field] = parseInt(formData[field]);
 
