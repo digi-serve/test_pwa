@@ -1,7 +1,6 @@
 import FormButton from "./formButton.f7.jsx";
 import FormCheckbox from "./formCheckbox.f7.jsx";
 import FormConnect from "./formConnect.f7.jsx";
-import FormCustom from "./formCustom.f7.jsx";
 import FormDatepicker from "./formDatepicker.f7.jsx";
 import FormJSON from "./formJSON.f7.jsx";
 import FormNumber from "./formNumber.f7.jsx";
@@ -53,9 +52,6 @@ export default class F7ViewForm {
 
             case "connect":
                return new FormConnect(AB, this, definition);
-
-            case "fieldcustom":
-               return new FormCustom(AB, this, definition);
 
             case "datepicker":
                return new FormDatepicker(AB, this, definition);
