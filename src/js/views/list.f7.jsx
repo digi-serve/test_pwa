@@ -19,7 +19,7 @@ export default class F7ViewList {
    itemSelected(item) {
       // if there is a detailPage set, then transition there:
       if (this.#settings.detailPage) {
-         this.#AB.$f7.view.main.router.navigate("/form", {
+         this.#AB.$f7.view.main.router.navigate(this.#settings.detailPage, {
             props: {
                isEditMode: true,
             },
