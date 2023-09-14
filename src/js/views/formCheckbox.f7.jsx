@@ -19,16 +19,7 @@ export default class F7ViewFormCheckbox extends formItem {
                <div class="item-title">{definition.label}</div>
                <div class="item-after">
                   <label class="toggle toggle-init">
-                     {definition.settings.required === 1 ? (
-                        <input
-                           name={definition.field}
-                           type="checkbox"
-                           required
-                           validate
-                        />
-                     ) : (
-                        <input name={definition.field} type="checkbox" />
-                     )}
+                     <input name={definition.field} type="checkbox" />
                      <i class="toggle-icon"></i>
                   </label>
                </div>
