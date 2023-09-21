@@ -1,15 +1,12 @@
 import FormButton from "./formButton.f7.jsx";
 import FormCheckbox from "./formCheckbox.f7.jsx";
 import FormConnect from "./formConnect.f7.jsx";
-import FormCustom from "./formCustom.f7.jsx";
 import FormDatepicker from "./formDatepicker.f7.jsx";
 import FormJSON from "./formJSON.f7.jsx";
 import FormNumber from "./formNumber.f7.jsx";
-import FormReadonly from "./formReadonly.f7.jsx";
 import FormSelectMultiple from "./formSelectMultiple.f7.jsx";
 import FormSelectSingle from "./formSelectSingle.f7.jsx";
 import FormTextbox from "./formTextbox.f7.jsx";
-import FormTree from "./formTree.f7.jsx";
 
 export default class F7ViewForm {
    #AB;
@@ -54,9 +51,6 @@ export default class F7ViewForm {
             case "connect":
                return new FormConnect(AB, this, definition);
 
-            case "fieldcustom":
-               return new FormCustom(AB, this, definition);
-
             case "datepicker":
                return new FormDatepicker(AB, this, definition);
 
@@ -66,17 +60,11 @@ export default class F7ViewForm {
             case "numberbox":
                return new FormNumber(AB, this, definition);
 
-            case "fieldreadonly":
-               return new FormReadonly(AB, this, definition);
-
             case "selectmultiple":
                return new FormSelectMultiple(AB, this, definition);
 
             case "selectsingle":
                return new FormSelectSingle(AB, this, definition);
-
-            case "formtree":
-               return new FormTree(AB, this, definition);
 
             default:
                return new FormTextbox(AB, this, definition);
@@ -210,7 +198,7 @@ export default class F7ViewForm {
    */
 
    async init() {
-      const ab = this.#AB;
+      const AB = this.#AB;
 
       const record = (this.record = this.datacollection.getCursor());
 
@@ -275,15 +263,15 @@ export default class F7ViewForm {
       });
 
       //fill in form
-      ab.$f7.form.fillFromData(`#${this.id}`, parsedRecord);
+      AB.$f7.form.fillFromData(`#${this.id}`, parsedRecord);
 
       // // listen for when we remove the preloader on the smart select then set the value to the select
       // // this is just a hack to get the value of the smart select set we may be able to take this out
-      // if (ab.$f7.$(".smartSelectCountry .item-after .preloader").length) {
-      //    ab.$(
+      // if (AB.$f7.$(".smartSelectCountry .item-after .preloader").length) {
+      //    AB.$(
       //       ".smartSelectCountry .item-after .preloader"
       //    )[0].addEventListener("DOMNodeRemoved", () => {
-      //       ab.$f7
+      //       AB.$f7
       //          .$(
       //             "select[name='Country'] option[value='" +
       //                this.#record.Country +

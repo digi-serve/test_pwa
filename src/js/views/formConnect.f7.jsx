@@ -1,4 +1,6 @@
 import formItem from "./formItem.f7.jsx";
+import formSelectMultiple from "./formSelectMultiple.f7.jsx";
+import formSelectSingle from "./formSelectSingle.f7.jsx";
 
 export default class F7ViewFormConnect extends formItem {
    #AB;
@@ -11,8 +13,21 @@ export default class F7ViewFormConnect extends formItem {
    }
 
    html() {
-      const connectedType = "selectsingle" || "selectmultiple";
+      const definition = this.definition;
+      const definitionCopy = Object.assign({}, definition, {
+         settings: Object.assign(
+            {
+               options: [], // conected object's records,
+            },
+            definition.settings
+         ),
+      });
 
-      return () => {};
+      const formComponent =
+         definition.settings.linkType !== "one"
+            ? new formSelectSingle(this.#AB, this.#form, definitionCopy)
+            : new formSelectMultiple(this.#AB, this.#form, definitionCopy);
+
+      return formComponent.html();
    }
 }

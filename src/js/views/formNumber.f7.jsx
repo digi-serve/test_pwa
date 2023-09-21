@@ -12,7 +12,7 @@ export default class F7ViewFormNumber extends formItem {
 
    html() {
       const definition = this.definition;
-      const errorMessage = this.#AB.Label("Only numbers please!");
+      const errorMessage = this.#AB.Label()("Only numbers please!");
 
       return () => (
          <div class="item-content item-input">

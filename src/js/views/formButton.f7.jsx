@@ -11,19 +11,13 @@ export default class F7ViewFormButton extends formItem {
    }
 
    async #save() {
-      const ab = this.#AB;
+      const AB = this.#AB;
       const form = this.#form;
       const definition = this.definition;
 
-      ab.$(`#${definition.id}`).addClass("button-loading");
+      AB.$(`#${definition.id}`).addClass("button-loading");
 
-      const formData = ab.$f7.form.convertToData(`#${form.id}`);
-
-      if (!ab.$f7.input.validateInputs(`#${form.id}`)) {
-         ab.$(`#${definition.id}`).removeClass("button-loading");
-
-         return;
-      }
+      const formData = AB.$f7.form.convertToData(`#${form.id}`);
 
       const parsedFormData = {};
 
@@ -47,6 +41,51 @@ export default class F7ViewFormButton extends formItem {
 
                break;
 
+            case "json":
+               {
+                  const $inputElements = AB.$(`#${form.id}`).find(
+                     `textarea[name="${field}"]`
+                  );
+                  const value = $inputElements.val();
+
+                  try {
+                     JSON.parse($inputElements.val());
+                  } catch (err) {
+                     $inputElements[0].setCustomValidity(L("Invalid JSON!"));
+                     $inputElements[0].checkValidity();
+                  }
+
+                  parsedFormData[field] = formData[field];
+               }
+
+               break;
+
+            case "list":
+               if (view.definition.key === "selectmultiple") {
+                  parsedFormData[field] = AB.$(`#${form.id}`)
+                     .find(`select[name="${field}"]`)
+                     .val();
+
+                  break;
+               }
+
+               parsedFormData[field] = formData[field];
+
+               break;
+
+            case "connectObject":
+               if (view.definition.settings.linkType === "many") {
+                  parsedFormData[field] = AB.$(`#${form.id}`)
+                     .find(`select[name="${field}"]`)
+                     .val();
+
+                  break;
+               }
+
+               parsedFormData[field] = formData[field];
+
+               break;
+
             case "number":
                parsedFormData[field] = parseInt(formData[field]);
 
@@ -59,6 +98,12 @@ export default class F7ViewFormButton extends formItem {
          }
       });
 
+      if (!AB.$f7.input.validateInputs(`#${form.id}`)) {
+         AB.$(`#${definition.id}`).removeClass("button-loading");
+
+         return;
+      }
+
       const dc = form.datacollection;
 
       try {
@@ -69,13 +114,20 @@ export default class F7ViewFormButton extends formItem {
                parsedFormData
             );
 
-         // on success, go back to list page
-         ab.$f7.views.current.router.back();
+         if (definition.afterSubmitView == null) {
+            AB.$f7.views.current.router.back();
+
+            return;
+         }
+
+         AB.$f7.views.current.router.navigate(definition.afterSubmitView.path, {
+            props: definition.afterSubmitView.props,
+         });
       } catch (e) {
          console.error(e);
 
          // TODO: popup here:
-         const L = ab.Label();
+         const L = AB.Label();
 
          let text = L("Save Failed");
 
@@ -94,7 +146,7 @@ export default class F7ViewFormButton extends formItem {
             });
          }
 
-         ab.$f7.toast
+         AB.$f7.toast
             .create({
                icon: '<i class="material-icons">error</i>',
                text,
@@ -104,16 +156,7 @@ export default class F7ViewFormButton extends formItem {
             .open();
       }
 
-      ab.$(`#${definition.id}`).removeClass("button-loading");
-
-      // this.$store.dispatch("updateRecord", {
-      //    dcID: "faa9905e-dea8-4c7f-8eb4-98f1e6e66506",
-      //    recordID: form.record.uuid,
-      //    record: parsedFormData,
-      // });
-      // setTimeout(() => {
-      //    this.$("#" + btn).removeClass("button-loading");
-      // }, 1000);
+      AB.$(`#${definition.id}`).removeClass("button-loading");
    }
 
    html() {

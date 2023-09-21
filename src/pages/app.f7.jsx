@@ -93,7 +93,7 @@ export default (AB) => {
             $f7.toast
                .create({
                   icon: '<i class="material-icons">error</i>',
-                  text: `Login Failed`,
+                  text: L("Login Failed"),
                   position: "center",
                   closeTimeout: 2000,
                })

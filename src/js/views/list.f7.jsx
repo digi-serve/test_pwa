@@ -19,7 +19,7 @@ export default class F7ViewList {
    itemSelected(item) {
       // if there is a detailPage set, then transition there:
       if (this.#settings.detailPage) {
-         this.#AB.$f7.view.main.router.navigate("/form", {
+         this.#AB.$f7.view.main.router.navigate(this.#settings.detailPage, {
             props: {
                isEditMode: true,
             },
@@ -37,7 +37,7 @@ export default class F7ViewList {
 
    // NOTE: this now means OPEN THIS VIEW.
    openView(data) {
-      this.#AB.$f7.view.main.router.navigate("/list", {
+      this.#AB.$f7.view.main.router.navigate(this.settings.route, {
          props: {
             data: data,
          },
@@ -59,6 +59,8 @@ export default class F7ViewList {
    }
 
    viewHTML() {
+      const L = this.#AB.Label();
+
       return this.#AB.$store.getters[this.#settings.dcID].value.map((item) => (
          <li id={item.uuid} class="swipeout deleted-callback">
             <div
@@ -73,8 +75,8 @@ export default class F7ViewList {
                <a
                   href="#"
                   class="swipeout-delete"
-                  data-confirm="Are you sure want to delete this item?"
-                  data-confirm-title="Delete?"
+                  data-confirm={L("Are you sure want to delete this item?")}
+                  data-confirm-title={L("Delete?")}
                >
                   Delete
                </a>
