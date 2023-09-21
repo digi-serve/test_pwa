@@ -1,7 +1,7 @@
 export default (AB) => {
    const L = AB.Label();
 
-   return (props, { $, $h, $f7, $on, $store, $update }) => {
+   return () => {
       return () => (
          <div class="page">
             <div class="navbar">
