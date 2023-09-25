@@ -19,11 +19,11 @@ export default class F7ViewList {
    itemSelected(item) {
       // if there is a detailPage set, then transition there:
       if (this.#settings.detailPage) {
-         this.#AB.$f7.view.main.router.navigate(this.#settings.detailPage, {
-            props: {
-               isEditMode: true,
-            },
-            ignoreCache: true,
+         const DetailPage = this.application.pageByID(this.settings.detailPage);
+
+         DetailPage.openView({
+            data: item,
+            isEditMode: true,
          });
       }
 
@@ -36,11 +36,9 @@ export default class F7ViewList {
    }
 
    // NOTE: this now means OPEN THIS VIEW.
-   openView(data) {
+   openView(props) {
       this.#AB.$f7.view.main.router.navigate(this.settings.route, {
-         props: {
-            data: data,
-         },
+         props,
          ignoreCache: true,
       });
    }
