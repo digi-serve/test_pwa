@@ -24,78 +24,7 @@ export default class F7ViewFormButton extends formItem {
       form.views.forEach((view) => {
          const field = view.definition.field;
 
-         switch (view.definition.fieldType) {
-            case "boolean":
-               if (formData[field].length === 0) {
-                  parsedFormData[field] = 0;
-
-                  break;
-               }
-
-               parsedFormData[field] = 1;
-
-               break;
-
-            case "datetime":
-               parsedFormData[field] = new Date(formData[field]).toISOString();
-
-               break;
-
-            case "json":
-               {
-                  const $inputElements = AB.$(`#${form.id}`).find(
-                     `textarea[name="${field}"]`
-                  );
-                  const value = $inputElements.val();
-
-                  try {
-                     JSON.parse($inputElements.val());
-                  } catch (err) {
-                     $inputElements[0].setCustomValidity(L("Invalid JSON!"));
-                     $inputElements[0].checkValidity();
-                  }
-
-                  parsedFormData[field] = formData[field];
-               }
-
-               break;
-
-            case "list":
-               if (view.definition.key === "selectmultiple") {
-                  parsedFormData[field] = AB.$(`#${form.id}`)
-                     .find(`select[name="${field}"]`)
-                     .val();
-
-                  break;
-               }
-
-               parsedFormData[field] = formData[field];
-
-               break;
-
-            case "connectObject":
-               if (view.definition.settings.linkType === "many") {
-                  parsedFormData[field] = AB.$(`#${form.id}`)
-                     .find(`select[name="${field}"]`)
-                     .val();
-
-                  break;
-               }
-
-               parsedFormData[field] = formData[field];
-
-               break;
-
-            case "number":
-               parsedFormData[field] = parseInt(formData[field]);
-
-               break;
-
-            default:
-               parsedFormData[field] = formData[field];
-
-               break;
-         }
+         parsedFormData[field] = view.parseFormData(formData[field]);
       });
 
       if (!AB.$f7.input.validateInputs(`#${form.id}`)) {

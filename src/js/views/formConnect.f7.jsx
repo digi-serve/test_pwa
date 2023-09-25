@@ -12,6 +12,16 @@ export default class F7ViewFormConnect extends formItem {
       this.#form = form;
    }
 
+   parseFormData(value) {
+      if (this.definition.settings.linkType === "many")
+         return this.#AB
+            .$(`#${this.#form.id}`)
+            .find(`select[name="${this.definition.field}"]`)
+            .val();
+
+      return super.parseFormData(value);
+   }
+
    html() {
       const definition = this.definition;
       const definitionCopy = Object.assign({}, definition, {

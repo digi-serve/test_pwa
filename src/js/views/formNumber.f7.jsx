@@ -10,6 +10,10 @@ export default class F7ViewFormNumber extends formItem {
       this.#form = form;
    }
 
+   parseFormData(value) {
+      return parseInt(super.parseFormData(value));
+   }
+
    html() {
       const definition = this.definition;
       const errorMessage = this.#AB.Label()("Only numbers please!");

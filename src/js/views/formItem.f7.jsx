@@ -16,6 +16,10 @@ export default class F7ViewFormItem {
       return this.#definition;
    }
 
+   parseFormData(value) {
+      return value;
+   }
+
    html() {
       return () => {};
    }

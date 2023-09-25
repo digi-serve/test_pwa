@@ -10,6 +10,13 @@ export default class F7ViewFormSelectMultiple extends formItem {
       this.#form = form;
    }
 
+   parseFormData(value) {
+      return this.#AB
+         .$(`#${this.#form.id}`)
+         .find(`select[name="${this.definition.field}"]`)
+         .val();
+   }
+
    html() {
       const definition = this.definition;
 

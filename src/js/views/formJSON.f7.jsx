@@ -10,6 +10,23 @@ export default class F7ViewFormJSON extends formItem {
       this.#form = form;
    }
 
+   parseFormData(value) {
+      const AB = this.#AB;
+      const $inputElements = AB.$(`#${this.#form.id}`).find(
+         `textarea[name="${this.definition.field}"]`
+      );
+
+      try {
+         $inputElements[0].setCustomValidity("");
+         JSON.parse(value);
+      } catch (err) {
+         $inputElements[0].setCustomValidity(AB.Label()("Invalid JSON!"));
+         $inputElements[0].checkValidity();
+      }
+
+      return super.parseFormData(value);
+   }
+
    html() {
       const definition = this.definition;
 

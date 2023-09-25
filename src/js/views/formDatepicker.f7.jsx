@@ -10,6 +10,13 @@ export default class F7ViewFormDatepicker extends formItem {
       this.#form = form;
    }
 
+   parseFormData(value) {
+      if (this.definition.fieldType === "datetime")
+         return new Date(value).toISOString();
+
+      return super.parseFormData(value);
+   }
+
    viewHTML() {
       const definition = this.definition;
 

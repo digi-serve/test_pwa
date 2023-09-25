@@ -10,6 +10,10 @@ export default class F7ViewFormCheckbox extends formItem {
       this.#form = form;
    }
 
+   parseFormData(value) {
+      return super.parseFormData(value).length === 0 ? 0 : 1;
+   }
+
    html() {
       const definition = this.definition;
 
