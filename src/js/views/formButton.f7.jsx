@@ -49,9 +49,11 @@ export default class F7ViewFormButton extends formItem {
             return;
          }
 
-         AB.$f7.views.current.router.navigate(definition.afterSubmitView.path, {
-            props: definition.afterSubmitView.props,
-         });
+         const afterSubmitView = this.application.pageByID(
+            definition.afterSubmitView.id
+         );
+
+         afterSubmitView.openView(definition.afterSubmitView.props);
       } catch (e) {
          console.error(e);
 
