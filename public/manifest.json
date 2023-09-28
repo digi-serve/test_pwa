@@ -1,0 +1,17 @@
+{
+  "name": "AppBuilder PWA",
+  "short_name": "AppBuilder PWA",
+  "description": "AppBuilder PWA",
+  "lang": "en-US",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1992af",
+  "theme_color": "#1992af",
+  "icons": [
+    {
+      "src": "/assets/mobile/icons/144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ]
+}
