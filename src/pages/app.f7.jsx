@@ -15,6 +15,13 @@ export default (AB) => {
       //    ? "https://design.digiserve.org"
       //    : "http://localhost:8010/proxy";
 
+      // check for a specified Route:
+      let params = new URL(document.location).searchParams;
+      let route = params.get("route");
+      if (route) {
+         defaultPath = `/${route}`;
+      }
+
       $store.dispatch("getVersion");
 
       $on("pageInit", () => {
@@ -179,6 +186,7 @@ export default (AB) => {
          }
       }
 
+      let pagesMenu = Application.pages((p) => p.menuType == "menu");
       return () => (
          <div id="app">
             {/* Left panel with cover effect */}
@@ -222,7 +230,7 @@ export default (AB) => {
                                     </div>
                                  </a>
                               </li>
-                              {Application.pages().map((p) => {
+                              {pagesMenu.map((p) => {
                                  return (
                                     <li>
                                        <a

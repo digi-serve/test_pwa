@@ -26,10 +26,6 @@ export default (AB) => {
          path: "/list",
          component: ListPage(AB),
       },
-      {
-         path: "(.*)",
-         component: NotFoundPage(AB),
-      },
    ];
 
    const listPages = Application.pages();

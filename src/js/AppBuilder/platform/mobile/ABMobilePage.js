@@ -97,7 +97,7 @@ export default class ABMobilePage extends ABMobilePageCore {
                let allResults = [];
 
                allViews.forEach((v) => {
-                  allResults.push(v.html());
+                  allResults.push(v.html($h));
                });
 
                // views.forEach((view) => {
@@ -185,7 +185,9 @@ export default class ABMobilePage extends ABMobilePageCore {
                   </div>
                </div>
             </div>
+            <div class="page-content infinite-scroll-content">
             ${viewHTML()}
+            </div>
          </div>
       `;
          },
