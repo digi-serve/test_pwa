@@ -18,6 +18,9 @@ export default (AB) => {
          path: "/",
          component: HomePage(AB),
       },
+      // These (/form and /list) are temporary reference pages we are using
+      // in our design. These should be removed after we have our Pages &
+      // Widgets up and working:
       {
          path: "/form",
          component: FormPage(AB),
@@ -28,7 +31,65 @@ export default (AB) => {
       },
    ];
 
-   const listPages = Application.pages();
+   // build our Tabs:
+   // NOTE: we build links only for the Root level Tabs
+   let pagesTabsRoot = Application.pages((p) => p.menuType == "tab");
+   if (pagesTabsRoot.length > 0) {
+      let tabRoute = {
+         path: "/tabs/",
+         content: "",
+         tabs: [],
+      };
+
+      let content = `<div class="page">
+<!--
+  <div class="navbar">
+    <div class="navbar-bg"></div>
+    <div class="navbar-inner">
+                      <div class="left">
+                     <a
+                        href="#"
+                        data-panel=".panel-left"
+                        class="link icon-only panel-open"
+                     >
+                        <i class="icon material-icons">menu</i>
+                     </a>
+                  </div>
+      <div class="title">Routable Tabs</div>
+    </div>
+  </div>
+-->
+  <div class="toolbar tabbar toolbar-bottom">
+    <div class="toolbar-inner">`;
+
+      // <!-- additional "data-route-tab-id" must match to tab's ID in the specified routes -->
+      pagesTabsRoot.forEach((p) => {
+         content += `<a href="/tabs/${p.route}" class="tab-link" data-route-tab-id="${p.route}">${p.name}</a>`;
+      });
+
+      content += `</div>
+  </div>
+  <!-- Additional "tabs-routable" is required on tabs -->
+  <div class="tabs tabs-routable">`;
+
+      // Make sure ALL tabs have a defined content <div>
+      let pagesTabsAll = Application.pages((p) => p.menuType == "tab", true);
+
+      pagesTabsAll.forEach((p) => {
+         content += `<div class="tab page-content" id="${p.route}">${p.name}</div>`;
+         tabRoute.tabs.push(p.routeComponent());
+      });
+
+      content += `
+  </div>
+</div>`;
+
+      tabRoute.content = content;
+
+      routes.push(tabRoute);
+   }
+
+   const listPages = Application.pages((p) => p.menuType == "menu", true);
 
    listPages.forEach((Page) => {
       routes.push(Page.routeComponent());

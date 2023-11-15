@@ -5,7 +5,18 @@ export default (AB) => {
             const user = await AB.Network.get({ url: "/mobile/whoami" });
 
             AB.isInitialized = true;
-            AB.$f7.view.main.router.navigate("/list", {
+
+            // now we route to our Default Page:
+            const Application = AB.applications()[0];
+            let DefaultPage = Application.pageByID(
+               Application.pageDefault,
+               true
+            );
+            if (!DefaultPage) {
+               DefaultPage = Application.pages()[0]; // just pick 1st one:
+            }
+
+            AB.$f7.view.main.router.navigate(`/${DefaultPage.route}`, {
                transition: "f7-fade",
             });
          } catch (e) {

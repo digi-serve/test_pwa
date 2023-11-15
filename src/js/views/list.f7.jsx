@@ -4,6 +4,7 @@ export default class F7ViewList {
    constructor(AB, settings) {
       this.#AB = AB;
       this.#settings = settings;
+      this.application = AB.applications()[0];
    }
 
    get id() {
@@ -19,9 +20,11 @@ export default class F7ViewList {
    itemSelected(item) {
       // if there is a detailPage set, then transition there:
       if (this.#settings.detailPage) {
-         const DetailPage = this.application.pageByID(this.settings.detailPage);
+         // const DetailPage = this.application.pageByID(
+         //    this.#settings.detailPage
+         // );
 
-         DetailPage.openView({
+         this.#AB.$f7.view.main.router.navigate("/form", {
             data: item,
             isEditMode: true,
          });

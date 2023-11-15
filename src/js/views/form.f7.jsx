@@ -222,9 +222,11 @@ export default class F7ViewForm {
                {
                   const date = record[view.definition.field];
 
-                  parsedRecord[view.definition.field] = `${
-                     date.getMonth() + 1
-                  }/${date.getDate()}/${date.getFullYear()}`;
+                  if (date) {
+                     parsedRecord[view.definition.field] = `${
+                        date.getMonth() + 1
+                     }/${date.getDate()}/${date.getFullYear()}`;
+                  }
                }
 
                break;
