@@ -12,8 +12,36 @@ export default class ABMobileViewForm extends ABMobileViewFormCore {
 
    async init() {}
 
+   itemsNotButtons($h) {
+      let rows = [];
+      this.views((v) => v.key != "mobile-button").forEach((v) => {
+         let align = "";
+         // @TODO: figure out which form items need alignment:
+         // if (v.key == "mobile-textbox") {
+         //    align = "align-top";
+         // }
+         rows.push($h`<li class="${align}" >${v.html($h)}</li>`);
+      });
+      return rows;
+   }
+
+   buttons($h) {
+      var rows = [];
+      this.views((v) => v.key == "mobile-button").forEach((v) => {
+         rows.push(v.html($h));
+      });
+      return rows;
+   }
+
    formItems($h) {
-      return "Form Items here!";
+      // OK, we are going to align our Form Item in a <ul> list,
+      // but tack on the Buttons at the bottom:
+      return $h`
+         <ul>
+         ${this.itemsNotButtons($h)}
+         </ul>
+         ${this.buttons($h)}
+      `;
    }
 
    html($h) {
