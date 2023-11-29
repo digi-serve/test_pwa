@@ -15,10 +15,7 @@ export default (AB) => {
             if (!DefaultPage) {
                DefaultPage = Application.pages()[0]; // just pick 1st one:
             }
-
-            AB.$f7.view.main.router.navigate(`/${DefaultPage.route}`, {
-               transition: "f7-fade",
-            });
+            DefaultPage.show();
          } catch (e) {
             // NOTE: this will catch errors OTHER than the "Reauth" notification
             // errors.  Those will be caught by listening to the AB.Network object

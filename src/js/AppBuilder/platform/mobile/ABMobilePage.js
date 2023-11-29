@@ -15,6 +15,26 @@ export default class ABMobilePage extends ABMobilePageCore {
    //    });
    // }
 
+   show(showBack = false) {
+      // TODO: figure out the different Page display options
+      // and update this call to properly intro the page:
+
+      let route = `/${this.route}`;
+      if (this.menuType == "tab") {
+         route = `/tabs/${this.route}`;
+      }
+      this.AB.$f7.view.main.router.navigate(route, {
+         props: {
+            /* This shows up as [props] in our .component definition */
+            showBack,
+            // data: item,
+            // isEditMode: true,
+            // transition: "f7-fade", // Q? Should we offer transition Options on a Page?
+         },
+         ignoreCache: true,
+      });
+   }
+
    viewHTML($h) {
       let allResults = [];
 
@@ -30,6 +50,7 @@ export default class ABMobilePage extends ABMobilePageCore {
          path: `/${this.route}`,
          id: this.route,
          component: (props, { $, $h, $f7, $on, $store, $update }) => {
+            const L = this.AB.Label();
             const title = this.label;
             let allGetters = {};
 
@@ -46,17 +67,13 @@ export default class ABMobilePage extends ABMobilePageCore {
             // it registers the components that need to be redrawn when the
             // related state is updated.
             let allViews = this.views();
-            let widgetAdd = null;
+
             allViews.forEach((v) => {
                let dc = v.datacollection;
                if (dc) {
                   dc.init();
                   allGetters[dc.id] = $store.getters[dc.id];
                }
-
-               // capture the 1st widget saying it wants the Add
-               // feature.
-               if (!widgetAdd && v.wantsAdd) widgetAdd = v;
             });
 
             $on("pageInit", async (e, page) => {
@@ -93,122 +110,59 @@ export default class ABMobilePage extends ABMobilePageCore {
                });
 
                await Promise.all(pendingInit);
-
-               // $("#add-data-form-submit").on("click", async () => {
-               //    const formData = $f7.form.convertToData("#add-data-form");
-
-               //    console.log(formData);
-               //    // await addItem(formData)
-               // });
-
-               // $(".deleted-callback").on(
-               //    "swipeout:deleted",
-               //    async function (value) {
-               //       await delItem(this.getAttribute("id"));
-               //    }
-               // );
             });
 
-            // let views = [
-            //    {
-            //       key: "list",
-            //       dcID: "0e9f5f6f-cd0b-4b93-b0c8-d51bd9852322",
-            //       detailPage: "ABPage.id",
-            //    },
-            // ];
-            function viewHTML() {
-               let allResults = [];
+            ///
+            /// Add Button
+            ///
 
-               allViews.forEach((v) => {
-                  allResults.push(v.html($h));
-               });
+            //             const viewAddButton = () => {
+            //                // Decide wether or not to display the Add button.
 
-               // views.forEach((view) => {
-               //    switch (view.key) {
-               //       case "list":
-               //          var list = new List(view, { Application }, AB);
-               //          allResults.push(list.html());
-               //          allViews.push(list);
-               //          break;
-               //       default:
-               //       // code block
-               //    }
-               // });
+            //                if (!widgetAdd) return ``;
 
-               return allResults.map((r) => r()); // render each jsx template
-            }
+            //                return $h`
+            //                <div class="right">
+            //                      <a
+            //                         href="#"
+            //                         data-panel=".panel-right"
+            //                         class="link icon-only"
+            //                         onclick=${() => {
+            //                            // tell the widget to open it's ADD page.
+            //                            widgetAdd.openAddPage();
+            //                            // this.AB.$f7.view.main.router.navigate("/form", {
+            //                            //    props: {
+            //                            //       isEditMode: false,
+            //                            //    },
+            //                            //    ignoreCache: true,
+            //                            // });
+            //                         }}
+            //                      >
+            //                         <i class="icon f7-icons if-not-md">plus</i>
+            //                         <i class="icon material-icons md-only">add</i>
+            //                      </a>
+            //                   </div>
+            // `;
+            //             };
 
-            const viewAddButton = () => {
-               if (!widgetAdd) return ``;
-
-               return $h`
-               <div class="right">
-                     <a
-                        href="#"
-                        data-panel=".panel-right"
-                        class="link icon-only"
-                        onclick=${() => {
-                           // tell the widget to open it's ADD page.
-                           widgetAdd.openAddPage();
-                           // this.AB.$f7.view.main.router.navigate("/form", {
-                           //    props: {
-                           //       isEditMode: false,
-                           //    },
-                           //    ignoreCache: true,
-                           // });
-                        }}
-                     >
-                        <i class="icon f7-icons if-not-md">plus</i>
-                        <i class="icon material-icons md-only">add</i>
-                     </a>
-                  </div>
-`;
-            };
-            // async function addItem() {
-            //    let DC = allViews[0].datacollection;
-            //    let firstItem = DC.getFirstRecord();
-            //    console.log(firstItem);
-            //    let removeThese = ["uuid", "created_at", "updated_at", "id"];
-            //    let newItem = {};
-            //    Object.keys(firstItem).forEach((k) => {
-            //       if (removeThese.indexOf(k) == -1) {
-            //          newItem[k] = firstItem[k];
-            //       }
-            //    });
-
-            //    newItem.Name = `${newItem.Name}-${AB.jobID()}`;
-            //    console.log(newItem);
-
-            //    try {
-            //       await DC.datasource.model().create(newItem);
-            //    } catch (e) {
-            //       console.error(e);
-            //    }
-            // }
-
-            // async function delItem(id) {
-            //    let DC = allViews[0].datacollection;
-            //    let item = id ? DC.$dc.getItem(id) : DC.getCursor();
-            //    if (!item) {
-            //       item = DC.getFirstRecord();
-            //    }
-
-            //    console.log("record to delete:", item);
-            //    try {
-            //       await DC.datasource
-            //          .model()
-            //          .delete(item[DC.datasource.PK()] || item.id || item.uuid);
-            //    } catch (e) {
-            //       console.error(e);
-            //    }
-            // }
+            ///
+            /// Tabs
+            ///
 
             let pagesTabs = this.application.pages((p) => p.menuType == "tab");
+            // {array} {ABMobilePage}
+            // The pages that are defined as Tabs in this application.
+
             let tabContent = (p) => {
+               // return the link for a Tab
+               // @param {ABMobilePage} that represents the Tab Page
                return $h`<a href="/tabs/${p.route}" class="tab-link" data-route-tab-id="${p.route}">${p.name}</a>`;
             };
+
             let viewTabs = () => {
-               if (pagesTabs.length == 0) return "";
+               // return the block of HTML for the Tabs on the bottom of a Page
+               // if there are no tabs, then this is empty.
+               if (pagesTabs.length == 0 || this.settings.hideTabs) return "";
 
                return $h`<div class="toolbar tabbar toolbar-bottom">
                    <div class="toolbar-inner">
@@ -217,28 +171,55 @@ export default class ABMobilePage extends ABMobilePageCore {
                  </div>`;
             };
 
-            return () => $h`
-         <div class="page">
-            <div class="navbar">
-               <div class="navbar-bg"></div>
-               <div class="navbar-inner">
-                  <div class="left">
-                     <a
+            ///
+            /// Menu or Back
+            ///
+            const menu = () => {
+               if (!props.showBack) {
+                  return $h`<a
                         href="#"
                         data-panel=".panel-left"
                         class="link icon-only panel-open"
                      >
                         <i class="icon material-icons">menu</i>
-                     </a>
-                  </div>
-                  <div class="title">${title}</div>
+                     </a>`;
+               }
+
+               return $h`<a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">${L("Back")}</span>
+                     </a>`;
+            };
+
+            ///
+            /// Title
+            ///
+
+            const pageTitle = () => {
+               // An ABMobilePage can optionally NOT display a title.
+
+               if (this.settings.hideTitle) {
+                  return "";
+               }
+
+               return $h`<div class="title">${title}</div>
                   <div class="title-large">
                      <div class="title-large-text">${title}</div>
+                  </div>`;
+            };
+
+            return () => $h`
+         <div class="page" data-name="${this.route}">
+            <div class="navbar">
+               <div class="navbar-bg"></div>
+               <div class="navbar-inner">
+                  <div class="left">
+                     ${menu()}
                   </div>
-                  ${viewAddButton()}
+                  ${pageTitle()}
                </div>
             </div>
-            <div class="page-content infinite-scroll-content">
+            <div class="page-content">
             ${this.viewHTML($h)}
             </div>
             ${viewTabs()}
