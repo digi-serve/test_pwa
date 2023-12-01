@@ -15,7 +15,7 @@ export default class ABMobileViewFormTextbox extends ABMobileViewFormTextboxCore
    inputElement($h) {
       let $inputElement = "";
       let field = this.field();
-      let placeholder = this.settings.placeholder ?? "?placeholder?";
+      let placeholder = this.settings.placeholder ?? "";
 
       switch (this.settings.type) {
          case "multiple":
@@ -24,8 +24,6 @@ export default class ABMobileViewFormTextbox extends ABMobileViewFormTextboxCore
                   name=${field.columnName}
                   placeholder=${placeholder}
                   class="resizable"
-                  ${this.settings.required ? "required" : ""}
-                  ${this.settings.required ? "validate" : ""}
                ></textarea>
             `;
             break;
@@ -60,12 +58,12 @@ export default class ABMobileViewFormTextbox extends ABMobileViewFormTextboxCore
                   name=${field.columnName}
                   placeholder=${placeholder}
                   type="text"
-                  ${this.settings.required ? "required" : ""}
-                  ${this.settings.required ? "validate" : ""}
                />
             `;
             break;
       }
+
+      this.updateProperties($inputElement);
 
       return $inputElement;
    }
