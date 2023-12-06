@@ -112,6 +112,12 @@ export default class ABMobilePage extends ABMobilePageCore {
                await Promise.all(pendingInit);
             });
 
+            $on("pageBeforeRemove", () => {
+               allViews.forEach((v) => {
+                  v.destroy();
+               });
+            });
+
             ///
             /// Add Button
             ///

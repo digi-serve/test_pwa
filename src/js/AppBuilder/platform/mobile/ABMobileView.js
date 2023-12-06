@@ -60,6 +60,20 @@ export default class ABMobileView extends ABMobileViewCore {
       return allowedComponents;
    }
 
+   /**
+    * @method init()
+    * perform any actions to prepare a view after HTML is ready
+    * happens during  $on("pageInit", ()=>{});
+    */
+   async init() {}
+
+   /**
+    * @method destroy()
+    * perform any actions to clean up during a destroy/page removal
+    * happens during $on("pageBeforeRemove", ()=>{})
+    */
+   destroy() {}
+
    warningsAll() {
       // report both OUR warnings, and any warnings from any of our sub views
       var allWarnings = super.warningsAll();

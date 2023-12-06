@@ -10,7 +10,23 @@ export default class ABMobileViewForm extends ABMobileViewFormCore {
    //    super(...params);
    // }
 
-   async init() {}
+   async init() {
+      let allInits = [];
+      this.views().forEach((v) => {
+         allInits.push(v.init());
+      });
+      await Promise.all(allInits);
+   }
+
+   /**
+    * @method destroy()
+    * perform any actions to clean up during a destroy/page removal
+    */
+   destroy() {
+      this.views().forEach((v) => {
+         v.destroy();
+      });
+   }
 
    itemsNotButtons($h) {
       let rows = [];
