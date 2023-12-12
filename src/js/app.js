@@ -3,7 +3,8 @@ import Framework7 from "framework7/bundle";
 
 // Import Global Resources
 // import "./atomic.polyfills.min.js";
-var atomic = require("./atomic.polyfills.min.js");
+var atomic = require("./atomic.js");
+// var atomic = require("./atomic.polyfills.min.js");
 var sails = require("./sails.io.js");
 Window.atomic = atomic;
 
