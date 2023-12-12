@@ -41,4 +41,22 @@ export default class ABMobileViewFormItem extends ABMobileViewFormItemCore {
          $inputElement.props["disabled"] = "disabled";
       }
    }
+
+   /**
+    * @method valuePrepare()
+    * Before a Form reads in it's values, we will first allow any FormItem to
+    * prepare it's data for submit.
+    * @return {Promise}
+    */
+   async valuePrepare() {}
+
+   html($h) {
+      return $h`
+         <div class="item-content item-input">
+            <div class="item-inner">
+               <div class="item-title item-label">${this.label}</div>
+               <div class="item-input-wrap">${this.inputElement($h)}</div>
+            </div>
+         </div>`;
+   }
 }

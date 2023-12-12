@@ -1,6 +1,21 @@
-import ABMobileViewFormReadonlyCore from "../../core/mobile/ABMobileViewFormReadonlyCore";
+/**
+ * ABMobileViewFormFormula
+ * The view that displays a form textbox on the screen.
+ */
 
-export default class ABMobileViewFormReadonly extends ABMobileViewFormReadonlyCore {
+import ABMobileViewFormFormulaCore from "../../core/mobile/ABMobileViewFormFormulaCore.js";
+
+export default class ABMobileViewFormFormula extends ABMobileViewFormFormulaCore {
+   // constructor(...params) {
+   //    super(...params);
+   // }
+
+   async init() {}
+
+   // destroy() {
+
+   // }
+
    inputElement($h) {
       let field = this.field();
       let placeholder = this.settings.placeholder ?? "";
@@ -10,7 +25,7 @@ export default class ABMobileViewFormReadonly extends ABMobileViewFormReadonlyCo
                   type="text"
                   id=${this.id}
                   name=${field.columnName}
-                  placeholder=${placeholder}
+                  readonly="readonly"
                   disabled="disabled"
                />
             `;

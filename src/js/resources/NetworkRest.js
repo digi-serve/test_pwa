@@ -219,11 +219,19 @@ class NetworkRest extends EventEmitter {
             params.url = this.baseURL + params.url;
          }
 
+         params.data = params.data || params.params;
+         delete params.params;
+
          params.headers = params.headers || {};
          if (this.AB.Account.authToken) {
             params.headers.Authorization = this.AB.Account.authToken;
          }
-         params.headers["Content-type"] = "application/json";
+         // Fix: don't set content-type if passed in data is a FormData object.
+         if (
+            !Object.prototype.toString.call(params.data) === "[object FormData]"
+         ) {
+            params.headers["Content-type"] = "application/json";
+         }
 
          var tenantID = this.AB.Tenant.id();
          if (tenantID) {
@@ -235,8 +243,18 @@ class NetworkRest extends EventEmitter {
          if (this.isNetworkConnected()) {
             params.method = params.method || params.type;
             params.timeout = 6000; // ??
-            params.data = params.data || params.params;
-            delete params.params;
+
+            // if params.data is a FormData object, don't set Content-type
+            if (
+               Object.prototype.toString.call(params.data) ===
+               "[object FormData]"
+            ) {
+               Object.keys(params.headers).forEach((k) => {
+                  if (k.toUpperCase() == "CONTENT-TYPE") {
+                     delete params.headers[k];
+                  }
+               });
+            }
 
             this.salSend(params)
                .then((packet) => {

@@ -67,14 +67,4 @@ export default class ABMobileViewFormTextbox extends ABMobileViewFormTextboxCore
 
       return $inputElement;
    }
-
-   html($h) {
-      return $h`
-         <div class="item-content item-input">
-            <div class="item-inner">
-               <div class="item-title item-label">${this.label}</div>
-               <div class="item-input-wrap">${this.inputElement($h)}</div>
-            </div>
-         </div>`;
-   }
 }
