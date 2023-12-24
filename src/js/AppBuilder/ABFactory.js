@@ -505,7 +505,9 @@ class ABFactory extends ABFactoryCore {
           *
           * @return {Date}
           */
-         subtractDate: (date, number, unit) => {
+         subtractDate: (date, number, unit = "hours") => {
+            // Prevent Depreciation warning:
+            if (unit == "") unit = "hours";
             return moment(date).subtract(number, unit).toDate();
          },
 
@@ -518,7 +520,9 @@ class ABFactory extends ABFactoryCore {
           *
           * @return {Date}
           */
-         addDate: (date, number, unit) => {
+         addDate: (date, number, unit = "hours") => {
+            // Prevent Depreciation warning:
+            if (unit == "") unit = "hours";
             return moment(date).add(number, unit).toDate();
          },
       };

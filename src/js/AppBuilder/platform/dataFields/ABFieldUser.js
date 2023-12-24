@@ -199,4 +199,15 @@ export default class ABFieldUser extends ABFieldUserCore {
          return result;
       });
    }
+
+   options(...params) {
+      return this.getOptions(...params).then((options) => {
+         // User values need to keep the .username as the .id
+         (options || []).forEach((o) => {
+            o.id = o.username ?? o.text;
+         });
+         this.AB.$store.state[this.id] = options || [];
+         return options;
+      });
+   }
 }

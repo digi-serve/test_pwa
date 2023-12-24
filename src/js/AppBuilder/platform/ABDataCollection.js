@@ -53,6 +53,25 @@ export default class ABDataCollection extends ABDataCollectionCore {
       return (this.__totalCount || 0) > this.$state[this.id].length;
    }
 
+   initStore(defStore) {
+      let id = this.id;
+      defStore.state[id] = [];
+      defStore.getters[id] = function ({ state }) {
+         return state[id];
+      };
+
+      // now check all the fields we are managing and see if they
+      // need to initStore()
+      let obj = this.datasource;
+      if (obj) {
+         obj.fields().forEach((f) => {
+            if (f.isConnection) {
+               f.initStore(defStore);
+            }
+         });
+      }
+   }
+
    init() {
       // prevent initialize many times
       if (this.initialized) return;
@@ -128,6 +147,9 @@ export default class ABDataCollection extends ABDataCollectionCore {
 
          // propagate the error here:
          if (err) {
+            this.AB.notify.developer(err, {
+               context: "ABDataCollection.loadData()",
+            });
             throw err;
          }
       });

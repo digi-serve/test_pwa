@@ -55,10 +55,7 @@ export default (AB) => {
    };
 
    allDCs.forEach((DC) => {
-      configStore.state[DC.id] = [];
-      configStore.getters[DC.id] = function ({ state }) {
-         return state[DC.id];
-      };
+      DC.initStore(configStore);
    });
 
    const store = createStore(configStore);

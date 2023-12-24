@@ -3,10 +3,36 @@ import ABMobileViewFormCheckboxCore from "../../core/mobile/ABMobileViewFormChec
 export default class ABMobileViewFormCheckbox extends ABMobileViewFormCheckboxCore {
    async init() {}
 
+   valueClear() {
+      const myInput = this.myField;
+      if (myInput) {
+         myInput.checked = false;
+      }
+   }
+
+   valueLoad(rowData) {
+      const myInput = this.myField;
+      if (myInput) {
+         let field = this.field();
+         let val = rowData[field.columnName] || false;
+         if (typeof val === "string") val = JSON.parse(val);
+         myInput.checked = val;
+      }
+   }
+
+   valueGet(rowData) {
+      const myField = this.myField;
+      if (myField) {
+         const field = this.field();
+         rowData[field.columnName] = myField.checked ? 1 : 0;
+      }
+   }
+
    inputElement($h) {
       let field = this.field();
       let $inputElement = $h`
          <input 
+            id=${this.idFormElement}
             name=${field.columnName} 
             type="checkbox" 
             ${this.settings.disable ? 'disabled="disabled"' : ""}

@@ -102,6 +102,8 @@ export default class ABModel extends ABModelCore {
             if (key.indexOf("delete") == -1) {
                this.normalizeData(data);
             } else {
+               // triggers to ab.datacollection.delete need to send the .id
+               // of the item deleted:
                data = data.data || context.id;
             }
          } else {

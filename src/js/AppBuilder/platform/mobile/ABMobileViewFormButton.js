@@ -12,6 +12,10 @@ export default class ABMobileViewFormButton extends ABMobileViewFormButtonCore {
 
    async init() {}
 
+   get isSave() {
+      return this.settings.includeSave;
+   }
+
    cancel() {
       console.warn("TODO: Cancel this form.");
    }
@@ -21,7 +25,8 @@ export default class ABMobileViewFormButton extends ABMobileViewFormButtonCore {
    }
 
    save() {
-      console.warn("TODO: SAVE this form");
+      this.busy();
+      this.parent.save();
    }
 
    buttonCancel($h) {
@@ -34,7 +39,7 @@ export default class ABMobileViewFormButton extends ABMobileViewFormButtonCore {
       return $h`
          <a
             onClick=${() => this.cancel()}
-            id=${this.id}
+            id=${this.idCancel}
             class="button button-small button-fill button-preloader"
             href="#"
          >
@@ -54,7 +59,7 @@ export default class ABMobileViewFormButton extends ABMobileViewFormButtonCore {
       return $h`
          <a
             onClick=${() => this.reset()}
-            id=${this.id}
+            id=${this.idReset}
             class="button button-large button-fill button-preloader"
             href="#"
          >
@@ -65,7 +70,7 @@ export default class ABMobileViewFormButton extends ABMobileViewFormButtonCore {
    }
 
    buttonSave($h) {
-      if (!this.settings.includeSave) return "";
+      if (!this.isSave) return "";
 
       let label = this.settings.saveLabel
          ? this.settings.saveLabel
@@ -74,7 +79,7 @@ export default class ABMobileViewFormButton extends ABMobileViewFormButtonCore {
       return $h`
          <a
             onClick=${() => this.save()}
-            id=${this.id}
+            id=${this.idSave}
             class="button button-large button-fill button-preloader"
             href="#"
          >
@@ -92,5 +97,27 @@ export default class ABMobileViewFormButton extends ABMobileViewFormButtonCore {
             ${this.buttonSave($h)}
          </div>
       `;
+   }
+
+   get idCancel() {
+      return `Cancel_${this.id}`;
+   }
+   get idReset() {
+      return `Reset_${this.id}`;
+   }
+   get idSave() {
+      return `Save_${this.id}`;
+   }
+
+   busy() {
+      this.AB.$(`#${this.idSave}`)
+         .addClass("button-loading")
+         .addClass("disabled");
+   }
+
+   ready() {
+      this.AB.$(`#${this.idSave}`)
+         .removeClass("button-loading")
+         .removeClass("disabled");
    }
 }

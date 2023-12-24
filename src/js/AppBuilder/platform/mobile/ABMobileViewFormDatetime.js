@@ -12,7 +12,7 @@ export default class ABMobileViewFormDatetime extends ABMobileViewFormDatetimeCo
 
    async init() {
       this.formDatepicker = this.AB.$f7.calendar.create({
-         inputEl: `#${this.id}`, // ".form-datepicker-datetime",
+         inputEl: `#${this.idFormElement}`, // ".form-datepicker-datetime",
          timePicker: true,
          dateFormat: {
             month: "numeric",
@@ -28,13 +28,17 @@ export default class ABMobileViewFormDatetime extends ABMobileViewFormDatetimeCo
       this.formDatepicker?.destroy();
    }
 
+   valueLoad() {
+      console.error("TODO: finish this");
+   }
+
    inputElement($h) {
       let field = this.field();
       let placeholder = this.settings.placeholder ?? "";
       let $inputElement = $h`
          <input
             type="text"
-            id=${this.id}
+            id=${this.idFormElement}
             name=${field.columnName}
             class="form-datepicker-datetime"
             placeholder=${placeholder}

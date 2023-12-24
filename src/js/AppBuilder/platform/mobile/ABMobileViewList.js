@@ -10,9 +10,87 @@ export default class ABMobileViewList extends ABMobileViewListCore {
    //    super(...params);
    // }
 
-   async init() {}
+   async init() {
+      this.isSwipeout = {};
+      // {hash} { item.uuid : bool }
+      // keeps track of which item was in the process of a swipeout.
+      // This prevents the click events from triggering an .itemSelected()
+      // during a swipeout event.
+
+      this.AB.$(`#${this.idList}`)
+         .find(".swipeout")
+         .on("swipeout:open", (e) => {
+            let id = this.AB.$(e.target).data("id");
+            this.isSwipeout[id] = true;
+         });
+
+      this.AB.$(`#${this.idList}`)
+         .find(".swipeout")
+         .on("swipeout:closed", (e) => {
+            let id = this.AB.$(e.target).data("id");
+            this.isSwipeout[id] = false;
+         });
+
+      this.AB.$(`#${this.idList}`)
+         .find(".swipeout")
+         .on("swipeout:delete", async (e) => {
+            let id = this.AB.$(e.target).data("id");
+            this.isSwipeout[id] = false;
+
+            let success = await this.itemDeleted(id);
+            if (!success) {
+               e.preventDefault();
+            }
+         });
+
+      setTimeout(() => {
+         let dc = this.datacollection;
+         let allVals = dc.$state[dc.id];
+         dc.$state[dc.id] = allVals;
+      }, 30);
+
+      // let dc = this.datacollection;
+      // dc.once("initializedData", () => {
+      //    // this triggers a change in the F7 store and updates the display
+      //    // hopefully this gets rid of that lingering progress indicator
+      //    let allVals = dc.$state[dc.id];
+      //    dc.$state[dc.id] = allVals;
+      // });
+   }
+
+   async itemDeleted(id) {
+      let CurrentObject = this.datacollection.datasource;
+      try {
+         let response = await CurrentObject.model().delete(id);
+
+         if (response) {
+            // there should have been an ab.datacollection.delete trigger
+            // that takes care of removing the item from the DC.
+            // this.datacollection.
+            return true;
+         } else {
+            let L = this.AB.Label();
+            this.AB.$f7.dialog.alert(
+               L("No rows were effected.  This does not seem right."),
+               L("Error")
+            );
+            return false;
+         }
+      } catch (err) {
+         this.AB.notify.developer(err, {
+            context: "ABMobileViewList.itemDeleted()",
+            message: "Error deleting item",
+            obj: CurrentObject.toObj(),
+            id,
+         });
+         return false;
+      }
+   }
 
    itemSelected(item) {
+      // prevent random clicks when processing a swipeout
+      if (this.isSwipeout[item.uuid]) return;
+
       // Make sure our DC registers which item was just selected.
       const dc = this.datacollection;
 
@@ -63,18 +141,29 @@ export default class ABMobileViewList extends ABMobileViewListCore {
       return "";
    }
 
+   get idList() {
+      return `L${this.id}`;
+   }
+   idItem(item) {
+      return `I${item.uuid}`;
+   }
+
    listItems($h) {
       const L = this.AB.Label();
 
       return this.AB.$store.getters[this.datacollection.id].value.map(
          (item) => $h`
-         <li id=${item.uuid} class="swipeout deleted-callback">
-            <div
-               class="swipeout-content item-content"
-               onClick=${() => this.itemSelected(item)}
-            >
-               <div class="item-inner">
-                  <div class="item-title">${this.template(item)}</div>
+         <li id=${this.idItem(item)} data-id=${
+            item.uuid
+         } class="swipeout deleted-callback">
+            <div class="swipeout-content" >
+               <div 
+                  class="item-content"
+                  onClick=${() => this.itemSelected(item)}
+               >
+                  <div class="item-inner">
+                     <div class="item-title">${this.template(item)}</div>
+                  </div>
                </div>
             </div>
             <div class="swipeout-actions-right">
@@ -170,6 +259,7 @@ export default class ABMobileViewList extends ABMobileViewListCore {
          ${this.listTitle($h)}
          ${this.searchBar($h)}
          <div
+            id=${this.idList}
             class="infinite-scroll-content"
             onInfinite=${() => this.loadMore()}
          >

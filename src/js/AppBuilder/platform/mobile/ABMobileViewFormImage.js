@@ -39,12 +39,27 @@ export default class ABMobileViewFormImage extends ABMobileViewFormImageCore {
    //    }
    // }
 
+   valueGet(rowData) {
+      super.valueGet(rowData);
+
+      // Images just store .uuid, so pull out the file.uuid info
+      // and return that.
+      const field = this.field();
+      if (rowData[field.columnName]) {
+         try {
+            let val = JSON.parse(rowData[field.columnName]);
+            val = val?.uuid ?? val;
+            rowData[field.columnName] = val;
+         } catch (e) {}
+      }
+   }
+
    inputElementUpload($h) {
       let $inputElement = $h`
          <input
             id=${this.idUpload}
             type="file"
-            name="image"
+            name="file"
             class="button button-big button-fill"
             accept="image/*"
             capture="environment"

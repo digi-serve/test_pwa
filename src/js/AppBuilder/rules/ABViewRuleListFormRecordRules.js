@@ -18,4 +18,25 @@ export default class ABViewRuleListFormRecordRules {
    //       p.warningsEval();
    //    });
    // }
+   async formLoad() {
+      console.error("TODO: implement RecordRules.formLoad()!");
+   }
+   async fromSettings() {
+      console.error("TODO: implement RecordRules.fromSettings()!");
+   }
+   async objectLoad() {
+      console.error("TODO: implement RecordRules.objectLoad()!");
+   }
+
+   async rulesReady() {
+      console.error("TODO: implement RecordRules.rulesReady()!");
+   }
+
+   async processPre() {
+      console.error("TODO: implement RecordRules.processPre()!");
+   }
+
+   async process() {
+      console.error("TODO: implement RecordRules.process()!");
+   }
 }

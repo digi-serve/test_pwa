@@ -18,6 +18,7 @@ export default class ABMobileViewFormEmail extends ABMobileViewFormEmailCore {
       let $inputElement = $h`
          <input
             type="email"
+            id=${this.idFormElement}
             name=${field.columnName}
             placeholder=${placeholder}
          />

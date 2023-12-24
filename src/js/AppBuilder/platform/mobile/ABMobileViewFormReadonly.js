@@ -8,7 +8,7 @@ export default class ABMobileViewFormReadonly extends ABMobileViewFormReadonlyCo
       let $inputElement = $h`
                <input
                   type="text"
-                  id=${this.id}
+                  id=${this.idFormElement}
                   name=${field.columnName}
                   placeholder=${placeholder}
                   disabled="disabled"

@@ -609,7 +609,7 @@ export default class ABFieldImage extends ABFieldImageCore {
     *        Is this url being used by a webix component?
     * @return {string}
     */
-   urlUpload(isWebix = true) {
+   urlUpload(isWebix = false) {
       return `/file/upload/${this.object.id}/${this.id}/${isWebix ? "1" : "0"}`;
    }
 }

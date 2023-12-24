@@ -25,6 +25,22 @@ export default class ABMobileViewFormFile extends ABMobileViewFormFileCore {
 
    destroy() {}
 
+   valueLoad() {
+      console.error("TODO: finish this");
+   }
+
+   // valueGet(rowData) {
+   //    const myField = this.myField;
+   //    if (myField) {
+   //       const field = this.field();
+   //       let value = myField.value;
+   //       try {
+   //          value = JSON.parse(value);
+   //       } catch (e) {}
+   //       rowData[field.columnName] = value;
+   //    }
+   // }
+
    /**
     * @method valuePrepare()
     * Prepare our value for the Form Submission.  This means we need to
@@ -37,12 +53,21 @@ export default class ABMobileViewFormFile extends ABMobileViewFormFileCore {
       let formElement = document.getElementById(this.idForm);
       let formData = new FormData(formElement);
 
+      // don't upload when not selected.
+      let file = formData.get("file");
+      if (file.name == "" && file.size == 0) return;
+
       try {
          let response = await this.AB.Network.post({
             url: field.urlUpload(false),
             data: formData,
          });
-         this.AB.$(`#${this.idFileID}`).val(response.uuid);
+         this.AB.$(`#${this.idFormElement}`).val(
+            JSON.stringify({
+               uuid: response.uuid,
+               filename: file.name,
+            })
+         );
       } catch (e) {
          this.AB.notify.developer(e, {
             context:
@@ -93,10 +118,6 @@ export default class ABMobileViewFormFile extends ABMobileViewFormFileCore {
       return `file_${this.id}`;
    }
 
-   get idFileID() {
-      return `fileID_${this.id}`;
-   }
-
    html($h) {
       let field = this.field();
       return $h`
@@ -110,7 +131,7 @@ export default class ABMobileViewFormFile extends ABMobileViewFormFileCore {
                   <div class="item-title floating-label">${this.label}</div>
                   <div class="item-input">
                     <input 
-                       id=${this.idFileID} 
+                       id=${this.idFormElement} 
                        name=${field.columnName} 
                        readonly 
                        type="hidden" 

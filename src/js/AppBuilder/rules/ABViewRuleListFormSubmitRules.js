@@ -18,4 +18,19 @@ export default class ABViewRuleListFormSubmitRules {
    //       p.warningsEval();
    //    });
    // }
+   async formLoad() {
+      console.error("TODO: implement SubmitRules.formLoad()!");
+   }
+
+   async fromSettings() {
+      console.error("TODO: implement SubmitRules.fromSettings()!");
+   }
+
+   async objectLoad() {
+      console.error("TODO: implement SubmitRules.objectLoad()!");
+   }
+
+   async process() {
+      console.error("TODO: implement SubmitRules.process()!");
+   }
 }

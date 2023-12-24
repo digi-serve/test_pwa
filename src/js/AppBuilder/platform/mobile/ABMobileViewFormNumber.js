@@ -28,7 +28,7 @@ export default class ABMobileViewFormNumber extends ABMobileViewFormNumberCore {
       let $inputElement = $h`
                <input
                   type="number"
-                  id=${this.id}
+                  id=${this.idFormElement}
                   name=${field.columnName}
                   placeholder=${placeholder}
                   pattern="[0-9]*"

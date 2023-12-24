@@ -235,6 +235,22 @@ export default class ABFieldConnect extends ABFieldConnectCore {
     *
     * @return {Promise}
     */
+
+   initStore(store) {
+      let id = this.id;
+      store.state[id] = [];
+      store.getters[id] = function ({ state }) {
+         return state[id];
+      };
+   }
+
+   options(...params) {
+      return this.getOptions(...params).then((options) => {
+         this.AB.$store.state[this.id] = options || [];
+         return options;
+      });
+   }
+
    getOptions(whereClause, term, sort, editor) {
       const theEditor = editor;
       return new Promise((resolve, reject) => {
@@ -263,16 +279,17 @@ export default class ABFieldConnect extends ABFieldConnectCore {
          // Prepare Where clause
 
          const where = this.AB.cloneDeep(whereClause || {});
-         sort = sort || [];
-
          if (!where.glue) where.glue = "and";
-
          if (!where.rules) where.rules = [];
 
          term = term || "";
+         sort = sort || [];
 
          // check if linked object value is not define, should return a empty array
-         if (!this.settings.linkObject) return [];
+         if (!this.settings.linkObject) {
+            respond([]);
+            return;
+         }
 
          // if options was cached
          // if (this._options != null) return resolve(this._options);
@@ -290,11 +307,11 @@ export default class ABFieldConnect extends ABFieldConnectCore {
          // Get linked object model
          const linkedModel = linkedObj.model();
 
+         const linkType = this.LinkString; // `${this.settings.linkType}:${this.settings.linkViaType}`;
+
          // M:1 - get data that's only empty relation value
          if (
-            this.settings.linkType == "many" &&
-            this.settings.linkViaType == "one" &&
-            editor?.config?.showAllOptions != true
+            "many:one" == linkType // && editor?.config?.showAllOptions != true
          ) {
             where.rules.push({
                key: linkedCol.id,
@@ -304,9 +321,7 @@ export default class ABFieldConnect extends ABFieldConnectCore {
          }
          // 1:1
          else if (
-            this.settings.linkType == "one" &&
-            this.settings.linkViaType == "one" &&
-            editor?.config?.showAllOptions != true
+            "one:one" == linkType // && editor?.config?.showAllOptions != true
          ) {
             // 1:1 - get data is not match link id that we have
             if (this.settings.isSource == true) {
@@ -610,22 +625,22 @@ export default class ABFieldConnect extends ABFieldConnectCore {
       });
    }
 
-   populateOptions(theEditor, data, field, form, addCy) {
-      if (theEditor == null || theEditor.$destructed) return;
+   // populateOptions(theEditor, data, field, form, addCy) {
+   //    if (theEditor == null || theEditor.$destructed) return;
 
-      theEditor.blockEvent();
-      theEditor.getList().clearAll();
-      theEditor.getList().define("data", data);
-      if (addCy) {
-         this.populateOptionsDataCy(theEditor, field, form);
-      }
-      if (theEditor.getValue && theEditor.getValue()) {
-         theEditor.setValue(theEditor.getValue());
-         // } else if (this._selectedData && this._selectedData.length) {
-         //    theEditor.setValue(this.editFormat(this._selectedData));
-      }
-      theEditor.unblockEvent();
-   }
+   //    theEditor.blockEvent();
+   //    theEditor.getList().clearAll();
+   //    theEditor.getList().define("data", data);
+   //    if (addCy) {
+   //       this.populateOptionsDataCy(theEditor, field, form);
+   //    }
+   //    if (theEditor.getValue && theEditor.getValue()) {
+   //       theEditor.setValue(theEditor.getValue());
+   //       // } else if (this._selectedData && this._selectedData.length) {
+   //       //    theEditor.setValue(this.editFormat(this._selectedData));
+   //    }
+   //    theEditor.unblockEvent();
+   // }
 
    populateOptionsDataCy(theEditor, field, form) {
       if (theEditor?.$destructed) return;

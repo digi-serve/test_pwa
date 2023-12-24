@@ -21,6 +21,7 @@ export default class ABMobileViewFormTextbox extends ABMobileViewFormTextboxCore
          case "multiple":
             $inputElement = $h`
                <textarea
+                  id=${this.idFormElement}
                   name=${field.columnName}
                   placeholder=${placeholder}
                   class="resizable"
@@ -55,6 +56,7 @@ export default class ABMobileViewFormTextbox extends ABMobileViewFormTextboxCore
             // "rich"
             $inputElement = $h`
                <input
+                  id=${this.idFormElement}
                   name=${field.columnName}
                   placeholder=${placeholder}
                   type="text"

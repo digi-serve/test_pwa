@@ -15,6 +15,37 @@ export default class ABMobileViewFormItem extends ABMobileViewFormItemCore {
    //    });
    // }
 
+   get idFormElement() {
+      return `F${this.id}`;
+   }
+
+   get myField() {
+      return document.getElementById(this.idFormElement);
+   }
+
+   valueClear() {
+      const myField = this.myField;
+      if (myField) {
+         myField.value = "";
+      }
+   }
+
+   valueLoad(rowData) {
+      const myField = this.myField;
+      if (myField) {
+         const field = this.field();
+         myField.value = rowData[field.columnName] || "";
+      }
+   }
+
+   valueGet(rowData) {
+      const myField = this.myField;
+      if (myField) {
+         const field = this.field();
+         rowData[field.columnName] = myField.value;
+      }
+   }
+
    updateProperties($inputElement) {
       // NOTE: the $h returns an object that we can update with
       // the properties.

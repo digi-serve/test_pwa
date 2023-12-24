@@ -42,12 +42,21 @@ export default class ABMobileViewFormSelectMultiple extends ABMobileViewFormSele
    //    return $inputElement;
    // }
 
+   valueGet(rowData) {
+      const myField = this.myField;
+      if (myField) {
+         const field = this.field();
+         rowData[field.columnName] = this.AB.$(`#${this.idFormElement}`).val();
+      }
+   }
+
    html($h) {
       let value = this.options.find((o) => o.id == this.value)?.text;
       let field = this.field();
       return $h`
          <a href="#" class="item-link smart-select smart-select-init">
             <select
+               id=${this.idFormElement} 
                name=${field?.columnName}
                multiple
             >
