@@ -19,7 +19,7 @@ export default class ABMobileViewForm extends ABMobileViewFormCore {
 
       const dc = this.datacollection;
       if (dc && !this.settings.clearOnLoad) {
-         let rowData = dc.getCursor();
+         let rowData = dc.getCursor() || {};
          this.views().forEach((v) => {
             v.valueLoad?.(rowData);
          });
