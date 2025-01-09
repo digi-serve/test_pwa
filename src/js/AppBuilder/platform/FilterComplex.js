@@ -249,6 +249,8 @@ export default class FilterComplex extends FilterComplexCore {
 
       super.init(options);
 
+      console.error("@TODO: Filtercomplex and more webix references");
+      /*
       const el = $$(this.ids.querybuilder);
 
       if (el) {
@@ -271,6 +273,7 @@ export default class FilterComplex extends FilterComplexCore {
          }
          this._initComplete = true;
       }
+      */
    }
 
    /**

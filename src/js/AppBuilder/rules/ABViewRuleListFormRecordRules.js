@@ -4,10 +4,25 @@
  * a blank stub. These only operate on the WEB platform, but are
  * referenced by our FORM components.
  */
-export default class ABViewRuleListFormRecordRules {
-   // constructor(values, application, parent, defaultValues) {
-   //    super(values, application, parent, defaultValues);
-   // }
+import ABViewRuleList from "./ABViewRuleList";
+import ABViewRule from "./ABViewRule";
+
+import RoleUpdateExisting from "./ruleActions/ABViewRuleActionFormRecordRuleUpdate";
+import RoleInsertConnected from "./ruleActions/ABViewRuleActionFormRecordRuleInsertConnected";
+import RoleUpdateConnected from "./ruleActions/ABViewRuleActionFormRecordRuleUpdateConnected";
+import RoleRemoveConnected from "./ruleActions/ABViewRuleActionFormRecordRuleRemoveConnected";
+
+export default class ABViewRuleListFormRecordRules extends ABViewRuleList {
+   constructor() {
+      var settings = {
+         labels: {
+            header: "ab.components.form.recordRules",
+            headerDefault: "Record Rules",
+         },
+      };
+      super(settings);
+   }
+
    // warningsEval() {
    //    super.warningsEval();
    //    let allViews = this.views();
@@ -18,25 +33,47 @@ export default class ABViewRuleListFormRecordRules {
    //       p.warningsEval();
    //    });
    // }
-   async formLoad() {
-      console.error("TODO: implement RecordRules.formLoad()!");
-   }
-   async fromSettings() {
-      console.error("TODO: implement RecordRules.fromSettings()!");
-   }
-   async objectLoad() {
-      console.error("TODO: implement RecordRules.objectLoad()!");
-   }
 
+   /**
+    * @method isReady()
+    * returns a promise that gets resolved once our list of Rules is
+    * ready to work.
+    * @return {Promise}
+    */
    async rulesReady() {
-      console.error("TODO: implement RecordRules.rulesReady()!");
+      var allReady = (this.listRules || []).map((r) => r.isReady());
+      await Promise.all(allReady);
    }
 
-   async processPre() {
-      console.error("TODO: implement RecordRules.processPre()!");
-   }
+   // must return the actual Rule object.
+   getRule() {
+      var listActions = [
+         new RoleUpdateExisting(
+            this.App,
+            `${this.idBase}_ruleActionUpdate`,
+            this.currentForm
+         ),
+         new RoleInsertConnected(
+            this.App,
+            `${this.idBase}_ruleActionInsert`,
+            this.currentForm
+         ),
+         new RoleUpdateConnected(
+            this.App,
+            `${this.idBase}_ruleActionUpdateConnected`,
+            this.currentForm
+         ),
+         new RoleRemoveConnected(
+            this.App,
+            `${this.idBase}_ruleActionRemoveConnected`,
+            this.currentForm
+         ),
+      ];
 
-   async process() {
-      console.error("TODO: implement RecordRules.process()!");
+      var Rule = new ABViewRule(listActions);
+      if (this.currentObject) {
+         Rule.objectLoad(this.currentObject);
+      }
+      return Rule;
    }
 }
