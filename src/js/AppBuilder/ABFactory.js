@@ -926,6 +926,11 @@ class ABFactory extends ABFactoryCore {
       });
    }
 
+   isEmail(value) {
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+      return _.matches(value, emailRegex);
+   }
+
    isNil(value) {
       return _.isNil(value);
    }

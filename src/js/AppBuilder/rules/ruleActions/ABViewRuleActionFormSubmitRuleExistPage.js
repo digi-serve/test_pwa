@@ -215,15 +215,16 @@ export default class ABViewRuleActionFormSubmitRuleExistPage extends ABViewRuleA
 
                toggleParent(tab);
 
-               // @TODO: refactor this to move to Framework7
-               let showIt = setInterval(function () {
-                  console.error("REFACTOR FOR FRAMEWORK7");
-                  // if ($$(tabView.id) && $$(tabView.id).isVisible()) {
-                  //    clearInterval(showIt);
-                  //    return;
-                  // }
-                  tab.emit("changeTab", tabView.id);
-               }, 100);
+               tab.emit("changeTab", tabView.id);
+               // // @TODO: refactor this to move to Framework7
+               // let showIt = setInterval(function () {
+               //    console.error("REFACTOR FOR FRAMEWORK7");
+               //    // if ($$(tabView.id) && $$(tabView.id).isVisible()) {
+               //    //    clearInterval(showIt);
+               //    //    return;
+               //    // }
+               //    tab.emit("changeTab", tabView.id);
+               // }, 100);
             }
          }
 

@@ -1,11 +1,11 @@
 //
-// ABViewRuleActionFormSubmitRuleConfirmMessage
+// ABViewRuleActionFormSubmitRuleWebsite
 //
 //
 //
 import ABViewRuleAction from "../ABViewRuleAction";
 
-export default class ABViewRuleActionFormSubmitRuleConfirmMessage extends ABViewRuleAction {
+export default class ABViewRuleActionFormSubmitRuleWebsite extends ABViewRuleAction {
    /**
     * @param {object} App
     *      The shared App object that is created in OP.Component
@@ -16,8 +16,8 @@ export default class ABViewRuleActionFormSubmitRuleConfirmMessage extends ABView
       super();
 
       this.App = App;
-      this.key = "ABViewRuleActionFormSubmitRuleConfirmMessage";
-      this.label = "Show a confirmation message";
+      this.key = "ABViewRuleActionFormSubmitRuleWebsite";
+      this.label = "Redirect to another website URL";
 
       this.currentObject = null; // the object this Action is tied to.
 
@@ -55,21 +55,18 @@ export default class ABViewRuleActionFormSubmitRuleConfirmMessage extends ABView
    //    return currFields;
    // }
 
-   // valueDisplayComponent
-   // Return an ABView to display our values form.
-   //
+   // // valueDisplayComponent
+   // // Return an ABView to display our values form.
+   // //
    // valueDisplayComponent(idBase) {
    //    var ids = {
-   //       message: `${idBase}_message`,
+   //       website: `${idBase}_website`,
    //    };
 
    //    this._ui = {
    //       ui: {
-   //          id: ids.message,
-   //          view: "textarea",
-   //          // label: this.labels.component.message,
-   //          // labelWidth: this.AB.UISettings.config().labelWidthLarge,
-   //          height: 130,
+   //          id: ids.website,
+   //          view: "text",
    //       },
 
    //       init: () => {},
@@ -88,13 +85,13 @@ export default class ABViewRuleActionFormSubmitRuleConfirmMessage extends ABView
    //       fromSettings: (valueRules) => {
    //          valueRules = valueRules || {};
 
-   //          $$(ids.message).setValue(valueRules.message || "");
+   //          $$(ids.website).setValue(valueRules.website || "");
    //       },
 
    //       toSettings: () => {
    //          // return the confirm message
    //          return {
-   //             message: $$(ids.message).getValue() || "",
+   //             website: $$(ids.website).getValue() || "",
    //          };
    //       },
    //    };
@@ -107,37 +104,35 @@ export default class ABViewRuleActionFormSubmitRuleConfirmMessage extends ABView
    // @param {obj} options
    process(options) {
       return new Promise((resolve, reject) => {
-         var confirmMessage = this.valueRules.message || "";
-
-         this.AB.$f7.dialog.create({
-            text: confirmMessage,
-         });
-         // webix.message({
-         //    text: confirmMessage,
-         //    type: "info",
-         // });
+         // redirect to website
+         if (this.valueRules.website)
+            window.open(
+               `http://${this.valueRules.website.replace("http://", "")}`,
+               "_blank"
+            );
 
          resolve();
       });
    }
 
-   // fromSettings
-   // initialize this Action from a given set of setting values.
-   // @param {obj}  settings
-   fromSettings(settings = {}) {
-      super.fromSettings(settings); // let the parent handle the QB
+   // // fromSettings
+   // // initialize this Action from a given set of setting values.
+   // // @param {obj}  settings
+   // fromSettings(settings) {
+   //    settings = settings || {};
+   //    super.fromSettings(settings); // let the parent handle the QB
 
-      // // if we have a display component, then populate it:
-      // if (this._ui) {
-      //    // now we handle our valueRules:{} object settings.
-      //    // pass the settings off to our DisplayList component:
-      //    this._ui.fromSettings(settings.valueRules);
-      // }
-   }
+   //    // if we have a display component, then populate it:
+   //    if (this._ui) {
+   //       // now we handle our valueRules:{} object settings.
+   //       // pass the settings off to our DisplayList component:
+   //       this._ui.fromSettings(settings.valueRules);
+   //    }
+   // }
 
-   // toSettings
-   // return an object that represents the current state of this Action
-   // @return {obj}
+   // // toSettings
+   // // return an object that represents the current state of this Action
+   // // @return {obj}
    // toSettings() {
    //    // settings: {
    //    //	message:''
@@ -146,7 +141,7 @@ export default class ABViewRuleActionFormSubmitRuleConfirmMessage extends ABView
    //    // let our parent store our QB settings
    //    var settings = super.toSettings();
 
-   //    // settings.valueRules = this._ui.toSettings();
+   //    settings.valueRules = this._ui.toSettings();
 
    //    return settings;
    // }

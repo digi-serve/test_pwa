@@ -9,10 +9,10 @@ import ABViewRule from "./ABViewRule";
 
 import RoleConfirmMessage from "./ruleActions/ABViewRuleActionFormSubmitRuleConfirmMessage";
 import RuleExistPage from "./ruleActions/ABViewRuleActionFormSubmitRuleExistPage";
-// const RuleParentPage = require("./ruleActions/ABViewRuleActionFormSubmitRuleParentPage");
-// const RuleClosePopup = require("./ruleActions/ABViewRuleActionFormSubmitRuleClosePopup");
-// const RuleWebsite = require("./ruleActions/ABViewRuleActionFormSubmitRuleWebsite");
-// const RuleEmail = require("./ruleActions/ABViewRuleActionFormSubmitRuleEmail");
+import RuleParentPage from "./ruleActions/ABViewRuleActionFormSubmitRuleParentPage";
+import RuleClosePopup from "./ruleActions/ABViewRuleActionFormSubmitRuleClosePopup";
+import RuleWebsite from "./ruleActions/ABViewRuleActionFormSubmitRuleWebsite";
+import RuleEmail from "./ruleActions/ABViewRuleActionFormSubmitRuleEmail";
 
 export default class ABViewRuleListFormSubmitRules extends ABViewRuleList {
    constructor() {
@@ -23,33 +23,6 @@ export default class ABViewRuleListFormSubmitRules extends ABViewRuleList {
          },
       };
       super(settings);
-   }
-
-   // warningsEval() {
-   //    super.warningsEval();
-   //    let allViews = this.views();
-   //    if (allViews.length == 0) {
-   //       this.warningsMessage("has no sub views");
-   //    }
-   //    (this.pages() || []).forEach((p) => {
-   //       p.warningsEval();
-   //    });
-   // }
-
-   async formLoad() {
-      console.error("TODO: implement SubmitRules.formLoad()!");
-   }
-
-   async fromSettings() {
-      console.error("TODO: implement SubmitRules.fromSettings()!");
-   }
-
-   async objectLoad() {
-      console.error("TODO: implement SubmitRules.objectLoad()!");
-   }
-
-   async process() {
-      console.error("TODO: implement SubmitRules.process()!");
    }
 
    // must return the actual Rule object.
