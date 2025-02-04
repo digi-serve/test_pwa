@@ -63,19 +63,66 @@ class Config {
       // portal popup and perform the initial config request
    }
 
+   /**
+    * Sets the configuration
+    * @param {Config} json - Configuration object
+    */
    config(json) {
+      if (!json || typeof json !== "object") {
+         throw new Error("Invalid configuration object");
+      }
+
       this._config = json;
+      /*
+         this._config = {
+            labels: {  label configuration  },
+            languages: { language configuration },
+            meta: { meta configuration  },
+            plugins: [ array of plugins  ],
+         +   inbox: { inbox configuration  },
+         +   inboxMeta: { inbox meta configuration },
+            site: { site configuration },
+            tenant: { tenant configuration },
+            user: { user configuration  },
+            userReal: {bool} true/false
+            version: {string} "1.0.0"
+         };
+
+         + = not pulled in by preloader. Instead a separate request is made.
+      */
+
+      // Move site and version to the top level
+      const { settings } = json;
+      ["site", "version"].forEach((key) => {
+         if (!this._config[key]) {
+            this._config[key] = settings[key];
+         }
+      });
+      delete this._config.settings;
+
+      this._config.userReal = window.__AB_Config_User_Real ?? false;
+
       defaultsDeep(this._config, configDefaults);
    }
 
+   /**
+    * Gets or sets a setting
+    * @param {string} key - Setting key
+    * @param {*} [value] - Setting value
+    * @returns {*} - Setting value if no value is provided
+    */
    setting(key, value) {
-      if (value) {
+      if (value !== undefined) {
          this._settings[key] = value;
          return;
       }
       return this._settings[key];
    }
 
+   /**
+    * Loads settings from a div element
+    * @param {HTMLElement} div - Div element
+    */
    settingsFromDiv(div) {
       Object.keys(settingsDefault).forEach((d) => {
          var val = div.getAttribute(d);
@@ -103,10 +150,10 @@ class Config {
     * @return {obj}
     *          { ABDefinition.id : {ABDefinition} }  hash of definitions.
     */
-   definitions() {
-      debugger;
-      return window.definitions;
-   }
+   // definitions() {
+   //    debugger;
+   //    return window.definitions;
+   // }
 
    error(/* ...args */) {
       console.error("Who is calling this? -> move to AB.error() instead.");
@@ -171,12 +218,12 @@ class Config {
       return null;
    }
 
-   uiSettings() {
-      if (window.innerWidth < 768) {
-         return ConfigMobile;
-      }
-      return ConfigDesktop;
-   }
+   // uiSettings() {
+   //    if (window.innerWidth < 768) {
+   //       return ConfigMobile;
+   //    }
+   //    return ConfigDesktop;
+   // }
 
    userConfig() {
       if (this._config && this._config.user) {

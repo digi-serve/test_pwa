@@ -996,8 +996,9 @@ class ABFactory extends ABFactoryCore {
       return _.isString(params);
    }
 }
-const AB = new ABFactory(Window.__ab_definitions.definitions);
-AB.Config.config(Window.__ab_config);
+await window.__AB_preload;
+const AB = new ABFactory(window.__ab_definitions.definitions);
+AB.Config.config(window.__ab_config);
 await AB.init();
 
 export default AB;

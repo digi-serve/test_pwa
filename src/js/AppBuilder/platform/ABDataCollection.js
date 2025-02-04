@@ -386,8 +386,12 @@ export default class ABDataCollection extends ABDataCollectionCore {
    }
 
    hideProgressOfComponents() {
+      // @TODO: do we simply .emit("loading.complete") and have components
+      // listen for that event?
+      console.warn(".hideProgressOfComponents() not implemented yet.");
       this.__bindComponentIds.forEach((comId) => {
-         if ($$(comId) && $$(comId).hideProgress) $$(comId).hideProgress();
+         // @TODO: this is webix code.
+         // if ($$(comId) && $$(comId).hideProgress) $$(comId).hideProgress();
       });
    }
 
@@ -410,7 +414,7 @@ export default class ABDataCollection extends ABDataCollectionCore {
          DC: this,
       });
 
-      this._extendCollection(dc);
+      // this._extendCollection(dc);
 
       return dc;
    }
@@ -431,58 +435,58 @@ export default class ABDataCollection extends ABDataCollectionCore {
       return treeStore;
    }
 
-   _extendCollection(dataStore) {
-      console.error(
-         "TODO: ABDataCollection._extendCollection(): remove this call!"
-      );
-      return;
+   // _extendCollection(dataStore) {
+   //    console.error(
+   //       "TODO: ABDataCollection._extendCollection(): remove this call!"
+   //    );
+   //    return;
 
-      // Apply this data collection to support multi-selection
-      // https://docs.webix.com/api__refs__selectionmodel.html
-      webix.extend(dataStore, webix.SelectionModel);
+   //    // Apply this data collection to support multi-selection
+   //    // https://docs.webix.com/api__refs__selectionmodel.html
+   //    webix.extend(dataStore, webix.SelectionModel);
 
-      dataStore.___AD = dataStore.___AD || {};
+   //    dataStore.___AD = dataStore.___AD || {};
 
-      // Implement .onDataRequest for paging loading
-      if (!this.settings.loadAll) {
-         if (!dataStore.___AD.onDataRequestEvent) {
-            dataStore.___AD.onDataRequestEvent = dataStore.attachEvent(
-               "onDataRequest",
-               (start, count) => {
-                  if (start < 0) start = 0;
+   //    // Implement .onDataRequest for paging loading
+   //    if (!this.settings.loadAll) {
+   //       if (!dataStore.___AD.onDataRequestEvent) {
+   //          dataStore.___AD.onDataRequestEvent = dataStore.attachEvent(
+   //             "onDataRequest",
+   //             (start, count) => {
+   //                if (start < 0) start = 0;
 
-                  // load more data to the data collection
-                  this.loadData(start, count);
+   //                // load more data to the data collection
+   //                this.loadData(start, count);
 
-                  return false; // <-- prevent the default "onDataRequest"
-               }
-            );
-         }
+   //                return false; // <-- prevent the default "onDataRequest"
+   //             }
+   //          );
+   //       }
 
-         if (!dataStore.___AD.onAfterLoadEvent) {
-            dataStore.___AD.onAfterLoadEvent = dataStore.attachEvent(
-               "onAfterLoad",
-               () => {
-                  this.emit("loadData", {});
-               }
-            );
-         }
-      }
+   //       if (!dataStore.___AD.onAfterLoadEvent) {
+   //          dataStore.___AD.onAfterLoadEvent = dataStore.attachEvent(
+   //             "onAfterLoad",
+   //             () => {
+   //                this.emit("loadData", {});
+   //             }
+   //          );
+   //       }
+   //    }
 
-      // override unused functions of selection model
-      dataStore.addCss = function () {};
-      dataStore.removeCss = function () {};
-      dataStore.render = function () {};
+   //    // override unused functions of selection model
+   //    dataStore.addCss = function () {};
+   //    dataStore.removeCss = function () {};
+   //    dataStore.render = function () {};
 
-      if (!dataStore.___AD.onAfterLoad) {
-         dataStore.___AD.onAfterLoad = dataStore.attachEvent(
-            "onAfterLoad",
-            () => {
-               this.hideProgressOfComponents();
-            }
-         );
-      }
-   }
+   //    if (!dataStore.___AD.onAfterLoad) {
+   //       dataStore.___AD.onAfterLoad = dataStore.attachEvent(
+   //          "onAfterLoad",
+   //          () => {
+   //             this.hideProgressOfComponents();
+   //          }
+   //       );
+   //    }
+   // }
 
    parseTreeCollection(data = {}) {
       if (
