@@ -2,7 +2,8 @@ export default (AB) => {
    const init = async () => {
       if (!AB.isInitialized) {
          try {
-            const user = await AB.Network.get({ url: "/mobile/whoami" });
+            // const user = await AB.Network.get({ url: "/mobile/whoami" });
+            // perform Inbox Lookup now?
 
             AB.isInitialized = true;
 
