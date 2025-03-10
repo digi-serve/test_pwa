@@ -40,7 +40,10 @@ export default class ABViewRuleListFormSubmitRules extends ABViewRuleList {
       ];
 
       var Rule = new ABViewRule(listActions);
-      Rule.objectLoad(this.currentObject);
+      console.assert(this.objectLoad, "this.objectLoad is not defined");
+      if (this.currentObject) {
+         Rule.objectLoad(this.currentObject);
+      }
       Rule.formLoad(this.currentForm);
       return Rule;
    }
