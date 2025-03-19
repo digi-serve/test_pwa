@@ -30,10 +30,12 @@ Framework7 app created with following options:
 First of all we need to install dependencies, run in terminal
 ```
 npm install
+git submodule update --init --recursive
 ```
 
 ## NPM Scripts
 
+* 🔨 `watch` - build and check for ongoing changes
 * 🔥 `start` - run development server
 * 🔧 `dev` - run development server
 * 🔧 `build` - build web app for production
