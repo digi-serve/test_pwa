@@ -39,6 +39,7 @@ export default class ABMobileViewFormSelectSingle extends ABMobileViewFormSelect
                this.options.push({
                   id: o.id,
                   text: o.text,
+                  value: field.getRelationValue(o),
                });
             });
             // let obj = field.datasourceLink;
@@ -93,7 +94,7 @@ export default class ABMobileViewFormSelectSingle extends ABMobileViewFormSelect
 
    inputElement($h, item) {
       let $inputElement = $h`<option id=${this.idOption(item)} value=${
-         item.id
+         item.value ?? item.id
       }>${item.text}</option>`;
       if (this.value == item.id) {
          $inputElement.props.selected = "";
