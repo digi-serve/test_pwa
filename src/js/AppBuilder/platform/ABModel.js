@@ -107,6 +107,18 @@ export default class ABModel extends ABModelCore {
                data = data.data || context.id;
             }
          } else {
+            if (this.isCsvPacked(data)) {
+               let lengthPacked = JSON.stringify(data).length;
+               data = this.csvUnpack(data);
+               let lengthUnpacked = JSON.stringify(data).length;
+               console.log(
+                  `CSV Pack: ${lengthUnpacked} -> ${lengthPacked} (${(
+                     (lengthPacked / lengthUnpacked) *
+                     100
+                  ).toFixed(2)}%)`
+               );
+            }
+
             // on a findAll we normalize data.data
             this.normalizeData(data.data);
          }

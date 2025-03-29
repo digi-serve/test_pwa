@@ -7,6 +7,7 @@ import moment from "moment";
 // @TODO: what is F7 method of working with dates?  can we swap libraries with moment?
 
 import { nanoid } from "nanoid";
+import Papa from "papaparse";
 import { v4 as uuidv4 } from "uuid";
 
 // import FilterComplex from "./platform/FilterComplex";
@@ -994,6 +995,17 @@ class ABFactory extends ABFactoryCore {
 
    isString(...params) {
       return _.isString(params);
+   }
+
+   csvToJson(csvData) {
+      return Papa.parse(csvData, {
+         header: true,
+         skipEmptyLines: true,
+      });
+   }
+
+   jsonToCsv(jsonData) {
+      return Papa.unparse(jsonData);
    }
 }
 await window.__AB_preload;
