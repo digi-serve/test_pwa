@@ -30,6 +30,18 @@ class Account extends EventEmitter {
       if (UserConfig) {
          this.isAuthenticated = true;
          this._config = UserConfig;
+      } else {
+         let { options: tenantConfig } = this.AB.Config.tenantConfig();
+         tenantConfig =
+            typeof tenantConfig === "string"
+               ? JSON.parse(tenantConfig)
+               : tenantConfig;
+         // If no user and tenant isn't using local auth start
+         // the external auth workflow:
+         if (tenantConfig.authType !== "login") {
+            // window.location.assign("/auth/login");
+         }
+         // Keep going if the tenant is using local auth
       }
 
       var MetaConfig = this.AB.Config.metaConfig();
