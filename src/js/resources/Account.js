@@ -39,7 +39,7 @@ class Account extends EventEmitter {
          // If no user and tenant isn't using local auth start
          // the external auth workflow:
          if (tenantConfig.authType !== "login") {
-            // window.location.assign("/auth/login");
+            window.location.assign("/auth/login");
          }
          // Keep going if the tenant is using local auth
       }
