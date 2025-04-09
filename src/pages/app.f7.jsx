@@ -8,7 +8,7 @@ export default (AB) => {
       let defaultPath = "/";
       let username = "";
       let password = "";
-      let versionNumber = Application.version;
+      let versionNumber = Application?.version;
       let showingUpdate = false;
       let apiUrl = document?.location?.origin ?? "http://localhost:8080";
       // process.env.NODE_ENV === "production"
@@ -123,11 +123,11 @@ export default (AB) => {
 
       async function checkForUpdate() {
          if (!showingUpdate) {
-            let getVersionPath = `${apiUrl}${Application.urlCurrentVersion}`;
+            let getVersionPath = `${apiUrl}${Application?.urlCurrentVersion}`;
 
             const response = await AB.Network.get({ url: getVersionPath });
             const version = response?.version ?? "0.0.0";
-            const currVersion = Application.version;
+            const currVersion = Application?.version;
             console.log("getVersionPath: ", version);
             console.log("getCurrVersion: ", currVersion);
             if (currVersion.trim() != version.trim()) {
@@ -186,7 +186,7 @@ export default (AB) => {
          }
       }
 
-      let pagesMenu = Application.pages((p) => p.menuType == "menu");
+      let pagesMenu = Application?.pages((p) => p.menuType == "menu") ?? [];
       return () => (
          <div id="app">
             {/* Left panel with cover effect */}
@@ -197,7 +197,7 @@ export default (AB) => {
                         <div class="navbar-bg"></div>
                         <div class="navbar-inner">
                            <div class="title">
-                              {Application.label ?? L("PWA")}
+                              {Application?.label ?? L("PWA")}
                            </div>
                         </div>
                      </div>
