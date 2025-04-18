@@ -31,7 +31,7 @@ class Account extends EventEmitter {
          this.isAuthenticated = true;
          this._config = UserConfig;
       } else {
-         let { options: tenantConfig } = this.AB.Config.tenantConfig();
+         let tenantConfig = this.AB?.Config?.tenantConfig?.()?.options ?? {};
          tenantConfig =
             typeof tenantConfig === "string"
                ? JSON.parse(tenantConfig)
