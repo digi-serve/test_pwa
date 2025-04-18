@@ -31,6 +31,8 @@ export default (AB) => {
       },
    ];
 
+   if (!AB.Account.isAuthenticated) return routes;
+
    // build our Tabs:
    // NOTE: we build links only for the Root level Tabs
    let pagesTabsRoot = Application.pages((p) => p.menuType == "tab");
