@@ -84,7 +84,7 @@ export default class ABMobileViewTimeline extends ABMobileViewTimelineCore {
 
    itemSelected(item) {
       // prevent random clicks when processing a swipeout
-      if (this.isSwipeout[item.uuid]) return;
+      if ( (typeof(this.isSwipeout) != "undefined") && this.isSwipeout[item.uuid]) return;
 
       // Make sure our DC registers which item was just selected.
       const dc = this.datacollection;
