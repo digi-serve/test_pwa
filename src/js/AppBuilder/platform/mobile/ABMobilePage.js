@@ -84,22 +84,17 @@ export default class ABMobilePage extends ABMobilePageCore {
 
                   const viewInit = async (v, callback) => {
                      await v.init();
-
                      callback();
                   };
                   const init = () =>
                      new Promise((resolve) => {
+                        // wait for DC to be initialized before
+                        // initializing the view.
                         if (dc && !dc.isDataInitialized) {
+                           dc.on("initializedData", () => {
+                              viewInit(v, resolve);
+                           });
                            $store.dispatch("getAppBuilderData", dc.id);
-
-                           const waitDCInit = setInterval(async () => {
-                              if (dc.isDataInitialized) {
-                                 clearInterval(waitDCInit);
-
-                                 await viewInit(v, resolve);
-                              }
-                           }, 500);
-
                            return;
                         }
 

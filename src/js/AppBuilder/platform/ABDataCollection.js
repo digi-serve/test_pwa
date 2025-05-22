@@ -144,6 +144,7 @@ export default class ABDataCollection extends ABDataCollectionCore {
       return super.loadData(start, limit).catch((err) => {
          // hideProgressOfComponents() is a platform specific action.
          this.hideProgressOfComponents();
+         this.emit("loadData", {});
 
          // propagate the error here:
          if (err) {
