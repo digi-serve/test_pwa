@@ -228,7 +228,7 @@ class NetworkRest extends EventEmitter {
          }
          // Fix: don't set content-type if passed in data is a FormData object.
          if (
-            !Object.prototype.toString.call(params.data) === "[object FormData]"
+            Object.prototype.toString.call(params.data) !== "[object FormData]"
          ) {
             params.headers["Content-type"] = "application/json";
          }
