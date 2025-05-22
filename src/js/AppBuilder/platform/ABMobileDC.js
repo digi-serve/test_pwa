@@ -95,7 +95,7 @@ dc.define("dataFeed", (value, params) => {
    }
 
    count() {
-      return this.stateValues().length();
+      return this.stateValues().length;
    }
 
    exists(ID) {
