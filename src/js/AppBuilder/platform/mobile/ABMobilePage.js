@@ -209,6 +209,23 @@ export default class ABMobilePage extends ABMobilePageCore {
                   </div>`;
             };
 
+             ///
+            /// Inbox
+            ///
+            const inbox = () => {
+               // this.AB = AB;
+               // this.AB.Network.get({ url: "/config/inbox" }).then((inboxConfig) => {
+               //    this.AB.Config.configInbox(inboxConfig);
+               // });
+
+               if (this.inboxBadge > 0) {
+                  return $h`<a href="/inbox" class="link icon-only">
+                        <i class="icon material-icons">mail<span class="badge color-red">${this.inboxBadge}</span></i>
+                     </a>`;
+               }
+               return $h`<a href="/inbox" class="link icon-only"><i class="icon material-icons">mail</i></a>`;
+            };
+
             return () => $h`
          <div class="page" data-name="${this.route}">
             <div class="navbar">
@@ -218,6 +235,9 @@ export default class ABMobilePage extends ABMobilePageCore {
                      ${menu()}
                   </div>
                   ${pageTitle()}
+                  <div class="right">
+                    ${inbox()}
+                  </div>
                </div>
             </div>
             <div class="page-content">
