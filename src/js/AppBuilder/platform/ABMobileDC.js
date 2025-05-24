@@ -215,7 +215,13 @@ dc.define("dataFeed", (value, params) => {
       let pos = data.pos || 0;
       let tc = data.total_count || 0;
 
-      if (Array.isArray(dataIn) && dataIn.length == 0) return;
+      if (Array.isArray(dataIn) && dataIn.length == 0) {
+         if (tc == 0) {
+            // this is an actual empty data set.
+            this.clearAll();
+         }
+         return;
+      }
 
       if (pos == 0) {
          this.setValues(dataIn);
