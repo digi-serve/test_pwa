@@ -1,0 +1,70 @@
+name: PR Merged
+on:
+  pull_request:
+    types: [closed]
+    branches: [master]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    name: Prepare To Update our Repos
+    runs-on: ubuntu-latest
+    outputs:
+      token: ${{ steps.encrypt-token.outputs.out }}
+      sha: ${{ steps.short-sha.outputs.short-sha }}
+      template-hash: ${{ steps.template-hash.outputs.hash }}
+    steps:
+      # Generate an App Token to checkout our repos in the next job
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.GS_DEV_APP_ID }}
+          private-key: ${{ secrets.GS_DEV_APP_PK }}
+          owner: ${{ github.repository_owner }}
+          skip-token-revoke: true
+      # Encrypt the token and share with the next jobs - github won't allow the token to be outputed directly
+      - uses: cloudposse/github-action-secret-outputs@main
+        id: encrypt-token
+        with:
+          secret: ${{ secrets.ENCRYPTION_PASSWORD }}
+          op: encode
+          in: ${{ steps.generate-token.outputs.token }}22
+  call-get-label:
+    name: Label
+    # Only run if the PR closed by merging and we have a label
+    if: ${{ github.event.pull_request.merged }}
+    uses: digi-serve/.github/.github/workflows/get-pr-release-label.yml@master
+  call-e2e-tests:
+    name: Test
+    needs: [call-get-label]
+    # Only run if the PR closed by merging and we have a label
+    if: ${{ needs.call-get-label.outputs.valid == 'true' }}
+    uses: ./.github/workflows/e2e-test.yml
+    secrets:
+      TOKEN: ${{ secrets.PAT }}
+  call-bump-version:
+    name: Version
+    # Only run if tests pass
+    needs: [ call-get-label, call-e2e-tests ]
+    uses: digi-serve/.github/.github/workflows/bump-version.yml@master
+    with:
+      ref: ${{ github.ref }}
+      type: ${{ needs.call-get-label.outputs.label }}
+  call-create-release:
+    name: Release
+    uses: digi-serve/.github/.github/workflows/create-release.yml@master
+    needs: [call-bump-version]
+    with:
+      tag: v${{ needs.call-bump-version.outputs.new_version }}
+  dispatch-web-update:
+    name: Dipsatch Web Service Update
+    needs: [ call-bump-version, call-get-label ]
+    uses: ./.github/workflows/dispatch-web-update.yml
+    with:
+      type: ${{ needs.call-get-label.outputs.label }}
+      version: ${{ needs.call-bump-version.outputs.new_version }}
+      repo: test_pwa
+      secret: ${{ secrets.ENCRYPTION_PASSWORD}}
+      op: decode
+      in: ${{ needs.prepare.outputs.token }}
