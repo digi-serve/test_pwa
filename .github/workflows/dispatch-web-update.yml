@@ -12,8 +12,8 @@ on:
         type: string
         required: true
     secrets:
-      TOKEN: ${{ steps.encrypt-token.outputs.out }}
-      required: true
+      TOKEN: 
+        required: true 
     # outputs: 
       # token: ${{ steps.encrypt-token.outputs.out }}
       # sha: ${{ steps.short-sha.outputs.short-sha }}
