@@ -56,7 +56,7 @@ jobs:
   dispatch-web-update:
     name: Dispatch Web Service Update
     # needs: [ call-bump-version, call-get-label ]
-    needs: [ prepare, call-bump-version, call-get-label ]
+    needs: [ prepare, call-bump-version ]
     uses: ./.github/workflows/dispatch-web-update.yml
     with:
       type: ${{ needs.call-get-label.outputs.label }}
