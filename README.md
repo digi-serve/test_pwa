@@ -39,6 +39,7 @@ git submodule update --init --recursive
 * 🔥 `start` - run development server
 * 🔧 `dev` - run development server
 * 🔧 `build` - build web app for production
+* 🔧 `postinstall` - postinstall
 
 ## Vite
 
