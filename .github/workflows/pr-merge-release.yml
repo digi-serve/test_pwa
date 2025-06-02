@@ -1,8 +1,8 @@
 name: PR Merged
 on:
   pull_request:
-    types: [closed]
-    branches: [master]
+    types: [created, edited, closed]
+    branches: [is/ghaTest, master]
 permissions:
   contents: write
 jobs:
