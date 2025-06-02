@@ -1,6 +1,6 @@
 name: PR Merged
 on:
-  push
+  [push, workflow_dispatch]
   # pull_request:
   #   types: [opened, edited, closed]
   #   branches: [is/ghaTest, master]
