@@ -11,9 +11,9 @@ on:
       repo:
         type: string
         required: true
-    # secrets:
-    #   TOKEN: ${{ steps.encrypt-token.outputs.out }}
-        # required: true
+    secrets:
+      TOKEN: ${{ steps.encrypt-token.outputs.out }}
+      required: true
     # outputs: 
       # token: ${{ steps.encrypt-token.outputs.out }}
       # sha: ${{ steps.short-sha.outputs.short-sha }}
@@ -65,7 +65,7 @@ jobs:
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
         with:
-          TOKEN: 
+          token: 
             ${{ steps.encrypt-token.outputs.out }}
           repository: digi-serve/ab_service_web
           event-type: pwa_new_version
