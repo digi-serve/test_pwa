@@ -32,7 +32,8 @@ jobs:
               path: web
               repository: digi-serve/ab_service_web
               token: ${{ secrets.GITHUB_TOKEN }}
-              ref: ${{ matrix.branch }}
+              ref: is/pwa
+              # ref: ${{ matrix.branch }}
 
          - run: npm i
            working-directory: ./ab_platform_pwa
