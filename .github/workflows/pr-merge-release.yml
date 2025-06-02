@@ -35,25 +35,25 @@ jobs:
   #   uses: digi-serve/.github/.github/workflows/get-pr-release-label.yml@master
   call-e2e-tests:
     name: Test
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
     needs: [prepare]
     # needs: [call-get-label]
     # Only run if the PR closed by merging and we have a label
     # if: ${{ needs.call-get-label.outputs.valid == 'true' }}
-    steps:
-    - uses: cloudposse/github-action-secret-outputs@main
-      id: decode-token
-      with:
-        # Load/Decrypt the token generated in prepare
-        secret: ${{ secrets.ENCRYPTION_PASSWORD }}
-        op: decode
-        in: ${{ needs.prepare.outputs.token }}
-    - name: run_the_test
-      uses: ./.github/workflows/e2e-tests.yml
+    # steps:
+    # - uses: cloudposse/github-action-secret-outputs@main
+    #   id: decode-token
+    #   with:
+    #     # Load/Decrypt the token generated in prepare
+    #     secret: ${{ secrets.ENCRYPTION_PASSWORD }}
+    #     op: decode
+    #     in: ${{ needs.prepare.outputs.token }}
+    # name: run_the_test
+    uses: ./.github/workflows/e2e-tests.yml
       # with:
-        # TOKEN: ${{ steps.decode-token.outputs.out }}
-        # secrets:
-        #   TOKEN: ${{ steps.decode-token.outputs.out }}
+      #   TOKEN: ${{ steps.decode-token.outputs.out }}
+    secrets:
+      TOKEN: ${{ steps.decode-token.outputs.out }}
   # # call-bump-version:
   # #   name: Version
   # #   # Only run if tests pass
