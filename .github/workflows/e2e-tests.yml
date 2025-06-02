@@ -17,9 +17,9 @@ jobs:
          fail-fast: true
          matrix:
             include:
-               - branch: develop
+               - branch: is/ghaTest # develop
                  webpack: dev
-               - branch: master
+               - branch: is/ghaTest # master
                  webpack: update
       steps:
          - uses: actions/checkout@v3
@@ -38,7 +38,7 @@ jobs:
            working-directory: ./ab_platform_pwa
 
          - name: Webpack
-           run: npm run build:${{ matrix.webpack }}
+           run: npm run build #:${{ matrix.webpack }}
            working-directory: ./ab_platform_pwa
 
          # webpack expects the folder to be called "web" ab-install action expects "ab_service_web"
