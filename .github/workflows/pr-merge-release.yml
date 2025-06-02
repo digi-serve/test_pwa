@@ -50,9 +50,10 @@ jobs:
         in: ${{ needs.prepare.outputs.token }}
     - name: run_the_test
       uses: ./.github/workflows/e2e-tests.yml
-      with:
-        secrets:
-          TOKEN: ${{ steps.decode-token.outputs.out }}
+      # with:
+        # TOKEN: ${{ steps.decode-token.outputs.out }}
+        # secrets:
+        #   TOKEN: ${{ steps.decode-token.outputs.out }}
   # # call-bump-version:
   # #   name: Version
   # #   # Only run if tests pass
