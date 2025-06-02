@@ -63,7 +63,7 @@ jobs:
       version: ${{ needs.call-bump-version.outputs.new_version }}
       repo: test_pwa
     secrets:
-      TOKEN: ${{ secrets.PAT }}
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # TOKEN: ${{ needs.prepare.outputs.token }}
 
 
