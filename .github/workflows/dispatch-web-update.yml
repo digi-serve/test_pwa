@@ -14,6 +14,14 @@ on:
     secrets:
       TOKEN: 
         required: true 
+    # outputs: 
+      # token: ${{ steps.encrypt-token.outputs.out }}
+      # sha: ${{ steps.short-sha.outputs.short-sha }}
+      # # Get a short sha of the commit triggering this run, will be used in the commit message in the tarrget repos
+      # - name: Get Short SHA 
+      #   id: short-sha
+      #   run: echo "short_sha=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_OUTPUT
+      #   working-directory: templates
 jobs:
   dispatch-web-update:
     name: Dispatch Web Service Update
@@ -21,22 +29,6 @@ jobs:
     outputs: 
       token: ${{ steps.encrypt-token.outputs.out }}
     steps:
-    #   - name: Generate a token
-    #     id: generate-token
-    #     uses: actions/create-github-app-token@v2
-    #     with:
-    #       app-id: ${{ vars.GS_DEV_APP_ID }}
-    #       private-key: ${{ secrets.GS_DEV_APP_PK }}
-    #       owner: ${{ github.repository_owner }}
-    #       skip-token-revoke: true
-    #   - name: encrypt-token
-    #     id: encrypt-token
-    #     uses: cloudposse/github-action-secret-outputs@main
-    #     with:
-    #       secret: ${{ secrets.ENCRYPTION_PASSWORD }}
-    #       op: encode
-    #       in: 
-    #         ${{ steps.generate-token.outputs.token }}
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
         with:
