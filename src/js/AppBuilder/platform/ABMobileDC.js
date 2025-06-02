@@ -76,7 +76,7 @@ dc.define("dataFeed", (value, params) => {
    }
 
    stateValues() {
-      if (!this.DC.$state) return [];
+      if (!this.DC.$state) return (this.DC.$state = []);
       return this.DC.$state[this.DC.id];
    }
 
@@ -287,7 +287,7 @@ dc.define("dataFeed", (value, params) => {
    /*
 
    attachEvent(str, fn() ) // onAfterCursorChange
-   
+
    updateItem(d.id,updateItemData);
 
    loadNext(count, start);

@@ -30,10 +30,12 @@ Framework7 app created with following options:
 First of all we need to install dependencies, run in terminal
 ```
 npm install
+git submodule update --init --recursive
 ```
 
 ## NPM Scripts
 
+* 🔨 `watch` - build and check for ongoing changes
 * 🔥 `start` - run development server
 * 🔧 `dev` - run development server
 * 🔧 `build` - build web app for production
@@ -65,7 +67,11 @@ framework7 assets --ui
 
 * [Framework7 Core Documentation](https://framework7.io/docs/)
 
-
+### Custom built docker image
+ - Your changes exist locally, since you're `build` or `watch`ing them
+ - Those changes end up in `/web`
+ - Push those changes to a new branch on `AppBuilder Service Web`
+ - Follow the directions in that repo for building a [custom image](https://github.com/digi-serve/ab_service_web/actions/workflows/docker-build-custom.yml)
 
 * [Framework7 Icons Reference](https://framework7.io/icons/)
 * [Community Forum](https://forum.framework7.io)

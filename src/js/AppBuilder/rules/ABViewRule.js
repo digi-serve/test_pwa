@@ -259,6 +259,7 @@ export default class ABViewRule {
    }
 
    objectLoad(object) {
+      console.assert(object, "objectLoad(): object is required.");
       this.currentObject = object;
       this.listActions.forEach((a) => {
          a.objectLoad(object);
@@ -276,12 +277,12 @@ export default class ABViewRule {
       this.AB = object.AB;
    }
 
-   // formLoad(form) {
-   //    this.currentForm = form;
-   //    this.listActions.forEach((a) => {
-   //       a.formLoad(form);
-   //    });
-   // }
+   formLoad(form) {
+      this.currentForm = form;
+      this.listActions.forEach((a) => {
+         a.formLoad(form);
+      });
+   }
 
    processPre(options = {}) {
       let isValid = this.isValid(options.data);
