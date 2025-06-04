@@ -2,36 +2,51 @@ name: E2E Tests
 on:
   workflow_call:
     inputs:
-      ref:
-        type: string
-        default: ${{ github.ref }}
+        ref:
+          type: string
+          default: ${{ github.ref }}
+        app_id:
+          description: GitHub App ID for Auth (or client ID)
+          type: string
+          required: true
+    secrets:
+        app_secret:
+          description: GitHub App client secret for Auth
+          required: true
 jobs:
   e2e-tests:
-    name: E2E Tests
+    name: Test
     runs-on: ubuntu-latest
     env:
-        CYPRESS_RESPONSE_TIMEOUT: 200000
-        CYPRESS_DEFAULT_COMMAND_TIMEOUT: 30000
-        CYPRESS_RETRIES: 2
+      CYPRESS_RESPONSE_TIMEOUT: 200000
+      CYPRESS_DEFAULT_COMMAND_TIMEOUT: 30000
+      CYPRESS_RETRIES: 2
     strategy:
-        fail-fast: true
-        matrix:
-          include:
-              - branch: is/ghaTest # develop
-                webpack: dev
-              - branch: is/ghaTest # master
-                webpack: update
+      # fail-fast: true
+      matrix:
+        include:
+          - branch: is/ghaTest # develop
+            webpack: dev
+          - branch: is/ghaTest # master
+            webpack: update
     steps:
-        - uses: actions/checkout@v3
+        - uses: actions/checkout@v4
           with:
             path: ab_platform_pwa
             submodules: true
             ref: ${{ inputs.ref }}
-        - uses: actions/checkout@v3
+        - name: Generate a token
+          id: generate-token
+          uses: actions/create-github-app-token@v2
+          with:
+            app-id: ${{ inputs.app_id }}
+            private-key: ${{ secrets.app_secret }}
+            repositories: ab_service_web
+        - uses: actions/checkout@v4
           with:
             path: web
             repository: digi-serve/ab_service_web
-            token: ${{ secrets.GITHUB_TOKEN }}
+            token: ${{ steps.generate-token.outputs.token }}
             ref: is/pwa
             # ref: ${{ matrix.branch }}
 
@@ -63,14 +78,8 @@ jobs:
           run: pm2 start ./logs.js -- --toFile logs/ABServices.log
           working-directory: ./ab
 
-        #Run test
-        - name: Wait for AB
-          # Skipping the wait step. Cypress has a bit of wait time built in. It might be enough.
-          if: false
-          uses: ifaxity/wait-on-action@v1.1.0
-          with:
-            resource: http://localhost:8080
-            timeout: 300000
+        # Skipping the wait step. Cypress has a bit of wait time built in.
+        # Run test
 
         - name: Run Cypress Tests
           run: npm run test:e2e:app -- --browser chrome
