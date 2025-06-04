@@ -49,6 +49,13 @@ jobs:
             token: ${{ steps.generate-token.outputs.token }}
             ref: is/pwa
             # ref: ${{ matrix.branch }}
+                # # TODO make this an action?
+        - uses: actions/checkout@v4
+          with:
+            path: ns_ab_mobile_setup
+            repository: digi-serve/ns_ab_mobile_setup
+            token: ${{ steps.generate-token.outputs.token }}
+            ref: main
 
         - run: npm i
           working-directory: ./ab_platform_pwa
@@ -72,14 +79,6 @@ jobs:
             repository: digi-serve/kitchensink_app
             path: ab/test/e2e/cypress/e2e/kitchensink_app
 
-        # # TODO make this an action?
-        - name: Check out ns_ab_mobile_setup tests
-          uses: actions/checkout@v4
-          with:
-            repository: digi-serve/ns_ab_mobile_setup
-            token: ${{ steps.generate-token.outputs.token }}
-            path: ns_ab_mobile_setup
-            ref: main
         - run: npm i
           working-directory: ./ns_ab_mobile_setup
         - run: npm make_env
