@@ -45,10 +45,9 @@ jobs:
     uses: digi-serve/.github/.github/workflows/dispatch-update.yml@master
     with:
       dispatch_repos: '["ab_service_web"]'
-      dispatch_type: pwa_new_version
+      dispatch_type: web_new_version
       type: ${{ needs.call-get-label.outputs.label }}
       version: ${{ needs.call-bump-version.outputs.new_version }}
       app_id: ${{ vars.GS_DEV_APP_ID }}
-      ref: is/pwa
     secrets:
       app_secret: ${{ secrets.GS_DEV_APP_PK }}
