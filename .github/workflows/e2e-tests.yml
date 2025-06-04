@@ -98,7 +98,7 @@ jobs:
         #   working-directory: ./ab
         
         - name: Run ns_ab_mobile_setup Cypress Tests
-          run: npm run test:ci
+          run: npm run test:custom
           working-directory: ./ns_ab_mobile_setup
 
         - uses: actions/upload-artifact@v4
