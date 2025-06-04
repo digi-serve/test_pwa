@@ -67,10 +67,22 @@ jobs:
             repository: digi-serve/ab_service_web
 
         - name: Check out kitchen-sink tests
-          uses: actions/checkout@v2
+          uses: actions/checkout@v4
           with:
             repository: digi-serve/kitchensink_app
             path: ab/test/e2e/cypress/e2e/kitchensink_app
+
+        # # TODO make this an action?
+        - name: Check out ns_ab_mobile_setup tests
+          uses: actions/checkout@v4
+          with:
+            repository: digi-serve/ns_ab_mobile_setup
+            token: ${{ steps.generate-token.outputs.token }}
+            path: ns_ab_mobile_setup
+        - run: npm i
+          working-directory: ./ns_ab_mobile_setup
+        - run: npm make_env
+          working-directory: ./ns_ab_mobile_setup
 
         # These next steps are to save our ablogs to file
         - run: npm install pm2@latest -g
@@ -81,9 +93,13 @@ jobs:
         # Skipping the wait step. Cypress has a bit of wait time built in.
         # Run test
 
-        - name: Run Cypress Tests
-          run: npm run test:e2e:app -- --browser chrome
-          working-directory: ./ab
+        # - name: Run Cypress Tests
+        #   run: npm run test:e2e:app -- --browser chrome
+        #   working-directory: ./ab
+        
+        - name: Run ns_ab_mobile_setup Cypress Tests
+          run: npm run test:ci
+          working-directory: ./ns_ab_mobile_setup
 
         - uses: actions/upload-artifact@v4
           if: failure()
