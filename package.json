@@ -12,7 +12,9 @@
       "postinstall": "cpy --flat ./node_modules/framework7-icons/fonts/*.* ./src/fonts/ && cpy --flat ./node_modules/material-icons/iconfont/*.* ./src/fonts/",
       "proxy": "./proxy.sh",
       "watch": "webpack-cli --config webpack.dev.js --watch --progress",
-      "build": "webpack-cli --config webpack.dev.js --progress"
+      "build": "webpack-cli --config webpack.dev.js --progress",
+      "build:update": "webpack-cli --config webpack.dev.js --progress",
+      "build:dev": "webpack-cli --config webpack.dev.js --progress"
    },
    "browserslist": [
       "IOS >= 15",
