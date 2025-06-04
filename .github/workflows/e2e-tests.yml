@@ -79,6 +79,7 @@ jobs:
             repository: digi-serve/ns_ab_mobile_setup
             token: ${{ steps.generate-token.outputs.token }}
             path: ns_ab_mobile_setup
+            ref: main
         - run: npm i
           working-directory: ./ns_ab_mobile_setup
         - run: npm make_env
