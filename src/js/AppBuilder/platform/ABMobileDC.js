@@ -173,6 +173,8 @@ dc.define("dataFeed", (value, params) => {
    getItem(id) {
       var PK = this.PK;
       var allValues = this.stateValues();
+      if (id == null || allValues == null || allValues.length === 0 )
+         return null;
       return allValues.find((v) => this.id(v) == id);
    }
 
