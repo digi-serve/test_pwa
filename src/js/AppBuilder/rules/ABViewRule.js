@@ -259,7 +259,6 @@ export default class ABViewRule {
    }
 
    objectLoad(object) {
-      console.assert(object, "objectLoad(): object is required.");
       this.currentObject = object;
       this.listActions.forEach((a) => {
          a.objectLoad(object);

@@ -289,7 +289,6 @@ dc.define("dataFeed", (value, params) => {
    /*
 
    attachEvent(str, fn() ) // onAfterCursorChange
-
    updateItem(d.id,updateItemData);
 
    loadNext(count, start);
