@@ -16,6 +16,12 @@ export default class ABDataCollection extends ABDataCollectionCore {
    constructor(attributes, AB) {
       super(attributes, AB);
       this.setMaxListeners(0);
+      this.blacklistLoadData = {};
+      // { key : ?? }
+      // keep track of previous loadData() calls that might not
+      // have fully completed yet. We don't want to get in a
+      // race condition where we keep trying to load the same frame
+      // over and over again.
 
       this.$state = null;
       // {Framework7.store} The shared F7 data store
@@ -144,6 +150,7 @@ export default class ABDataCollection extends ABDataCollectionCore {
       return super.loadData(start, limit).catch((err) => {
          // hideProgressOfComponents() is a platform specific action.
          this.hideProgressOfComponents();
+         this.emit("loadData", {});
 
          // propagate the error here:
          if (err) {
@@ -317,8 +324,24 @@ export default class ABDataCollection extends ABDataCollectionCore {
                         if (component.showProgress)
                            component.showProgress({ type: "icon" });
 
-                        // load more data to the data collection
-                        dc.loadNext(count, start);
+                        if (start < 0) start = 0;
+
+                        // // load more data to the data collection
+                        // dc.loadNext(count, start);
+
+                        // since the where clause can change if we are following
+                        // another cursor, include the where as part of the key:
+                        let [where] = this.getWhereClause(start, 0);
+                        let key = `${JSON.stringify(where)}-${start}-${count}`;
+                        if (this.blacklistLoadData[key]) {
+                           return false;
+                        }
+                        this.blacklistLoadData[key] = true;
+
+                        this.loadData(start, count).finally(() => {
+                           // remove from blacklist
+                           delete this.blacklistLoadData[key];
+                        });
 
                         return false; // <-- prevent the default "onDataRequest"
                      }

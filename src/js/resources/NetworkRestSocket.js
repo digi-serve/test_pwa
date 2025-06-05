@@ -37,6 +37,12 @@ class NetworkRestSocket extends NetworkRest {
       // Pass the io.socket.on(*) events to our AB factory.
       listSocketEvents.forEach((ev) => {
          io.socket.on(ev, (data) => {
+            // data should be in the format:
+            // {
+            //    objectId: {uuid},
+            //    data: {object}
+            // }
+
             // check if the ev contains 'datacollection'
             // and do a single normalizeData() on the incoming data here
             // before sending it off to be processed.
@@ -47,6 +53,23 @@ class NetworkRestSocket extends NetworkRest {
                   if (obj) {
                      let model = obj.model();
                      if (ev != "ab.datacollection.delete") {
+                        // if data is packed, then unpack it
+                        let model = obj.model();
+                        if (model.isCsvPacked(values)) {
+                           let lengthPacked = JSON.stringify(data).length;
+                           values = model.csvUnpack(values);
+                           data.data = values.data;
+                           let lengthUnpacked = JSON.stringify(data).length;
+                           data.__length = lengthUnpacked;
+                           data.__lengthPacked = lengthPacked;
+                           console.log(
+                              `CSV Pack: ${lengthUnpacked} -> ${lengthPacked} (${(
+                                 (lengthPacked / lengthUnpacked) *
+                                 100
+                              ).toFixed(2)}%)`
+                           );
+                        }
+
                         let jobID = this.AB.jobID();
                         console.log(`${jobID} : ${ev}:normalization begin`);
                         let timeFrom = performance.now();
