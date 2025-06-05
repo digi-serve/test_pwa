@@ -22,12 +22,11 @@ jobs:
       app_id: ${{ vars.GS_DEV_APP_ID }}
     secrets:
       app_secret: ${{ secrets.GS_DEV_APP_PK }}
-  
+
   call-bump-version:
     name: Version
     # Only run if tests pass
-    # needs: [ call-get-label, call-e2e-tests ]
-    needs: [ call-get-label ]
+    needs: [ call-get-label, call-e2e-tests ]
     uses: digi-serve/.github/.github/workflows/bump-version.yml@master
     with:
       ref: ${{ github.ref }}

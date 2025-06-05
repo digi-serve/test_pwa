@@ -35,25 +35,19 @@ jobs:
             path: ab_platform_pwa
             submodules: true
             ref: ${{ inputs.ref }}
-        - name: Generate a token
-          id: generate-token
-          uses: actions/create-github-app-token@v2
-          with:
-            app-id: ${{ inputs.app_id }}
-            private-key: ${{ secrets.app_secret }}
             repositories: ab_service_web
         - uses: actions/checkout@v4
           with:
             path: web
             repository: digi-serve/ab_service_web
-            token: ${{ steps.generate-token.outputs.token }}
+            token: ${{ secrets.GITHUB_TOKEN }}
             ref: ${{ matrix.branch }}
 
         - run: npm i
           working-directory: ./ab_platform_pwa
 
         - name: Webpack
-          run: npm run build #:${{ matrix.webpack }}
+          run: npm run build:${{ matrix.webpack }}
           working-directory: ./ab_platform_pwa
 
         # webpack expects the folder to be called "web" ab-install action expects "ab_service_web"
