@@ -47,7 +47,7 @@ jobs:
             path: web
             repository: digi-serve/ab_service_web
             token: ${{ steps.generate-token.outputs.token }}
-            ref: is/pwa
+            ref: pwa
             # ref: ${{ matrix.branch }}
         # # TODO make this an action?
         # - uses: actions/checkout@v4
