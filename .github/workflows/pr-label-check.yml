@@ -2,7 +2,7 @@ name: Check Release Labels
 on:
   pull_request:
     types: [opened, labeled, unlabeled, synchronize]
-    branches: [master, is/ghaTest]
+    branches: [master]
 jobs:
   call-check-pr:
     name: Check

@@ -25,9 +25,9 @@ jobs:
       # fail-fast: true
       matrix:
         include:
-          - branch: is/ghaTest # develop
+          - branch: develop
             webpack: dev
-          - branch: is/ghaTest # master
+          - branch: master
             webpack: update
     steps:
         - uses: actions/checkout@v4
@@ -47,15 +47,7 @@ jobs:
             path: web
             repository: digi-serve/ab_service_web
             token: ${{ steps.generate-token.outputs.token }}
-            ref: pwa
-            # ref: ${{ matrix.branch }}
-        # # TODO make this an action?
-        # - uses: actions/checkout@v4
-        #   with:
-        #     path: ns_ab_mobile_setup
-        #     repository: digi-serve/ns_ab_mobile_setup
-        #     token: ${{ steps.generate-token.outputs.token }}
-        #     ref: main
+            ref: ${{ matrix.branch }}
 
         - run: npm i
           working-directory: ./ab_platform_pwa
@@ -79,11 +71,6 @@ jobs:
             repository: digi-serve/kitchensink_app
             path: ab/test/e2e/cypress/e2e/kitchensink_app
 
-        # - run: npm i
-        #   working-directory: ./ns_ab_mobile_setup
-        # - run: npm make_env
-        #   working-directory: ./ns_ab_mobile_setup
-
         # These next steps are to save our ablogs to file
         - run: npm install pm2@latest -g
         - name: Save Logs
@@ -92,14 +79,9 @@ jobs:
 
         # Skipping the wait step. Cypress has a bit of wait time built in.
         # Run test
-
         - name: Run Cypress Tests
           run: npm run test:e2e:app -- --browser chrome
           working-directory: ./ab
-        
-        # - name: Run ns_ab_mobile_setup Cypress Tests
-        #   run: npm run test:custom
-        #   working-directory: ./ns_ab_mobile_setup
 
         - uses: actions/upload-artifact@v4
           if: failure()
